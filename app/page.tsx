@@ -1,161 +1,83 @@
-"use client";
-
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { QuestionCard } from "@/components/question-card";
+import Link from "next/link";
 import { Signature } from "@/components/signature";
-import {
-  INITIAL_SCORE,
-  applyDelta,
-  type Answer,
-  type AxisKey,
-  type VectorScore,
-} from "@/lib/scoring";
 
-type Step = "primary" | "followup-1" | "followup-2";
-
-export default function StartPage() {
-  const router = useRouter();
-
-  const [step, setStep] = useState<Step>("primary");
-  const [score, setScore] = useState<VectorScore>(INITIAL_SCORE);
-  const [primary, setPrimary] = useState<AxisKey | null>(null);
-
-  const handlePrimary = (axis: AxisKey) => {
-    setPrimary(axis);
-    setScore((prev) => applyDelta(prev, { [axis]: 3 }));
-    setStep("followup-1");
-  };
-
-  const handleFollowUp = (answer: Answer) => {
-    const updatedScore = applyDelta(score, answer.delta);
-
-    if (step === "followup-1") {
-      setScore(updatedScore);
-      setStep("followup-2");
-      return;
-    }
-
-    const params = new URLSearchParams({
-      s: String(updatedScore.structuration),
-      c: String(updatedScore.comprehension),
-      v: String(updatedScore.valorisation),
-      primary: primary ?? "",
-    });
-
-    router.push(`/result?${params.toString()}`);
-  };
-
+export default function HomePage() {
   return (
-    <main className="min-h-screen flex items-center justify-center px-6 py-12 md:px-12">
-      <div className="w-full max-w-5xl space-y-12">
+    <main className="min-h-screen grid-background flex items-center justify-center px-4 py-6 sm:px-6 md:px-12 md:py-12">
+      <div className="w-full max-w-6xl">
+        <section className="relative overflow-hidden rounded-[28px] border border-black/5 bg-[linear-gradient(180deg,#ffffff_0%,#f5efe6_100%)] px-6 py-9 shadow-[0_30px_80px_rgba(0,0,0,0.08)] sm:px-8 sm:py-12 md:rounded-[32px] md:px-16 md:py-16">
+          <div className="pointer-events-none absolute right-0 top-0 h-64 w-64 translate-x-1/3 -translate-y-1/3 rounded-full bg-[#315f8c]/10 blur-3xl" />
+          <div className="pointer-events-none absolute bottom-0 left-0 h-64 w-64 -translate-x-1/3 translate-y-1/3 rounded-full bg-[#c8a46b]/14 blur-3xl" />
 
-        {/* SIGNATURE */}
-        <div className="flex flex-col items-center">
-          <Signature />
-          <div className="mt-4 h-px w-12 bg-black/10" />
-        </div>
+          {/* HEADER */}
+          <div className="relative mb-10 flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+            <Signature />
 
-        {/* ÉTAPE 1 */}
-        {step === "primary" && (
-          <section className="text-center space-y-10">
-
-            <h1 className="font-serif text-[32px] md:text-[52px] leading-tight">
-              Quel type de rôle êtes-vous capable d’assumer ?
-            </h1>
-
-            <p className="mx-auto max-w-xl text-[15px] md:text-[16px] text-black/60 leading-7">
-              Trois logiques d’action différentes. Trois manières d’intervenir.
-              <br className="hidden md:block" />
-              Identifiez celle dans laquelle vous êtes réellement solide.
-            </p>
-
-            <div className="grid gap-6 md:grid-cols-3">
-
-              <button
-                onClick={() => handlePrimary("structuration")}
-                className="group rounded-[20px] border border-black/5 bg-white/70 backdrop-blur-sm p-6 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
-              >
-                <h2 className="font-serif text-xl">Structurer</h2>
-                <p className="mt-3 text-sm text-black/60 leading-6">
-                  Mettre en place, organiser, construire un cadre solide.
-                </p>
-              </button>
-
-              <button
-                onClick={() => handlePrimary("comprehension")}
-                className="group rounded-[20px] border border-black/5 bg-white/70 backdrop-blur-sm p-6 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
-              >
-                <h2 className="font-serif text-xl">Comprendre</h2>
-                <p className="mt-3 text-sm text-black/60 leading-6">
-                  Analyser, interpréter, apporter une lecture claire.
-                </p>
-              </button>
-
-              <button
-                onClick={() => handlePrimary("valorisation")}
-                className="group rounded-[20px] border border-black/5 bg-white/70 backdrop-blur-sm p-6 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
-              >
-                <h2 className="font-serif text-xl">Valoriser</h2>
-                <p className="mt-3 text-sm text-black/60 leading-6">
-                  Améliorer l’impact, rendre visible et attractif.
-                </p>
-              </button>
-
+            <div className="w-fit rounded-full border border-[#d8c7ad] bg-white/55 px-4 py-2 text-[10px] uppercase tracking-[0.2em] text-[#8b6d43]">
+              Lecture professionnelle
             </div>
-          </section>
-        )}
+          </div>
 
-        {/* ÉTAPE 2 */}
-        {step === "followup-1" && (
-          <QuestionCard
-            prompt="Face à une situation à gérer, votre premier réflexe est :"
-            answers={[
-              {
-                id: "structurer",
-                label: "Poser un cadre et organiser",
-                delta: { structuration: 2 },
-              },
-              {
-                id: "comprendre",
-                label: "Analyser avant d’agir",
-                delta: { comprehension: 2 },
-              },
-              {
-                id: "valoriser",
-                label: "Améliorer ce qui est visible",
-                delta: { valorisation: 2 },
-              },
-            ]}
-            onSelect={handleFollowUp}
-          />
-        )}
+          {/* TITRE */}
+          <h1 className="relative max-w-4xl font-serif text-[35px] leading-[1.08] tracking-[-0.02em] text-[#14110d] sm:text-[46px] md:text-[56px]">
+            Quel type de rôle êtes-vous réellement capable d’assumer ?
+          </h1>
 
-        {/* ÉTAPE 3 */}
-        {step === "followup-2" && (
-          <QuestionCard
-            prompt="Dans un projet, vous êtes le plus à l’aise pour :"
-            answers={[
-              {
-                id: "systeme",
-                label: "Construire une structure efficace",
-                delta: { structuration: 2 },
-              },
-              {
-                id: "analyse",
-                label: "Apporter une compréhension fine",
-                delta: { comprehension: 2 },
-              },
-              {
-                id: "impact",
-                label: "Rendre le résultat plus impactant",
-                delta: { valorisation: 2 },
-              },
-            ]}
-            onSelect={handleFollowUp}
-          />
-        )}
+          {/* TEXTE */}
+          <div className="relative mt-6 max-w-2xl space-y-3 text-[16px] leading-8 text-black/60 md:text-[17px]">
+            <p>
+              Structurer, analyser ou produire demandent des logiques très différentes.
+            </p>
+            <p>
+              En quelques questions, identifiez votre position naturelle et la manière dont vous pouvez réellement intervenir dans un système existant.
+            </p>
+          </div>
 
+          {/* CTA */}
+          <div className="relative mt-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
+            <Link
+              href="/start"
+              className="inline-flex w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#315f8c_0%,#223f60_100%)] px-8 py-4 text-sm font-medium text-white shadow-[0_18px_45px_rgba(49,95,140,0.28)] transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_22px_55px_rgba(49,95,140,0.34)] sm:w-auto"
+            >
+              Accéder à la lecture
+              <span className="ml-2">→</span>
+            </Link>
+
+            <div className="text-center text-[13px] leading-6 text-black/40 sm:text-left">
+              2 minutes · sans inscription
+            </div>
+          </div>
+
+          {/* BLOCS */}
+          <div className="relative mt-14 grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6">
+            <div className="rounded-[20px] border border-black/5 bg-white/70 p-6 shadow-[0_14px_40px_rgba(0,0,0,0.04)]">
+              <h3 className="mb-2 text-[16px] font-medium text-[#14110d]">
+                Position claire
+              </h3>
+              <p className="text-[14px] leading-6 text-black/50">
+                Une lecture directe du rôle dans lequel vous êtes réellement pertinent.
+              </p>
+            </div>
+
+            <div className="rounded-[20px] border border-black/5 bg-white/70 p-6 shadow-[0_14px_40px_rgba(0,0,0,0.04)]">
+              <h3 className="mb-2 text-[16px] font-medium text-[#14110d]">
+                Projection
+              </h3>
+              <p className="text-[14px] leading-6 text-black/50">
+                Une vision concrète du type de responsabilités que vous pouvez assumer.
+              </p>
+            </div>
+
+            <div className="rounded-[20px] border border-black/5 bg-white/70 p-6 shadow-[0_14px_40px_rgba(0,0,0,0.04)]">
+              <h3 className="mb-2 text-[16px] font-medium text-[#14110d]">
+                Orientation
+              </h3>
+              <p className="text-[14px] leading-6 text-black/50">
+                Une direction claire vers un cadre structuré correspondant à votre profil.
+              </p>
+            </div>
+          </div>
+        </section>
       </div>
     </main>
   );
