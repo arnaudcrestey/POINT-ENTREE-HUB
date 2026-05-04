@@ -17,10 +17,7 @@ export default function HomePage() {
 
             <div className="mt-4 h-px w-12 bg-black/10" />
 
-            <p className="mt-4 text-[11px] tracking-[0.25em] text-black/40 text-center">
-              ORIENTATION STRATÉGIQUE
-            </p>
-
+           
           </div>
 
           {/* TITRE */}
