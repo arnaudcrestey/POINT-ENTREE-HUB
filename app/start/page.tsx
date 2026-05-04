@@ -4,7 +4,6 @@ import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { QuestionCard } from "@/components/question-card";
 import { Signature } from "@/components/signature";
-import { primaryOptions } from "@/lib/questions";
 import { INITIAL_SCORE, applyDelta, type Answer, type AxisKey, type VectorScore } from "@/lib/scoring";
 
 type Step = "primary" | "followup-1" | "followup-2";
@@ -14,11 +13,6 @@ export default function StartPage() {
   const [step, setStep] = useState<Step>("primary");
   const [score, setScore] = useState<VectorScore>(INITIAL_SCORE);
   const [primary, setPrimary] = useState<AxisKey | null>(null);
-
-  const selectedOption = useMemo(
-    () => primaryOptions.find((o) => o.id === primary) ?? null,
-    [primary]
-  );
 
   const handlePrimary = (axis: AxisKey) => {
     setPrimary(axis);
@@ -35,12 +29,10 @@ export default function StartPage() {
       return;
     }
 
-    const finalScore = applyDelta(updatedScore, {});
-
     const params = new URLSearchParams({
-      s: String(finalScore.structuration),
-      c: String(finalScore.comprehension),
-      v: String(finalScore.valorisation),
+      s: String(updatedScore.structuration),
+      c: String(updatedScore.comprehension),
+      v: String(updatedScore.valorisation),
       primary: primary ?? "",
     });
 
@@ -48,76 +40,70 @@ export default function StartPage() {
   };
 
   return (
-    <main className="min-h-screen px-6 py-12 md:px-12 flex items-center justify-center">
-      <div className="mx-auto w-full max-w-5xl space-y-10">
+    <main className="min-h-screen flex items-center justify-center px-6 py-12 md:px-12">
 
-        <Signature />
+      <div className="w-full max-w-5xl space-y-12">
+
+        {/* SIGNATURE */}
+        <div className="flex flex-col items-center">
+          <Signature />
+          <div className="mt-4 h-px w-12 bg-black/10" />
+        </div>
 
         {step === "primary" && (
-          <section className="space-y-10 text-center">
+          <section className="text-center space-y-10">
 
-            {/* TITRE */}
-            <h1 className="font-serif text-3xl leading-tight md:text-5xl">
+            <h1 className="font-serif text-3xl md:text-5xl leading-tight">
               Dans quel rôle êtes-vous réellement le plus utile ?
             </h1>
 
-            {/* SOUS-TEXTE */}
-            <p className="mx-auto max-w-xl text-sm text-black/60 md:text-base">
-              Une lecture rapide pour identifier le type de rôle dans lequel votre manière de réfléchir et d’agir crée le plus de valeur.
+            <p className="mx-auto max-w-xl text-sm md:text-base text-black/60">
+              Identifiez le type de rôle dans lequel votre manière de penser et d’agir crée le plus de valeur.
             </p>
 
             {/* CARTES */}
-            <div className="grid gap-5 md:grid-cols-3 text-left">
+            <div className="grid gap-6 md:grid-cols-3">
 
-              {/* STRUCTURATION */}
-              <button
-                onClick={() => handlePrimary("structuration")}
-                className="surface p-6 transition-all duration-300 hover:-translate-y-1 hover:border-black/20"
-              >
-                <h2 className="font-serif text-xl">Structurer</h2>
-                <p className="mt-2 text-sm text-black/60">
-                  Organiser, clarifier, construire des systèmes.
-                </p>
-              </button>
-
-              {/* COMPRÉHENSION */}
-              <button
-                onClick={() => handlePrimary("comprehension")}
-                className="surface p-6 transition-all duration-300 hover:-translate-y-1 hover:border-black/20"
-              >
-                <h2 className="font-serif text-xl">Comprendre</h2>
-                <p className="mt-2 text-sm text-black/60">
-                  Analyser, interpréter, donner du sens.
-                </p>
-              </button>
-
-              {/* VALORISATION */}
-              <button
-                onClick={() => handlePrimary("valorisation")}
-                className="surface p-6 transition-all duration-300 hover:-translate-y-1 hover:border-black/20"
-              >
-                <h2 className="font-serif text-xl">Valoriser</h2>
-                <p className="mt-2 text-sm text-black/60">
-                  Améliorer l’impact, la perception et la présentation.
-                </p>
-              </button>
+              {[
+                {
+                  id: "structuration",
+                  title: "Structurer",
+                  desc: "Organiser, clarifier, construire.",
+                },
+                {
+                  id: "comprehension",
+                  title: "Comprendre",
+                  desc: "Analyser, interpréter, donner du sens.",
+                },
+                {
+                  id: "valorisation",
+                  title: "Valoriser",
+                  desc: "Améliorer l’impact et la perception.",
+                },
+              ].map((card) => (
+                <button
+                  key={card.id}
+                  onClick={() => handlePrimary(card.id as AxisKey)}
+                  className="group rounded-[20px] border border-black/5 bg-white/70 backdrop-blur-sm p-6 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                >
+                  <h2 className="font-serif text-xl">{card.title}</h2>
+                  <p className="mt-3 text-sm text-black/60">{card.desc}</p>
+                </button>
+              ))}
 
             </div>
+
           </section>
         )}
 
-        {selectedOption && step !== "primary" && (
+        {step !== "primary" && (
           <QuestionCard
-            prompt={
-              selectedOption.followUps[
-                step === "followup-1" ? 0 : 1
-              ].prompt
-            }
-            answers={
-              selectedOption.followUps[
-                step === "followup-1" ? 0 : 1
-              ].answers
-            }
+            prompt="Face à une situation complexe, votre premier réflexe est :"
+            answers={[
+              { label: "Structurer et organiser", delta: { structuration: 2 } },
+              { label: "Analyser et comprendre", delta: { comprehension: 2 } },
+              { label: "Améliorer et valoriser", delta: { valorisation: 2 } },
+            ]}
             onSelect={handleFollowUp}
           />
         )}
