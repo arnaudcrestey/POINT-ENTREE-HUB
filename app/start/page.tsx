@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { QuestionCard } from "@/components/question-card";
 import { Signature } from "@/components/signature";
@@ -60,12 +60,14 @@ export default function StartPage() {
         {step === "primary" && (
           <section className="text-center space-y-10">
 
-            <h1 className="font-serif text-3xl md:text-5xl leading-tight">
-              Dans quel rôle êtes-vous réellement le plus utile ?
+            <h1 className="font-serif text-[32px] md:text-[52px] leading-tight">
+              Quel type de rôle êtes-vous capable d’assumer ?
             </h1>
 
-            <p className="mx-auto max-w-xl text-sm md:text-base text-black/60">
-              Identifiez le type de rôle dans lequel votre manière de penser et d’agir crée le plus de valeur.
+            <p className="mx-auto max-w-xl text-[15px] md:text-[16px] text-black/60 leading-7">
+              Trois logiques d’action différentes. Trois manières d’intervenir.
+              <br className="hidden md:block" />
+              Identifiez celle dans laquelle vous êtes réellement solide.
             </p>
 
             <div className="grid gap-6 md:grid-cols-3">
@@ -75,8 +77,8 @@ export default function StartPage() {
                 className="group rounded-[20px] border border-black/5 bg-white/70 backdrop-blur-sm p-6 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
               >
                 <h2 className="font-serif text-xl">Structurer</h2>
-                <p className="mt-3 text-sm text-black/60">
-                  Organiser, clarifier, construire.
+                <p className="mt-3 text-sm text-black/60 leading-6">
+                  Mettre en place, organiser, construire un cadre solide.
                 </p>
               </button>
 
@@ -85,8 +87,8 @@ export default function StartPage() {
                 className="group rounded-[20px] border border-black/5 bg-white/70 backdrop-blur-sm p-6 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
               >
                 <h2 className="font-serif text-xl">Comprendre</h2>
-                <p className="mt-3 text-sm text-black/60">
-                  Analyser, interpréter, donner du sens.
+                <p className="mt-3 text-sm text-black/60 leading-6">
+                  Analyser, interpréter, apporter une lecture claire.
                 </p>
               </button>
 
@@ -95,8 +97,8 @@ export default function StartPage() {
                 className="group rounded-[20px] border border-black/5 bg-white/70 backdrop-blur-sm p-6 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
               >
                 <h2 className="font-serif text-xl">Valoriser</h2>
-                <p className="mt-3 text-sm text-black/60">
-                  Améliorer l’impact et la perception.
+                <p className="mt-3 text-sm text-black/60 leading-6">
+                  Améliorer l’impact, rendre visible et attractif.
                 </p>
               </button>
 
@@ -107,21 +109,21 @@ export default function StartPage() {
         {/* ÉTAPE 2 */}
         {step === "followup-1" && (
           <QuestionCard
-            prompt="Face à une situation complexe, votre premier réflexe est :"
+            prompt="Face à une situation à gérer, votre premier réflexe est :"
             answers={[
               {
                 id: "structurer",
-                label: "Structurer et organiser",
+                label: "Poser un cadre et organiser",
                 delta: { structuration: 2 },
               },
               {
                 id: "comprendre",
-                label: "Analyser et comprendre",
+                label: "Analyser avant d’agir",
                 delta: { comprehension: 2 },
               },
               {
                 id: "valoriser",
-                label: "Améliorer et valoriser",
+                label: "Améliorer ce qui est visible",
                 delta: { valorisation: 2 },
               },
             ]}
@@ -132,21 +134,21 @@ export default function StartPage() {
         {/* ÉTAPE 3 */}
         {step === "followup-2" && (
           <QuestionCard
-            prompt="Ce qui vous correspond le plus :"
+            prompt="Dans un projet, vous êtes le plus à l’aise pour :"
             answers={[
               {
                 id: "systeme",
-                label: "Créer une structure efficace",
+                label: "Construire une structure efficace",
                 delta: { structuration: 2 },
               },
               {
                 id: "analyse",
-                label: "Apporter une lecture claire",
+                label: "Apporter une compréhension fine",
                 delta: { comprehension: 2 },
               },
               {
                 id: "impact",
-                label: "Améliorer la perception",
+                label: "Rendre le résultat plus impactant",
                 delta: { valorisation: 2 },
               },
             ]}
