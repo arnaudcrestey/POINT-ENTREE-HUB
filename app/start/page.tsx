@@ -4,12 +4,19 @@ import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { QuestionCard } from "@/components/question-card";
 import { Signature } from "@/components/signature";
-import { INITIAL_SCORE, applyDelta, type Answer, type AxisKey, type VectorScore } from "@/lib/scoring";
+import {
+  INITIAL_SCORE,
+  applyDelta,
+  type Answer,
+  type AxisKey,
+  type VectorScore,
+} from "@/lib/scoring";
 
 type Step = "primary" | "followup-1" | "followup-2";
 
 export default function StartPage() {
   const router = useRouter();
+
   const [step, setStep] = useState<Step>("primary");
   const [score, setScore] = useState<VectorScore>(INITIAL_SCORE);
   const [primary, setPrimary] = useState<AxisKey | null>(null);
@@ -41,7 +48,6 @@ export default function StartPage() {
 
   return (
     <main className="min-h-screen flex items-center justify-center px-6 py-12 md:px-12">
-
       <div className="w-full max-w-5xl space-y-12">
 
         {/* SIGNATURE */}
@@ -50,6 +56,7 @@ export default function StartPage() {
           <div className="mt-4 h-px w-12 bg-black/10" />
         </div>
 
+        {/* ÉTAPE 1 */}
         {step === "primary" && (
           <section className="text-center space-y-10">
 
@@ -61,48 +68,87 @@ export default function StartPage() {
               Identifiez le type de rôle dans lequel votre manière de penser et d’agir crée le plus de valeur.
             </p>
 
-            {/* CARTES */}
             <div className="grid gap-6 md:grid-cols-3">
 
-              {[
-                {
-                  id: "structuration",
-                  title: "Structurer",
-                  desc: "Organiser, clarifier, construire.",
-                },
-                {
-                  id: "comprehension",
-                  title: "Comprendre",
-                  desc: "Analyser, interpréter, donner du sens.",
-                },
-                {
-                  id: "valorisation",
-                  title: "Valoriser",
-                  desc: "Améliorer l’impact et la perception.",
-                },
-              ].map((card) => (
-                <button
-                  key={card.id}
-                  onClick={() => handlePrimary(card.id as AxisKey)}
-                  className="group rounded-[20px] border border-black/5 bg-white/70 backdrop-blur-sm p-6 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
-                >
-                  <h2 className="font-serif text-xl">{card.title}</h2>
-                  <p className="mt-3 text-sm text-black/60">{card.desc}</p>
-                </button>
-              ))}
+              <button
+                onClick={() => handlePrimary("structuration")}
+                className="group rounded-[20px] border border-black/5 bg-white/70 backdrop-blur-sm p-6 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+              >
+                <h2 className="font-serif text-xl">Structurer</h2>
+                <p className="mt-3 text-sm text-black/60">
+                  Organiser, clarifier, construire.
+                </p>
+              </button>
+
+              <button
+                onClick={() => handlePrimary("comprehension")}
+                className="group rounded-[20px] border border-black/5 bg-white/70 backdrop-blur-sm p-6 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+              >
+                <h2 className="font-serif text-xl">Comprendre</h2>
+                <p className="mt-3 text-sm text-black/60">
+                  Analyser, interpréter, donner du sens.
+                </p>
+              </button>
+
+              <button
+                onClick={() => handlePrimary("valorisation")}
+                className="group rounded-[20px] border border-black/5 bg-white/70 backdrop-blur-sm p-6 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+              >
+                <h2 className="font-serif text-xl">Valoriser</h2>
+                <p className="mt-3 text-sm text-black/60">
+                  Améliorer l’impact et la perception.
+                </p>
+              </button>
 
             </div>
-
           </section>
         )}
 
-        {step !== "primary" && (
+        {/* ÉTAPE 2 */}
+        {step === "followup-1" && (
           <QuestionCard
             prompt="Face à une situation complexe, votre premier réflexe est :"
             answers={[
-              { label: "Structurer et organiser", delta: { structuration: 2 } },
-              { label: "Analyser et comprendre", delta: { comprehension: 2 } },
-              { label: "Améliorer et valoriser", delta: { valorisation: 2 } },
+              {
+                id: "structurer",
+                label: "Structurer et organiser",
+                delta: { structuration: 2 },
+              },
+              {
+                id: "comprendre",
+                label: "Analyser et comprendre",
+                delta: { comprehension: 2 },
+              },
+              {
+                id: "valoriser",
+                label: "Améliorer et valoriser",
+                delta: { valorisation: 2 },
+              },
+            ]}
+            onSelect={handleFollowUp}
+          />
+        )}
+
+        {/* ÉTAPE 3 */}
+        {step === "followup-2" && (
+          <QuestionCard
+            prompt="Ce qui vous correspond le plus :"
+            answers={[
+              {
+                id: "systeme",
+                label: "Créer une structure efficace",
+                delta: { structuration: 2 },
+              },
+              {
+                id: "analyse",
+                label: "Apporter une lecture claire",
+                delta: { comprehension: 2 },
+              },
+              {
+                id: "impact",
+                label: "Améliorer la perception",
+                delta: { valorisation: 2 },
+              },
             ]}
             onSelect={handleFollowUp}
           />
