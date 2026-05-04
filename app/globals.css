@@ -2,20 +2,62 @@
 @tailwind components;
 @tailwind utilities;
 
+/* =========================
+   ROOT
+========================= */
+
 :root {
   color-scheme: light;
 }
 
+/* =========================
+   BODY (MATIÈRE PREMIUM)
+========================= */
+
 body {
-  @apply bg-shell text-ink antialiased;
+  @apply text-ink antialiased;
+
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255,255,255,0.9), transparent 35%),
+    radial-gradient(circle at 10% 20%, rgba(255,255,255,0.6), transparent 30%),
+    linear-gradient(135deg, #f5efe6 0%, #e9dfcf 50%, #ddd2bf 100%);
 }
+
+/* =========================
+   SURFACES (CARTES / BLOCS)
+========================= */
 
 .surface {
-  @apply rounded-2xl border border-black/5 bg-white/90 shadow-premium shadow-innerSoft;
+  @apply rounded-[20px] border border-black/5;
+
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(6px);
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.04),
+    inset 0 1px 0 rgba(255,255,255,0.6);
 }
 
-.grid-background {
-  background-image: linear-gradient(to right, rgba(0,0,0,0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0,0,0,0.03) 1px, transparent 1px);
-  background-size: 24px 24px;
+/* =========================
+   SHADOW PREMIUM
+========================= */
+
+.shadow-premium {
+  box-shadow:
+    0 20px 60px rgba(0,0,0,0.08);
 }
+
+/* =========================
+   TEXTE FIN (OPTIONNEL)
+========================= */
+
+.text-muted {
+  color: rgba(0,0,0,0.55);
+}
+
+/* =========================
+   SUPPRESSION GRID
+========================= */
+
+/* SUPPRIMÉ VOLONTAIREMENT */
+/* .grid-background => à ne plus utiliser */
