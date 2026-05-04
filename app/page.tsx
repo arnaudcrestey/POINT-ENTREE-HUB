@@ -3,7 +3,7 @@ import { Signature } from "@/components/signature";
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen grid-background px-6 py-12 md:px-12 flex items-center justify-center">
+    <main className="min-h-screen grid-background flex items-center justify-center px-6 py-12 md:px-12">
 
       <div className="w-full max-w-6xl">
 
@@ -13,22 +13,22 @@ export default function HomePage() {
           <div className="flex items-center justify-between mb-10">
             <Signature />
             <div className="text-[11px] tracking-[0.2em] text-black/40 uppercase">
-              Système en développement
+              Lecture professionnelle
             </div>
           </div>
 
           {/* TITRE */}
           <h1 className="font-serif text-[34px] leading-[1.2] md:text-[56px] max-w-4xl">
-            Certaines personnes sont capables de faire tourner ce système.
+            Quel type de rôle êtes-vous réellement capable d’assumer ?
           </h1>
 
           {/* TEXTE */}
           <div className="mt-6 max-w-2xl text-[15px] leading-7 text-black/60 md:text-[16px] space-y-2">
             <p>
-              Structurer une activité, analyser une situation ou valoriser un produit demande des profils très différents.
+              Structurer, analyser ou produire demandent des logiques très différentes.
             </p>
             <p>
-              En quelques questions, identifiez le type de rôle que vous pouvez réellement prendre dans cet écosystème.
+              En quelques questions, identifiez votre position naturelle et la manière dont vous pouvez réellement intervenir dans un système existant.
             </p>
           </div>
 
@@ -38,12 +38,12 @@ export default function HomePage() {
               href="/start"
               className="inline-flex items-center justify-center rounded-full bg-black px-8 py-4 text-sm text-white transition-all duration-300 hover:scale-[1.02] hover:bg-neutral-900"
             >
-              Accéder au positionnement
+              Accéder à la lecture
               <span className="ml-2">→</span>
             </Link>
 
             <div className="text-[13px] text-black/40">
-              2 minutes · lecture directe · sans inscription
+              2 minutes · sans inscription
             </div>
           </div>
 
@@ -53,21 +53,21 @@ export default function HomePage() {
             <div className="rounded-[20px] border border-black/5 bg-white/70 p-6">
               <h3 className="font-medium text-[16px] mb-2">Position claire</h3>
               <p className="text-[14px] text-black/50 leading-6">
-                Identifiez rapidement le rôle dans lequel vous êtes réellement pertinent.
+                Une lecture directe du rôle dans lequel vous êtes réellement pertinent.
               </p>
             </div>
 
             <div className="rounded-[20px] border border-black/5 bg-white/70 p-6">
-              <h3 className="font-medium text-[16px] mb-2">Projection concrète</h3>
+              <h3 className="font-medium text-[16px] mb-2">Projection</h3>
               <p className="text-[14px] text-black/50 leading-6">
-                Visualisez comment vous pouvez intervenir dans un système existant.
+                Une vision concrète du type de responsabilités que vous pouvez assumer.
               </p>
             </div>
 
             <div className="rounded-[20px] border border-black/5 bg-white/70 p-6">
-              <h3 className="font-medium text-[16px] mb-2">Orientation directe</h3>
+              <h3 className="font-medium text-[16px] mb-2">Orientation</h3>
               <p className="text-[14px] text-black/50 leading-6">
-                Accédez à l’entité correspondant à votre position.
+                Une direction claire vers un cadre structuré correspondant à votre profil.
               </p>
             </div>
 
