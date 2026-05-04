@@ -1,82 +1,162 @@
-import Link from "next/link";
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { QuestionCard } from "@/components/question-card";
 import { Signature } from "@/components/signature";
+import {
+  INITIAL_SCORE,
+  applyDelta,
+  type Answer,
+  type AxisKey,
+  type VectorScore,
+} from "@/lib/scoring";
 
-export default function HomePage() {
+type Step = "primary" | "followup-1" | "followup-2";
+
+export default function StartPage() {
+  const router = useRouter();
+
+  const [step, setStep] = useState<Step>("primary");
+  const [score, setScore] = useState<VectorScore>(INITIAL_SCORE);
+  const [primary, setPrimary] = useState<AxisKey | null>(null);
+
+  const handlePrimary = (axis: AxisKey) => {
+    setPrimary(axis);
+    setScore((prev) => applyDelta(prev, { [axis]: 3 }));
+    setStep("followup-1");
+  };
+
+  const handleFollowUp = (answer: Answer) => {
+    const updatedScore = applyDelta(score, answer.delta);
+
+    if (step === "followup-1") {
+      setScore(updatedScore);
+      setStep("followup-2");
+      return;
+    }
+
+    const params = new URLSearchParams({
+      s: String(updatedScore.structuration),
+      c: String(updatedScore.comprehension),
+      v: String(updatedScore.valorisation),
+      primary: primary ?? "",
+    });
+
+    router.push(`/result?${params.toString()}`);
+  };
+
   return (
-    <main className="min-h-screen grid-background flex items-center justify-center px-6 py-12 md:px-12">
+    <main className="min-h-screen flex items-center justify-center px-6 py-12 md:px-12">
+      <div className="w-full max-w-5xl space-y-12">
 
-      <div className="w-full max-w-6xl">
+        {/* SIGNATURE */}
+        <div className="flex flex-col items-center">
+          <Signature />
+          <div className="mt-4 h-px w-12 bg-black/10" />
+        </div>
 
-        <section className="relative rounded-[32px] border border-black/5 bg-[linear-gradient(180deg,#ffffff_0%,#f5efe6_100%)] px-8 py-12 md:px-16 md:py-16 shadow-[0_30px_80px_rgba(0,0,0,0.08)]">
+        {/* ÉTAPE 1 */}
+        {step === "primary" && (
+          <section className="text-center space-y-10">
 
-          {/* HEADER */}
-          <div className="flex items-center justify-between mb-10">
-            <Signature />
-            <div className="text-[11px] tracking-[0.2em] text-black/40 uppercase">
-              Lecture professionnelle
-            </div>
-          </div>
+            <h1 className="font-serif text-[32px] md:text-[52px] leading-tight">
+              Quel type de rôle êtes-vous capable d’assumer ?
+            </h1>
 
-          {/* TITRE */}
-          <h1 className="font-serif text-[34px] leading-[1.2] md:text-[56px] max-w-4xl">
-            Quel type de rôle êtes-vous réellement capable d’assumer ?
-          </h1>
-
-          {/* TEXTE */}
-          <div className="mt-6 max-w-2xl text-[15px] leading-7 text-black/60 md:text-[16px] space-y-2">
-            <p>
-              Structurer, analyser ou produire demandent des logiques très différentes.
+            <p className="mx-auto max-w-xl text-[15px] md:text-[16px] text-black/60 leading-7">
+              Trois logiques d’action différentes. Trois manières d’intervenir.
+              <br className="hidden md:block" />
+              Identifiez celle dans laquelle vous êtes réellement solide.
             </p>
-            <p>
-              En quelques questions, identifiez votre position naturelle et la manière dont vous pouvez réellement intervenir dans un système existant.
-            </p>
-          </div>
 
-          {/* CTA */}
-          <div className="mt-10 flex items-center gap-6">
-            <Link
-              href="/start"
-              className="inline-flex items-center justify-center rounded-full bg-black px-8 py-4 text-sm text-white transition-all duration-300 hover:scale-[1.02] hover:bg-neutral-900"
-            >
-              Accéder à la lecture
-              <span className="ml-2">→</span>
-            </Link>
+            <div className="grid gap-6 md:grid-cols-3">
 
-            <div className="text-[13px] text-black/40">
-              2 minutes · sans inscription
+              <button
+                onClick={() => handlePrimary("structuration")}
+                className="group rounded-[20px] border border-black/5 bg-white/70 backdrop-blur-sm p-6 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+              >
+                <h2 className="font-serif text-xl">Structurer</h2>
+                <p className="mt-3 text-sm text-black/60 leading-6">
+                  Mettre en place, organiser, construire un cadre solide.
+                </p>
+              </button>
+
+              <button
+                onClick={() => handlePrimary("comprehension")}
+                className="group rounded-[20px] border border-black/5 bg-white/70 backdrop-blur-sm p-6 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+              >
+                <h2 className="font-serif text-xl">Comprendre</h2>
+                <p className="mt-3 text-sm text-black/60 leading-6">
+                  Analyser, interpréter, apporter une lecture claire.
+                </p>
+              </button>
+
+              <button
+                onClick={() => handlePrimary("valorisation")}
+                className="group rounded-[20px] border border-black/5 bg-white/70 backdrop-blur-sm p-6 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+              >
+                <h2 className="font-serif text-xl">Valoriser</h2>
+                <p className="mt-3 text-sm text-black/60 leading-6">
+                  Améliorer l’impact, rendre visible et attractif.
+                </p>
+              </button>
+
             </div>
-          </div>
+          </section>
+        )}
 
-          {/* BLOCS */}
-          <div className="mt-14 grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* ÉTAPE 2 */}
+        {step === "followup-1" && (
+          <QuestionCard
+            prompt="Face à une situation à gérer, votre premier réflexe est :"
+            answers={[
+              {
+                id: "structurer",
+                label: "Poser un cadre et organiser",
+                delta: { structuration: 2 },
+              },
+              {
+                id: "comprendre",
+                label: "Analyser avant d’agir",
+                delta: { comprehension: 2 },
+              },
+              {
+                id: "valoriser",
+                label: "Améliorer ce qui est visible",
+                delta: { valorisation: 2 },
+              },
+            ]}
+            onSelect={handleFollowUp}
+          />
+        )}
 
-            <div className="rounded-[20px] border border-black/5 bg-white/70 p-6">
-              <h3 className="font-medium text-[16px] mb-2">Position claire</h3>
-              <p className="text-[14px] text-black/50 leading-6">
-                Une lecture directe du rôle dans lequel vous êtes réellement pertinent.
-              </p>
-            </div>
-
-            <div className="rounded-[20px] border border-black/5 bg-white/70 p-6">
-              <h3 className="font-medium text-[16px] mb-2">Projection</h3>
-              <p className="text-[14px] text-black/50 leading-6">
-                Une vision concrète du type de responsabilités que vous pouvez assumer.
-              </p>
-            </div>
-
-            <div className="rounded-[20px] border border-black/5 bg-white/70 p-6">
-              <h3 className="font-medium text-[16px] mb-2">Orientation</h3>
-              <p className="text-[14px] text-black/50 leading-6">
-                Une direction claire vers un cadre structuré correspondant à votre profil.
-              </p>
-            </div>
-
-          </div>
-
-        </section>
+        {/* ÉTAPE 3 */}
+        {step === "followup-2" && (
+          <QuestionCard
+            prompt="Dans un projet, vous êtes le plus à l’aise pour :"
+            answers={[
+              {
+                id: "systeme",
+                label: "Construire une structure efficace",
+                delta: { structuration: 2 },
+              },
+              {
+                id: "analyse",
+                label: "Apporter une compréhension fine",
+                delta: { comprehension: 2 },
+              },
+              {
+                id: "impact",
+                label: "Rendre le résultat plus impactant",
+                delta: { valorisation: 2 },
+              },
+            ]}
+            onSelect={handleFollowUp}
+          />
+        )}
 
       </div>
-
     </main>
   );
 }
