@@ -10,13 +10,13 @@ export default function HomePage() {
           <div className="pointer-events-none absolute bottom-0 left-0 h-64 w-64 -translate-x-1/3 translate-y-1/3 rounded-full bg-[#c8a46b]/14 blur-3xl" />
 
           {/* HEADER */}
-          <div className="relative mb-14 flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
-            <Signature />
+          <div className="relative mb-14 flex flex-col items-center gap-4 text-center sm:flex-row sm:items-start sm:justify-between sm:text-left">
+  <Signature />
 
-            <div className="w-fit rounded-full border border-[#d8c7ad] bg-white/60 px-4 py-2 text-[10px] uppercase tracking-[0.2em] text-[#8b6d43] shadow-[0_12px_35px_rgba(139,109,67,0.08)]">
-              Lecture de positionnement
-            </div>
-          </div>
+  <div className="w-fit rounded-full border border-[#d8c7ad] bg-white/60 px-4 py-2 text-[10px] uppercase tracking-[0.2em] text-[#8b6d43] shadow-[0_12px_35px_rgba(139,109,67,0.08)]">
+    Lecture de positionnement
+  </div>
+</div>
 
           {/* CONTENU */}
           <div className="relative max-w-4xl">
