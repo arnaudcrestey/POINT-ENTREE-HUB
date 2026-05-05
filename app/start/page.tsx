@@ -63,7 +63,7 @@ export default function StartPage() {
             <Signature />
 
             <div className="w-fit rounded-full border border-[#d8c7ad] bg-white/55 px-4 py-2 text-[10px] uppercase tracking-[0.2em] text-[#8b6d43]">
-              Lecture professionnelle
+              Lecture de positionnement
             </div>
           </div>
 
