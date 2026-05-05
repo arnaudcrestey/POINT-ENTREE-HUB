@@ -360,7 +360,7 @@ export function ResultExperience({
                   }`}
                 >
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/35 via-transparent to-transparent" />
-                  <VectorRadar score={normalizedScore} color={meta.color} />
+                  <VectorRadar axis={dominant} color={meta.color} />
                 </div>
               </div>
             </section>
