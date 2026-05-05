@@ -1,5 +1,20 @@
 import { NextResponse } from "next/server";
 
+function extractJSON(text: string) {
+  try {
+    return JSON.parse(text);
+  } catch {
+    const match = text.match(/\{[\s\S]*\}/);
+    if (!match) return null;
+
+    try {
+      return JSON.parse(match[0]);
+    } catch {
+      return null;
+    }
+  }
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -21,13 +36,17 @@ Scores :
 
 Axe dominant : ${dominant}
 
-Réponds en JSON STRICT :
+IMPORTANT :
+Réponds UNIQUEMENT avec un JSON valide.
+Aucun texte avant ou après.
+
+Format attendu :
 
 {
-  "lecture": "...",
-  "projection": "...",
-  "attention": ["...", "..."],
-  "suite": ["...", "..."]
+  "lecture": "analyse claire et directe",
+  "projection": "rôle concret et réaliste",
+  "attention": ["point critique", "point à surveiller"],
+  "suite": ["action concrète", "prochaine étape"]
 }
 `;
 
@@ -39,31 +58,31 @@ Réponds en JSON STRICT :
       },
       body: JSON.stringify({
         model: "gpt-4o-mini",
-        response_format: { type: "json_object" },
         messages: [
           {
             role: "system",
             content:
-              "Tu es un expert en positionnement professionnel. Réponse concrète, structurée, sans marketing.",
+              "Tu es un expert en positionnement professionnel. Tu réponds uniquement en JSON valide, sans texte autour.",
           },
           {
             role: "user",
             content: prompt,
           },
         ],
-        temperature: 0.5,
+        temperature: 0.4,
       }),
     });
 
-    // 🔴 gestion erreur API
     if (!openaiRes.ok) {
       const err = await openaiRes.text();
-      console.error("OPENAI ERROR:", err);
+      console.error("❌ OPENAI ERROR:", err);
 
-      throw new Error("OpenAI failed");
+      throw new Error("OpenAI request failed");
     }
 
     const data = await openaiRes.json();
+
+    console.log("✅ RAW OPENAI:", JSON.stringify(data, null, 2));
 
     const content = data.choices?.[0]?.message?.content;
 
@@ -71,33 +90,25 @@ Réponds en JSON STRICT :
       throw new Error("No content from OpenAI");
     }
 
-    // 🟢 PARSE SÉCURISÉ
-    let parsed;
+    // 🔥 EXTRACTION ROBUSTE
+    const parsed = extractJSON(content);
 
-    try {
-      parsed = JSON.parse(content);
-    } catch (e) {
-      console.error("JSON ERROR:", content);
+    if (!parsed) {
+      console.error("❌ PARSE IMPOSSIBLE:", content);
 
-      // 👉 fallback intelligent (pas moche)
       return NextResponse.json({
         lecture:
-          "Votre profil montre une orientation exploitable malgré une analyse partielle.",
+          "Votre profil présente une cohérence globale malgré une analyse partielle.",
         projection:
-          "Une implication progressive dans cet axe permettrait de confirmer votre positionnement.",
-        attention: [
-          "Analyse technique partiellement indisponible",
-        ],
-        suite: [
-          "Approfondir ce positionnement",
-          "Valider par mise en situation",
-        ],
+          "Une orientation progressive permettrait de confirmer ce positionnement.",
+        attention: ["Analyse IA non structurée"],
+        suite: ["Approfondir le positionnement", "Tester en situation réelle"],
       });
     }
 
     return NextResponse.json(parsed);
   } catch (error) {
-    console.error("GLOBAL ERROR:", error);
+    console.error("❌ GLOBAL ERROR:", error);
 
     return NextResponse.json({
       lecture:
