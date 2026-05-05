@@ -50,18 +50,27 @@ Réponds STRICTEMENT en JSON :
 
     const data = await response.json();
 
-    console.log("RAW:", data);
+    console.log("RAW FULL:", JSON.stringify(data, null, 2));
 
-    // 🔥 FIX ICI
-    const text =
-      data.output_text ||
-      data.output?.[0]?.content?.[0]?.text ||
-      data.choices?.[0]?.message?.content;
+    // ✅ EXTRACTION ROBUSTE
+    let text = "";
 
-    console.log("TEXT:", text);
+    if (data.output && Array.isArray(data.output)) {
+      for (const item of data.output) {
+        if (item.content) {
+          for (const content of item.content) {
+            if (content.type === "output_text") {
+              text += content.text;
+            }
+          }
+        }
+      }
+    }
+
+    console.log("TEXT EXTRACTED:", text);
 
     if (!text) {
-      throw new Error("No text returned");
+      throw new Error("No text returned from OpenAI");
     }
 
     let parsed;
