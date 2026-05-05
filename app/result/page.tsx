@@ -196,9 +196,9 @@ export default function ResultPage({
                           className="h-2 rounded-full"
                           style={{
                             width: `${Math.min(
-                              100,
-                              Math.max(0, norm[axis])
-                            )}%`,
+  100,
+  Math.max(0, norm[axis] * 100)
+)}%`,
                             backgroundColor: meta.color,
                           }}
                         />
