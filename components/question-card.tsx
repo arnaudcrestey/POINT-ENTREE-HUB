@@ -11,8 +11,8 @@ export function QuestionCard({ prompt, detail, answers, onSelect }: QuestionCard
   return (
     <section className="surface p-6 md:p-8">
       <h2 className="font-serif text-2xl md:text-3xl leading-tight">
-        {prompt.replace(/:/g, "\u00A0:")}
-      </h2>
+  {prompt.replace(/ ([^ ]*:)$/, "\u00A0$1")}
+</h2>
 
       {detail ? <p className="mt-3 text-sm text-black/65">{detail}</p> : null}
 
