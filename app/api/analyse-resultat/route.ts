@@ -11,41 +11,7 @@ export async function POST(req: Request) {
       valorisation,
     } = body;
 
-    const response = await fetch("https://api.openai.com/v1/responses", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: "gpt-4.1-mini",
-
-        // 🔥 ON FORCE LE FORMAT JSON
-        response_format: {
-          type: "json_schema",
-          json_schema: {
-            name: "analysis",
-            schema: {
-              type: "object",
-              properties: {
-                lecture: { type: "string" },
-                projection: { type: "string" },
-                attention: {
-                  type: "array",
-                  items: { type: "string" },
-                },
-                suite: {
-                  type: "array",
-                  items: { type: "string" },
-                },
-              },
-              required: ["lecture", "projection", "attention", "suite"],
-              additionalProperties: false,
-            },
-          },
-        },
-
-        input: `
+    const prompt = `
 Analyse ce profil professionnel.
 
 Structuration : ${structuration}
@@ -54,39 +20,77 @@ Valorisation : ${valorisation}
 
 Axe dominant : ${dominant}
 
-Ton :
-- sobre
-- crédible
-- niveau cabinet
-- pas de marketing
+IMPORTANT :
+Réponds uniquement en JSON valide, sans texte autour.
 
-Objectif :
-- lecture claire
-- projection concrète
-- utile pour un rôle réel
-`,
+Format attendu :
+{
+  "lecture": "...",
+  "projection": "...",
+  "attention": ["...", "..."],
+  "suite": ["...", "..."]
+}
+`;
+
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini", // 🔥 fiable
+        temperature: 0.4,
+        messages: [
+          {
+            role: "system",
+            content:
+              "Tu es un consultant stratégique. Tu réponds uniquement en JSON valide.",
+          },
+          {
+            role: "user",
+            content: prompt,
+          },
+        ],
       }),
     });
 
     if (!response.ok) {
       const err = await response.text();
-      console.error("❌ OPENAI ERROR:", err);
+      console.error("OPENAI ERROR:", err);
       throw new Error("OpenAI failed");
     }
 
     const data = await response.json();
 
-    console.log("FULL:", JSON.stringify(data, null, 2));
+    const content = data.choices?.[0]?.message?.content;
 
-    // 🔥 ICI : plus de parsing manuel
-    const result = data.output?.[0]?.content?.[0]?.json;
-
-    if (!result) {
-      throw new Error("No JSON returned");
+    if (!content) {
+      throw new Error("No content returned");
     }
 
-    return NextResponse.json(result);
+    // 🔥 nettoyage si jamais le modèle triche
+    const clean = content
+      .replace(/```json/g, "")
+      .replace(/```/g, "")
+      .trim();
 
+    let parsed;
+
+    try {
+      parsed = JSON.parse(clean);
+    } catch (e) {
+      console.error("PARSE ERROR:", clean);
+
+      return NextResponse.json({
+        lecture: "Analyse indisponible pour le moment.",
+        projection: "Le positionnement reste exploitable.",
+        attention: ["Réponse IA non exploitable"],
+        suite: ["Réessayer dans quelques instants"],
+      });
+    }
+
+    return NextResponse.json(parsed);
   } catch (error) {
     console.error("GLOBAL ERROR:", error);
 
