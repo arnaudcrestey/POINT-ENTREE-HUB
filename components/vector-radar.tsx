@@ -27,7 +27,7 @@ function polarToCartesian(
 }
 
 export function VectorRadar({ score, color }: VectorRadarProps) {
-  const center = 140;
+  const center = 155;
   const radius = 88;
 
   // IMPORTANT :
