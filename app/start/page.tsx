@@ -53,25 +53,38 @@ export default function StartPage() {
     setPrimary(axis);
     setQuestions(selectedQuestions);
     setCurrentIndex(0);
-    setScore(applyDelta(INITIAL_SCORE, { [axis]: 3 }));
+
+    setScore({
+      ...INITIAL_SCORE,
+      [axis]: 100,
+    });
+
     setStep("followup");
   };
 
   const handleFollowUp = (answer: Answer) => {
+    if (!primary) return;
+
     const updatedScore = applyDelta(score, answer.delta);
+
+    const lockedScore: VectorScore = {
+      ...updatedScore,
+      [primary]: Math.max(updatedScore[primary], 100),
+    };
+
     const nextIndex = currentIndex + 1;
 
     if (nextIndex < questions.length) {
-      setScore(updatedScore);
+      setScore(lockedScore);
       setCurrentIndex(nextIndex);
       return;
     }
 
     const params = new URLSearchParams({
-      s: String(updatedScore.structuration),
-      c: String(updatedScore.comprehension),
-      v: String(updatedScore.valorisation),
-      primary: primary ?? "",
+      s: String(lockedScore.structuration),
+      c: String(lockedScore.comprehension),
+      v: String(lockedScore.valorisation),
+      axis: primary,
     });
 
     router.push(`/result?${params.toString()}`);
