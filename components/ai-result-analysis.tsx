@@ -20,6 +20,27 @@ type Props = {
   isDark: boolean;
 };
 
+function normalizeAnalysis(data: any): AiAnalysis | null {
+  if (!data || typeof data !== "object") return null;
+
+  return {
+    lecture:
+      typeof data.lecture === "string"
+        ? data.lecture
+        : "L’analyse personnalisée n’a pas pu être générée correctement pour le moment.",
+    projection:
+      typeof data.projection === "string"
+        ? data.projection
+        : "Votre résultat indique néanmoins une orientation exploitable dans l’écosystème.",
+    attention: Array.isArray(data.attention)
+      ? data.attention
+      : ["Vérifier la cohérence entre le résultat et votre situation réelle."],
+    suite: Array.isArray(data.suite)
+      ? data.suite
+      : ["Transmettre quelques éléments de contexte pour affiner la lecture."],
+  };
+}
+
 export function AiResultAnalysis({
   dominant,
   entity,
@@ -33,7 +54,9 @@ export function AiResultAnalysis({
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function loadAnalysis() {
+    let active = true;
+
+    async function load() {
       try {
         const response = await fetch("/api/analyse-resultat", {
           method: "POST",
@@ -48,15 +71,26 @@ export function AiResultAnalysis({
         });
 
         const data = await response.json();
-        setAnalysis(data);
+
+        if (!active) return;
+
+        if (!response.ok || data.error) {
+          setAnalysis(null);
+        } else {
+          setAnalysis(normalizeAnalysis(data));
+        }
       } catch {
-        setAnalysis(null);
+        if (active) setAnalysis(null);
       } finally {
-        setLoading(false);
+        if (active) setLoading(false);
       }
     }
 
-    loadAnalysis();
+    load();
+
+    return () => {
+      active = false;
+    };
   }, [dominant, entity, structuration, comprehension, valorisation]);
 
   if (loading) {
@@ -67,19 +101,36 @@ export function AiResultAnalysis({
         }`}
       >
         <p className="text-xs uppercase tracking-[0.28em] opacity-50">
-          Analyse en cours
+          Analyse personnalisée
         </p>
-        <h2 className="mt-3 font-serif text-3xl">
-          Lecture personnalisée de votre profil…
-        </h2>
+        <h2 className="mt-3 font-serif text-3xl">Lecture en cours…</h2>
         <p className="mt-5 text-sm leading-7 opacity-70">
-          Votre résultat est en train d’être interprété à partir des trois axes.
+          Votre résultat est en cours d’interprétation.
         </p>
       </section>
     );
   }
 
-  if (!analysis) return null;
+  if (!analysis) {
+    return (
+      <section
+        className={`rounded-[32px] border p-6 md:p-8 ${
+          isDark ? "border-white/10 bg-white/10" : "border-black/5 bg-white/85"
+        }`}
+      >
+        <p className="text-xs uppercase tracking-[0.28em] opacity-50">
+          Analyse personnalisée
+        </p>
+        <h2 className="mt-3 font-serif text-3xl">
+          Analyse indisponible pour le moment
+        </h2>
+        <p className="mt-5 text-sm leading-7 opacity-70">
+          Le résultat reste exploitable. Vous pouvez transmettre votre situation
+          via le formulaire ci-dessous pour recevoir une lecture personnalisée.
+        </p>
+      </section>
+    );
+  }
 
   return (
     <>
@@ -102,9 +153,7 @@ export function AiResultAnalysis({
       <div className="grid gap-6 md:grid-cols-2">
         <section
           className={`rounded-[28px] border p-6 md:p-8 ${
-            isDark
-              ? "border-white/10 bg-white/10"
-              : "border-black/5 bg-white/85"
+            isDark ? "border-white/10 bg-white/10" : "border-black/5 bg-white/85"
           }`}
         >
           <p className="text-xs uppercase tracking-[0.28em] opacity-50">
@@ -120,9 +169,7 @@ export function AiResultAnalysis({
 
         <section
           className={`rounded-[28px] border p-6 md:p-8 ${
-            isDark
-              ? "border-white/10 bg-white/10"
-              : "border-black/5 bg-white/85"
+            isDark ? "border-white/10 bg-white/10" : "border-black/5 bg-white/85"
           }`}
         >
           <p className="text-xs uppercase tracking-[0.28em] opacity-50">
@@ -134,8 +181,8 @@ export function AiResultAnalysis({
           </h2>
 
           <ul className="mt-5 space-y-3 text-sm leading-6 opacity-75">
-            {analysis.attention.map((item) => (
-              <li key={item} className="flex gap-3">
+            {analysis.attention.map((item, index) => (
+              <li key={`${item}-${index}`} className="flex gap-3">
                 <span style={{ color }}>•</span>
                 <span>{item}</span>
               </li>
@@ -159,7 +206,7 @@ export function AiResultAnalysis({
 
         <div className="mt-5 space-y-3 text-sm leading-6">
           {analysis.suite.map((item, index) => (
-            <div key={item} className="flex gap-3">
+            <div key={`${item}-${index}`} className="flex gap-3">
               <span
                 className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs text-white"
                 style={{ backgroundColor: color }}
@@ -173,4 +220,5 @@ export function AiResultAnalysis({
       </section>
     </>
   );
+}
 }
