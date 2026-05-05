@@ -9,11 +9,11 @@ type AnalysisResult = {
 
 const fallback: AnalysisResult = {
   lecture:
-    "Analyse indisponible pour le moment. Le résultat reste néanmoins exploitable.",
+    "Votre résultat reste exploitable, mais l’analyse personnalisée n’a pas pu être générée pour le moment.",
   projection:
-    "Votre positionnement suggère une orientation possible dans l’écosystème.",
-  attention: ["Réponse IA non exploitable"],
-  suite: ["Réessayer dans quelques instants"],
+    "Votre positionnement indique une orientation possible dans l’écosystème, à préciser par une lecture plus fine.",
+  attention: ["Vérifier la cohérence entre le score et votre situation réelle."],
+  suite: ["Transmettre votre situation pour recevoir une lecture personnalisée."],
 };
 
 export async function POST(req: Request) {
@@ -25,13 +25,18 @@ export async function POST(req: Request) {
     const prompt = `
 Tu analyses un résultat de positionnement professionnel.
 
+IMPORTANT :
+Tu t’adresses directement à la personne.
+Tu dois utiliser uniquement "vous", "votre", "vos".
+Tu ne dois jamais écrire : "la personne", "cette personne", "le profil", "l’utilisateur", "le candidat".
+
 Ce dispositif n'est pas un quiz.
-C'est un point d'entrée destiné à orienter un profil vers un rôle réel.
+C'est un point d'entrée premium destiné à orienter un profil LinkedIn vers une place possible dans un écosystème professionnel.
 
 Écosystème :
-- Structuration : SYSTIA
-- Compréhension : Cabinet Astraé
-- Valorisation : QLYK
+- Structuration : SYSTIA — clarifier, organiser, cadrer, construire des systèmes numériques et opérationnels.
+- Compréhension : Cabinet Astraé — analyser une situation, lire les signaux faibles, éclairer une décision ou une trajectoire.
+- Valorisation : QLYK — améliorer la perception, renforcer l’impact visuel, présenter une offre, un produit ou un contenu avec plus de force.
 
 Scores :
 - Structuration : ${structuration}
@@ -41,25 +46,29 @@ Scores :
 Axe dominant : ${dominant}
 
 Règles :
-- ton sobre, professionnel
+- ton sobre, professionnel, niveau cabinet
 - pas de marketing
 - pas de flatterie
 - pas de phrases génériques
-- parler de potentiel et de rôle concret
+- parler de potentiel, pas de vérité absolue
+- relier clairement l’analyse à un rôle possible dans SYSTIA, Cabinet Astraé ou QLYK
+- écrire en phrases naturelles et directement affichables
 
-Structure :
+Structure attendue :
 
 lecture :
-Décrire ce que la personne fait naturellement + une limite
+2 à 4 phrases en "vous".
+Décrire ce que vous semblez faire naturellement, ce que cela produit concrètement, puis une limite possible.
 
 projection :
-Expliquer où elle peut être utile dans l’écosystème
+2 à 4 phrases en "vous".
+Expliquer où vous pourriez être utile dans l’écosystème, avec une valeur concrète.
 
 attention :
-2 points concrets
+2 points concrets en "vous".
 
 suite :
-2 actions concrètes
+2 actions concrètes en "vous".
 
 Réponds uniquement en JSON valide :
 
@@ -71,33 +80,30 @@ Réponds uniquement en JSON valide :
 }
 `;
 
-    const response = await fetch(
-      "https://api.openai.com/v1/chat/completions",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-        },
-        body: JSON.stringify({
-          model: "gpt-4o-mini",
-          temperature: 0.35,
-          max_tokens: 350,
-          response_format: { type: "json_object" },
-          messages: [
-            {
-              role: "system",
-              content:
-                "Tu es un consultant senior. Tu réponds uniquement en JSON valide.",
-            },
-            {
-              role: "user",
-              content: prompt,
-            },
-          ],
-        }),
-      }
-    );
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        temperature: 0.25,
+        max_tokens: 420,
+        response_format: { type: "json_object" },
+        messages: [
+          {
+            role: "system",
+            content:
+              "Tu es un consultant senior en positionnement professionnel. Tu t’adresses toujours directement à la personne avec vous/votre/vos. Tu réponds uniquement en JSON valide.",
+          },
+          {
+            role: "user",
+            content: prompt,
+          },
+        ],
+      }),
+    });
 
     if (!response.ok) {
       console.error(await response.text());
@@ -111,15 +117,12 @@ Réponds uniquement en JSON valide :
       return NextResponse.json(fallback);
     }
 
-    let parsed: AnalysisResult;
-
     try {
-      parsed = JSON.parse(content);
+      const parsed = JSON.parse(content) as AnalysisResult;
+      return NextResponse.json(parsed);
     } catch {
       return NextResponse.json(fallback);
     }
-
-    return NextResponse.json(parsed);
   } catch (e) {
     console.error(e);
     return NextResponse.json(fallback);
