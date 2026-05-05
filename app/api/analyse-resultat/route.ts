@@ -1,89 +1,84 @@
 import { NextResponse } from "next/server";
 
-export async function POST(request: Request) {
+export async function POST(req: Request) {
   try {
-    const body = await request.json();
+    const body = await req.json();
 
-    const {
-      dominant,
-      entity,
-      structuration,
-      comprehension,
-      valorisation,
-    } = body;
+    const { dominant, entity, structuration, comprehension, valorisation } = body;
 
-    if (!process.env.OPENAI_API_KEY) {
-      return NextResponse.json(
-        { error: "Clé OpenAI manquante." },
-        { status: 500 }
-      );
+    if (!dominant) {
+      return NextResponse.json({ error: "Missing data" }, { status: 400 });
     }
 
     const prompt = `
-Tu es un analyste professionnel pour arnaudcrestey.com.
+Tu es un consultant en structuration professionnelle.
 
-Contexte :
-Ce dispositif n'est pas un quiz psychologique.
-C'est un point d'entrée professionnel destiné à orienter des profils LinkedIn vers un rôle potentiel dans l'écosystème :
-- Structuration : SYSTIA
-- Compréhension : Cabinet Astraé
-- Valorisation : QLYK
+Analyse un profil basé sur ces scores :
+- Structuration: ${structuration}
+- Compréhension: ${comprehension}
+- Valorisation: ${valorisation}
+- Axe dominant: ${dominant}
+- Entité associée: ${entity}
 
-Résultat :
-- Axe dominant : ${dominant}
-- Entité orientée : ${entity}
-- Score structuration : ${structuration}
-- Score compréhension : ${comprehension}
-- Score valorisation : ${valorisation}
+Ta réponse DOIT être un JSON strict, sans texte autour :
 
-Rédige une analyse courte, premium, sobre, humaine et professionnelle.
+{
+  "lecture": "...",
+  "projection": "...",
+  "attention": ["...", "..."],
+  "suite": ["...", "..."]
+}
 
-Format strict :
-1. "lecture" : 5 à 7 lignes, analyse fine du profil.
-2. "projection" : 3 à 4 lignes, rôle possible dans l'écosystème.
-3. "attention" : 3 points de vigilance.
-4. "suite" : 3 prochaines étapes pour vérifier la compatibilité.
-
-Ne parle jamais de test psychologique.
-Ne fais pas de flatterie excessive.
-Ne sois pas commercial.
-Réponds uniquement en JSON valide.
+Contraintes :
+- Ton professionnel, sobre
+- Pas de psychologie floue
+- Utile et exploitable
 `;
 
-    const response = await fetch("https://api.openai.com/v1/responses", {
+    const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: "gpt-4.1-mini",
-        input: prompt,
+        model: "gpt-4o-mini",
+        messages: [{ role: "user", content: prompt }],
+        temperature: 0.7,
       }),
     });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      return NextResponse.json(
-        { error: "Erreur OpenAI", details: errorText },
-        { status: 500 }
-      );
+    const data = await openaiRes.json();
+
+    const content = data?.choices?.[0]?.message?.content;
+
+    if (!content) {
+      throw new Error("No content from OpenAI");
     }
 
-    const data = await response.json();
+    let parsed;
 
-    const text =
-      data.output_text ||
-      data.output?.[0]?.content?.[0]?.text ||
-      "";
-
-    const parsed = JSON.parse(text);
+    try {
+      parsed = JSON.parse(content);
+    } catch {
+      // fallback si JSON cassé
+      return NextResponse.json({
+        lecture: content,
+        projection: "Projection non structurée disponible.",
+        attention: ["Vérifier la cohérence du résultat."],
+        suite: ["Compléter votre situation pour affiner."],
+      });
+    }
 
     return NextResponse.json(parsed);
   } catch (error) {
-    return NextResponse.json(
-      { error: "Erreur génération analyse." },
-      { status: 500 }
-    );
+    console.error("AI ERROR:", error);
+
+    return NextResponse.json({
+      lecture: "Analyse indisponible pour le moment.",
+      projection: "Votre positionnement reste exploitable.",
+      attention: ["Une erreur technique est survenue."],
+      suite: ["Vous pouvez transmettre votre situation pour affiner."],
+    });
   }
 }
