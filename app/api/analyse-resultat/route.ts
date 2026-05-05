@@ -20,7 +20,7 @@ Valorisation : ${valorisation}
 
 Axe dominant : ${dominant}
 
-Réponds STRICTEMENT en JSON avec ce format :
+Réponds STRICTEMENT en JSON :
 
 {
   "lecture": "...",
@@ -43,17 +43,22 @@ Réponds STRICTEMENT en JSON avec ce format :
     });
 
     if (!response.ok) {
-      const error = await response.text();
-      console.error("OPENAI ERROR:", error);
-
-      throw new Error("OpenAI request failed");
+      const err = await response.text();
+      console.error("❌ OPENAI ERROR:", err);
+      throw new Error("OpenAI failed");
     }
 
     const data = await response.json();
 
     console.log("RAW:", data);
 
-    const text = data.output?.[0]?.content?.[0]?.text;
+    // 🔥 FIX ICI
+    const text =
+      data.output_text ||
+      data.output?.[0]?.content?.[0]?.text ||
+      data.choices?.[0]?.message?.content;
+
+    console.log("TEXT:", text);
 
     if (!text) {
       throw new Error("No text returned");
