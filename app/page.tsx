@@ -10,71 +10,53 @@ export default function HomePage() {
           <div className="pointer-events-none absolute bottom-0 left-0 h-64 w-64 -translate-x-1/3 translate-y-1/3 rounded-full bg-[#c8a46b]/14 blur-3xl" />
 
           {/* HEADER */}
-          <div className="relative mb-10 flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+          <div className="relative mb-12 flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
             <Signature />
 
             <div className="w-fit rounded-full border border-[#d8c7ad] bg-white/55 px-4 py-2 text-[10px] uppercase tracking-[0.2em] text-[#8b6d43]">
-              Lecture professionnelle
+              Lecture de positionnement
             </div>
           </div>
 
-          {/* TITRE */}
-          <h1 className="relative max-w-4xl font-serif text-[35px] leading-[1.08] tracking-[-0.02em] text-[#14110d] sm:text-[46px] md:text-[56px]">
-            Quel type de rôle êtes-vous réellement capable d’assumer ?
-          </h1>
+          {/* CONTENU */}
+          <div className="relative max-w-4xl">
+            <div className="mb-5 text-[11px] uppercase tracking-[0.28em] text-black/35">
+              Orientation professionnelle
+            </div>
 
-          {/* TEXTE */}
-          <div className="relative mt-6 max-w-2xl space-y-3 text-[16px] leading-8 text-black/60 md:text-[17px]">
-            <p>
-              Structurer, analyser ou produire demandent des logiques très différentes.
+            <h1 className="font-serif text-[42px] leading-[1.02] tracking-[-0.035em] text-[#14110d] sm:text-[54px] md:text-[70px]">
+              Où êtes-vous réellement utile ?
+            </h1>
+
+            <div className="mt-7 max-w-2xl space-y-3 text-[16px] leading-8 text-black/60 md:text-[18px]">
+              <p>
+                Trois manières d’intervenir. Une seule correspond réellement à
+                votre façon d’agir.
+              </p>
+              <p>
+                Identifiez votre position naturelle en quelques questions, sans
+                inscription.
+              </p>
+            </div>
+
+            <p className="mt-7 max-w-xl text-[14px] leading-7 text-black/45">
+              Pas un test. Une lecture courte pour comprendre dans quel rôle
+              vous pouvez réellement apporter de la valeur.
             </p>
-            <p>
-              En quelques questions, identifiez votre position naturelle et la manière dont vous pouvez réellement intervenir dans un système existant.
-            </p>
-          </div>
 
-          {/* CTA */}
-          <div className="relative mt-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
-            <Link
-              href="/start"
-              className="inline-flex w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#315f8c_0%,#223f60_100%)] px-8 py-4 text-sm font-medium text-white shadow-[0_18px_45px_rgba(49,95,140,0.28)] transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_22px_55px_rgba(49,95,140,0.34)] sm:w-auto"
-            >
-              Accéder à la lecture
-              <span className="ml-2">→</span>
-            </Link>
+            {/* CTA */}
+            <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
+              <Link
+                href="/start"
+                className="inline-flex w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#315f8c_0%,#223f60_100%)] px-8 py-4 text-sm font-medium text-white shadow-[0_18px_45px_rgba(49,95,140,0.28)] transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_22px_55px_rgba(49,95,140,0.34)] sm:w-auto"
+              >
+                Se positionner
+                <span className="ml-2">→</span>
+              </Link>
 
-            <div className="text-center text-[13px] leading-6 text-black/40 sm:text-left">
-              2 minutes · sans inscription
-            </div>
-          </div>
-
-          {/* BLOCS */}
-          <div className="relative mt-14 grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6">
-            <div className="rounded-[20px] border border-black/5 bg-white/70 p-6 shadow-[0_14px_40px_rgba(0,0,0,0.04)]">
-              <h3 className="mb-2 text-[16px] font-medium text-[#14110d]">
-                Position claire
-              </h3>
-              <p className="text-[14px] leading-6 text-black/50">
-                Une lecture directe du rôle dans lequel vous êtes réellement pertinent.
-              </p>
-            </div>
-
-            <div className="rounded-[20px] border border-black/5 bg-white/70 p-6 shadow-[0_14px_40px_rgba(0,0,0,0.04)]">
-              <h3 className="mb-2 text-[16px] font-medium text-[#14110d]">
-                Projection
-              </h3>
-              <p className="text-[14px] leading-6 text-black/50">
-                Une vision concrète du type de responsabilités que vous pouvez assumer.
-              </p>
-            </div>
-
-            <div className="rounded-[20px] border border-black/5 bg-white/70 p-6 shadow-[0_14px_40px_rgba(0,0,0,0.04)]">
-              <h3 className="mb-2 text-[16px] font-medium text-[#14110d]">
-                Orientation
-              </h3>
-              <p className="text-[14px] leading-6 text-black/50">
-                Une direction claire vers un cadre structuré correspondant à votre profil.
-              </p>
+              <div className="text-center text-[13px] leading-6 text-black/40 sm:text-left">
+                2 minutes · sans inscription
+              </div>
             </div>
           </div>
         </section>
