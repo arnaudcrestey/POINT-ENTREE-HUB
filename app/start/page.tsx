@@ -70,9 +70,9 @@ export default function StartPage() {
           {/* ÉTAPE 1 */}
           {step === "primary" && (
             <section>
-              <h1 className="relative max-w-4xl font-serif text-[36px] leading-[1.08] tracking-[-0.02em] text-[#14110d] sm:text-[48px] md:text-[60px]">
-                Quel type de rôle êtes-vous réellement en capacité d’assumer ?
-              </h1>
+              <h1 className="relative max-w-4xl font-serif text-[34px] leading-[1.12] tracking-[-0.02em] text-[#14110d] sm:text-[48px] md:text-[60px]">
+  Quel type de rôle êtes-vous réellement en capacité d’assumer&nbsp;?
+</h1>
 
               <div className="relative mt-6 max-w-2xl space-y-3 text-[16px] leading-8 text-black/60 md:text-[17px]">
                 <p>
