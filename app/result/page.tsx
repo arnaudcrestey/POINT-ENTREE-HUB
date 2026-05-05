@@ -29,7 +29,8 @@ const axisMeta: Record<
     entity: "SYSTIA",
     gradient: "from-[#f7f9ff] via-[#edf3ff] to-[#f6efe6]",
     color: "#315f8c",
-    promise: "Vous êtes naturellement orienté vers la mise en ordre, la clarification et la construction de systèmes fiables.",
+    promise:
+      "Vous êtes naturellement orienté vers la mise en ordre, la clarification et la construction de systèmes fiables.",
     reading:
       "Votre résultat indique une capacité à repérer ce qui manque de cadre, ce qui se disperse et ce qui doit être transformé en méthode. Ce profil est précieux dans un environnement où les idées existent déjà, mais doivent être organisées pour devenir réellement opérationnelles.",
     roleProjection:
@@ -51,7 +52,8 @@ const axisMeta: Record<
     entity: "Cabinet Astraé",
     gradient: "from-[#fff7f5] via-[#f8eee8] to-[#eef3ff]",
     color: "#b46b7d",
-    promise: "Vous êtes naturellement orienté vers l’analyse, la lecture des situations et la clarification des signaux faibles.",
+    promise:
+      "Vous êtes naturellement orienté vers l’analyse, la lecture des situations et la clarification des signaux faibles.",
     reading:
       "Votre résultat montre une capacité à comprendre ce qui se joue derrière une situation apparente. Vous semblez fonctionner par observation, nuance et discernement. Ce profil est utile lorsqu’il faut écouter, analyser, reformuler et accompagner une personne ou un contexte avec justesse.",
     roleProjection:
@@ -73,7 +75,8 @@ const axisMeta: Record<
     entity: "QLYK",
     gradient: "from-[#111827] via-[#172033] to-[#eef3ff]",
     color: "#7f8bff",
-    promise: "Vous êtes naturellement orienté vers l’impact perçu, la présentation et la valeur ressentie.",
+    promise:
+      "Vous êtes naturellement orienté vers l’impact perçu, la présentation et la valeur ressentie.",
     reading:
       "Votre résultat indique une sensibilité forte à la manière dont une chose est vue, comprise et ressentie. Vous repérez ce qui manque d’impact, ce qui affaiblit la perception et ce qui pourrait être présenté avec plus de force, de cohérence ou de désirabilité.",
     roleProjection:
@@ -92,7 +95,9 @@ const axisMeta: Record<
   },
 };
 
-function parseScore(searchParams: Record<string, string | string[] | undefined>): VectorScore {
+function parseScore(
+  searchParams: Record<string, string | string[] | undefined>
+): VectorScore {
   const parse = (value: string | string[] | undefined) =>
     Number(Array.isArray(value) ? value[0] : value) || 0;
 
@@ -113,7 +118,6 @@ export default function ResultPage({
   const hybrid = getHybridAxes(rawScore);
   const norm = normalizeScore(rawScore);
   const meta = axisMeta[dominant];
-
   const isDark = dominant === "valorisation";
 
   return (
@@ -125,9 +129,12 @@ export default function ResultPage({
       <div className="mx-auto w-full max-w-6xl space-y-8">
         <div className="flex items-center justify-between">
           <Signature />
+
           <div
             className={`rounded-full border px-4 py-2 text-[10px] uppercase tracking-[0.28em] ${
-              isDark ? "border-white/20 bg-white/10" : "border-black/10 bg-white/70"
+              isDark
+                ? "border-white/20 bg-white/10"
+                : "border-black/10 bg-white/70"
             }`}
           >
             Lecture professionnelle
@@ -136,7 +143,9 @@ export default function ResultPage({
 
         <section
           className={`overflow-hidden rounded-[32px] border p-6 shadow-[0_30px_90px_rgba(15,23,42,0.10)] backdrop-blur md:p-10 ${
-            isDark ? "border-white/10 bg-white/10" : "border-black/5 bg-white/85"
+            isDark
+              ? "border-white/10 bg-white/10"
+              : "border-black/5 bg-white/85"
           }`}
         >
           <div className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
@@ -165,20 +174,27 @@ export default function ResultPage({
               {hybrid.length > 1 && (
                 <div
                   className={`mt-6 rounded-2xl border p-4 text-sm leading-6 ${
-                    isDark ? "border-white/10 bg-white/10" : "border-black/5 bg-[#f4f7fb]"
+                    isDark
+                      ? "border-white/10 bg-white/10"
+                      : "border-black/5 bg-[#f4f7fb]"
                   }`}
                 >
                   Profil hybride détecté :{" "}
-                  <strong>{hybrid.map((axis) => axisMeta[axis].name).join(" / ")}</strong>.
-                  Cela signifie que votre profil ne se limite pas à un seul registre.
-                  L’axe dominant indique simplement le meilleur point d’entrée pour commencer.
+                  <strong>
+                    {hybrid.map((axis) => axisMeta[axis].name).join(" / ")}
+                  </strong>
+                  . Cela signifie que votre profil ne se limite pas à un seul
+                  registre. L’axe dominant indique simplement le meilleur point
+                  d’entrée pour commencer.
                 </div>
               )}
             </div>
 
             <div
               className={`rounded-[28px] border p-5 ${
-                isDark ? "border-white/10 bg-black/20" : "border-black/5 bg-[#f7f9fc]"
+                isDark
+                  ? "border-white/10 bg-black/20"
+                  : "border-black/5 bg-[#f7f9fc]"
               }`}
             >
               <VectorRadar score={norm} color={meta.color} />
@@ -186,17 +202,26 @@ export default function ResultPage({
               <div className="mt-6 space-y-3 text-sm">
                 {Object.entries(rawScore).map(([key, value]) => {
                   const axis = key as AxisKey;
+
                   return (
                     <div key={axis}>
                       <div className="mb-1 flex justify-between gap-4">
                         <span>{axisMeta[axis].name}</span>
                         <span className="opacity-60">{value}</span>
                       </div>
-                      <div className={`h-2 rounded-full ${isDark ? "bg-white/10" : "bg-black/5"}`}>
+
+                      <div
+                        className={`h-2 rounded-full ${
+                          isDark ? "bg-white/10" : "bg-black/5"
+                        }`}
+                      >
                         <div
                           className="h-2 rounded-full"
                           style={{
-                            width: `${Math.min(100, Math.max(0, norm[axis]))}%`,
+                            width: `${Math.min(
+                              100,
+                              Math.max(0, norm[axis])
+                            )}%`,
                             backgroundColor: meta.color,
                           }}
                         />
@@ -212,25 +237,36 @@ export default function ResultPage({
         <div className="grid gap-6 md:grid-cols-2">
           <section
             className={`rounded-[28px] border p-6 md:p-8 ${
-              isDark ? "border-white/10 bg-white/10" : "border-black/5 bg-white/85"
+              isDark
+                ? "border-white/10 bg-white/10"
+                : "border-black/5 bg-white/85"
             }`}
           >
             <p className="text-xs uppercase tracking-[0.28em] opacity-50">
               Projection concrète
             </p>
+
             <h2 className="mt-3 font-serif text-3xl">Votre place possible</h2>
-            <p className="mt-5 text-sm leading-7 opacity-75">{meta.roleProjection}</p>
+
+            <p className="mt-5 text-sm leading-7 opacity-75">
+              {meta.roleProjection}
+            </p>
           </section>
 
           <section
             className={`rounded-[28px] border p-6 md:p-8 ${
-              isDark ? "border-white/10 bg-white/10" : "border-black/5 bg-white/85"
+              isDark
+                ? "border-white/10 bg-white/10"
+                : "border-black/5 bg-white/85"
             }`}
           >
             <p className="text-xs uppercase tracking-[0.28em] opacity-50">
               Points d’attention
             </p>
-            <h2 className="mt-3 font-serif text-3xl">À vérifier avant d’aller plus loin</h2>
+
+            <h2 className="mt-3 font-serif text-3xl">
+              À vérifier avant d’aller plus loin
+            </h2>
 
             <ul className="mt-5 space-y-3 text-sm leading-6 opacity-75">
               {meta.attention.map((item) => (
@@ -245,7 +281,9 @@ export default function ResultPage({
 
         <section
           className={`rounded-[32px] border p-6 shadow-[0_30px_90px_rgba(15,23,42,0.10)] md:p-10 ${
-            isDark ? "border-white/10 bg-white/10" : "border-[#315f8c]/15 bg-white/90"
+            isDark
+              ? "border-white/10 bg-white/10"
+              : "border-[#315f8c]/15 bg-white/90"
           }`}
         >
           <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
@@ -259,10 +297,10 @@ export default function ResultPage({
               </h2>
 
               <p className="mt-5 text-sm leading-7 opacity-75">
-                Votre résultat donne une première orientation. Pour savoir si ce rôle
-                peut devenir une vraie piste de collaboration, il faut maintenant
-                regarder votre situation réelle, votre parcours, vos réflexes de travail
-                et votre manière d’agir.
+                Votre résultat donne une première orientation. Pour savoir si ce
+                rôle peut devenir une vraie piste de collaboration, il faut
+                maintenant regarder votre situation réelle, votre parcours, vos
+                réflexes de travail et votre manière d’agir.
               </p>
 
               <div className="mt-6 space-y-3 text-sm leading-6">
@@ -284,14 +322,28 @@ export default function ResultPage({
               action="/api/result-lead"
               method="POST"
               className={`rounded-[26px] border p-5 md:p-6 ${
-                isDark ? "border-white/10 bg-black/20" : "border-black/5 bg-[#f8fafc]"
+                isDark
+                  ? "border-white/10 bg-black/20"
+                  : "border-black/5 bg-[#f8fafc]"
               }`}
             >
               <input type="hidden" name="dominant" value={dominant} />
               <input type="hidden" name="entity" value={meta.entity} />
-              <input type="hidden" name="structuration" value={rawScore.structuration} />
-              <input type="hidden" name="comprehension" value={rawScore.comprehension} />
-              <input type="hidden" name="valorisation" value={rawScore.valorisation} />
+              <input
+                type="hidden"
+                name="structuration"
+                value={rawScore.structuration}
+              />
+              <input
+                type="hidden"
+                name="comprehension"
+                value={rawScore.comprehension}
+              />
+              <input
+                type="hidden"
+                name="valorisation"
+                value={rawScore.valorisation}
+              />
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <label className="space-y-2 text-xs">
@@ -336,7 +388,10 @@ export default function ResultPage({
               </div>
 
               <label className="mt-4 block space-y-2 text-xs">
-                <span className="opacity-70">Votre situation en quelques lignes</span>
+                <span className="opacity-70">
+                  Votre situation en quelques lignes
+                </span>
+
                 <textarea
                   required
                   name="message"
@@ -377,7 +432,7 @@ export default function ResultPage({
               isDark ? "border-white/20" : "border-black/10 bg-white/60"
             }`}
           >
-            Retour au hub
+            Retour Accueil
           </a>
         </div>
       </div>
