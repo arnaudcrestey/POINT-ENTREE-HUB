@@ -10,7 +10,7 @@ export default function HomePage() {
           <div className="pointer-events-none absolute bottom-0 left-0 h-64 w-64 -translate-x-1/3 translate-y-1/3 rounded-full bg-[#c8a46b]/14 blur-3xl" />
 
           {/* HEADER */}
-          <div className="relative mb-12 flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+          <div className="relative mb-14 flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
             <Signature />
 
             <div className="w-fit rounded-full border border-[#d8c7ad] bg-white/55 px-4 py-2 text-[10px] uppercase tracking-[0.2em] text-[#8b6d43]">
@@ -20,10 +20,6 @@ export default function HomePage() {
 
           {/* CONTENU */}
           <div className="relative max-w-4xl">
-            <div className="mb-5 text-[11px] uppercase tracking-[0.28em] text-black/35">
-              Orientation professionnelle
-            </div>
-
             <h1 className="font-serif text-[42px] leading-[1.02] tracking-[-0.035em] text-[#14110d] sm:text-[54px] md:text-[70px]">
               Où êtes-vous réellement utile ?
             </h1>
