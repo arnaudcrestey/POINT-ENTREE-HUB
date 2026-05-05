@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { Signature } from "@/components/signature";
 import { VectorRadar } from "@/components/vector-radar";
@@ -40,6 +39,12 @@ const analysisSteps = [
   "Préparation d’une projection dans l’écosystème",
 ];
 
+function toDisplayPercent(value: number) {
+  if (!Number.isFinite(value)) return 0;
+  if (value <= 1) return Math.round(value * 100);
+  return Math.round(value);
+}
+
 export function ResultExperience({
   rawScore,
   normalizedScore,
@@ -52,7 +57,7 @@ export function ResultExperience({
   const isDark = dominant === "valorisation";
 
   const dominantPercent = useMemo(() => {
-    return Math.round(normalizedScore[dominant]);
+    return toDisplayPercent(normalizedScore[dominant]);
   }, [dominant, normalizedScore]);
 
   useEffect(() => {
@@ -90,11 +95,6 @@ export function ResultExperience({
           to { opacity: 1; transform: translateY(0); filter: blur(0); }
         }
 
-        @keyframes fadeOut {
-          from { opacity: 1; transform: scale(1); filter: blur(0); }
-          to { opacity: 0; transform: scale(.985); filter: blur(12px); }
-        }
-
         @keyframes rotateRing {
           to { transform: rotate(360deg); }
         }
@@ -125,10 +125,6 @@ export function ResultExperience({
 
         .analysis-card {
           animation: revealUp .75s ease-out both;
-        }
-
-        .analysis-card-out {
-          animation: fadeOut .45s ease-in both;
         }
 
         .reveal-1 { animation: revealUp .75s ease-out both; animation-delay: .05s; }
@@ -267,6 +263,7 @@ export function ResultExperience({
                               <span className="h-1.5 w-1.5 rounded-full bg-white" />
                             )}
                           </span>
+
                           <span>
                             {step}
                             {active && (
@@ -343,8 +340,16 @@ export function ResultExperience({
                         ? hybrid.map((axis) => axisLabels[axis]).join(" / ")
                         : meta.name}
                     </p>
-                    <p>Intensité du signal dominant : {dominantPercent}%</p>
+                    <p>Signal dominant : {dominantPercent}%</p>
                   </div>
+
+                  <a
+                    href="#collaboration"
+                    className="mt-6 inline-flex rounded-full px-6 py-3 text-sm font-medium text-white shadow-[0_18px_40px_rgba(49,95,140,0.25)] transition hover:-translate-y-0.5"
+                    style={{ backgroundColor: meta.color }}
+                  >
+                    Vérifier une collaboration possible
+                  </a>
                 </div>
 
                 <div
@@ -434,6 +439,7 @@ export function ResultExperience({
             </section>
 
             <section
+              id="collaboration"
               className={`reveal-5 rounded-[34px] border p-6 shadow-[0_34px_100px_rgba(15,23,42,0.14)] md:p-10 ${
                 isDark
                   ? "border-white/10 bg-white/10"
@@ -447,14 +453,15 @@ export function ResultExperience({
                   </p>
 
                   <h2 className="mt-3 font-serif text-3xl leading-tight">
-                    Voir si ce rôle peut devenir une activité
+                    Vérifier si ce rôle peut devenir une activité
                   </h2>
 
                   <p className="mt-5 text-sm leading-7 opacity-75">
                     Si ce résultat vous parle, l’étape utile consiste à regarder
                     votre situation réelle : votre parcours, vos réflexes de
                     travail, vos supports actuels et votre capacité à intervenir
-                    concrètement.
+                    concrètement dans l’un des univers développés autour de
+                    arnaudcrestey.com.
                   </p>
 
                   <div className="mt-6 space-y-3 text-sm leading-6">
@@ -564,36 +571,16 @@ export function ResultExperience({
                     className="mt-5 w-full rounded-full px-6 py-3 text-sm font-medium text-white shadow-[0_18px_40px_rgba(49,95,140,0.25)]"
                     style={{ backgroundColor: meta.color }}
                   >
-                    Voir si ce rôle peut devenir une activité
+                    Envoyer ma situation
                   </button>
 
                   <p className="mt-3 text-center text-xs opacity-60">
-                    Analyse rapide de votre situation et de votre capacité à
+                    Lecture rapide de votre situation et de votre capacité à
                     intervenir concrètement.
                   </p>
                 </form>
               </div>
             </section>
-
-            <div className="reveal-5 flex justify-center gap-3 pb-8">
-              <Link
-                href="/start"
-                className={`rounded-full border px-5 py-2.5 text-sm ${
-                  isDark ? "border-white/20" : "border-black/10 bg-white/60"
-                }`}
-              >
-                Refaire le test
-              </Link>
-
-              <a
-                href="https://arnaudcrestey.com"
-                className={`rounded-full border px-5 py-2.5 text-sm ${
-                  isDark ? "border-white/20" : "border-black/10 bg-white/60"
-                }`}
-              >
-                Approfondir ce résultat
-              </a>
-            </div>
           </div>
         )}
       </div>
