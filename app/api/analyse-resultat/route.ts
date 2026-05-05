@@ -26,6 +26,9 @@ export async function POST(req: Request) {
       valorisation,
     } = body;
 
+    // 🔍 DEBUG CLÉ
+    console.log("👉 OPENAI KEY:", process.env.OPENAI_API_KEY);
+
     const prompt = `
 Analyse ce profil professionnel.
 
@@ -36,17 +39,13 @@ Scores :
 
 Axe dominant : ${dominant}
 
-IMPORTANT :
-Réponds UNIQUEMENT avec un JSON valide.
-Aucun texte avant ou après.
-
-Format attendu :
+Réponds uniquement en JSON :
 
 {
-  "lecture": "analyse claire et directe",
-  "projection": "rôle concret et réaliste",
-  "attention": ["point critique", "point à surveiller"],
-  "suite": ["action concrète", "prochaine étape"]
+  "lecture": "analyse claire",
+  "projection": "rôle concret",
+  "attention": ["point 1", "point 2"],
+  "suite": ["action 1", "action 2"]
 }
 `;
 
@@ -62,7 +61,7 @@ Format attendu :
           {
             role: "system",
             content:
-              "Tu es un expert en positionnement professionnel. Tu réponds uniquement en JSON valide, sans texte autour.",
+              "Tu es un expert en positionnement professionnel. Réponds uniquement en JSON valide.",
           },
           {
             role: "user",
@@ -73,36 +72,37 @@ Format attendu :
       }),
     });
 
+    // 🔴 SI ERREUR HTTP
     if (!openaiRes.ok) {
-      const err = await openaiRes.text();
-      console.error("❌ OPENAI ERROR:", err);
+      const errorText = await openaiRes.text();
+      console.error("❌ OPENAI HTTP ERROR:", errorText);
 
       throw new Error("OpenAI request failed");
     }
 
     const data = await openaiRes.json();
 
-    console.log("✅ RAW OPENAI:", JSON.stringify(data, null, 2));
+    // 🔍 DEBUG RÉPONSE
+    console.log("👉 OPENAI RAW RESPONSE:", JSON.stringify(data, null, 2));
 
     const content = data.choices?.[0]?.message?.content;
+
+    console.log("👉 CONTENT:", content);
 
     if (!content) {
       throw new Error("No content from OpenAI");
     }
 
-    // 🔥 EXTRACTION ROBUSTE
     const parsed = extractJSON(content);
 
     if (!parsed) {
-      console.error("❌ PARSE IMPOSSIBLE:", content);
+      console.error("❌ JSON PARSE FAILED:", content);
 
       return NextResponse.json({
-        lecture:
-          "Votre profil présente une cohérence globale malgré une analyse partielle.",
-        projection:
-          "Une orientation progressive permettrait de confirmer ce positionnement.",
-        attention: ["Analyse IA non structurée"],
-        suite: ["Approfondir le positionnement", "Tester en situation réelle"],
+        lecture: "Analyse indisponible pour le moment.",
+        projection: "Le positionnement reste exploitable.",
+        attention: ["Réponse IA non exploitable"],
+        suite: ["Réessayer dans quelques instants"],
       });
     }
 
@@ -111,12 +111,10 @@ Format attendu :
     console.error("❌ GLOBAL ERROR:", error);
 
     return NextResponse.json({
-      lecture:
-        "Votre profil reste lisible malgré une indisponibilité temporaire de l’analyse.",
-      projection:
-        "Une orientation peut néanmoins être envisagée sur la base des scores.",
-      attention: ["Erreur technique temporaire"],
-      suite: ["Réessayer dans quelques instants"],
+      lecture: "Analyse indisponible pour le moment.",
+      projection: "Le positionnement reste exploitable.",
+      attention: ["Erreur technique"],
+      suite: ["Réessayer plus tard"],
     });
   }
 }
