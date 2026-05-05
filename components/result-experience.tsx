@@ -332,15 +332,10 @@ export function ResultExperience({
                         : "border-black/5 bg-[#f4f7fb]"
                     }`}
                   >
-                    <p className="mb-2 font-medium">Lecture rapide</p>
-                    <p>Dominant : {meta.name}</p>
-                    <p>
-                      Profil :{" "}
-                      {hybrid.length > 1
-                        ? hybrid.map((axis) => axisLabels[axis]).join(" / ")
-                        : meta.name}
-                    </p>
-                    <p>Signal dominant : {dominantPercent}%</p>
+                   <p className="mb-2 font-medium">Lecture rapide</p>
+<p>Orientation : {meta.entity}</p>
+<p>Rôle identifié : {meta.name}</p>
+<p>Signal principal : {dominantPercent}%</p>
                   </div>
 
                   <a
