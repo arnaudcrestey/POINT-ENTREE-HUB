@@ -1,18 +1,31 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { QuestionCard } from "@/components/question-card";
 import { Signature } from "@/components/signature";
+import { primaryOptions, QUESTIONS_PER_SESSION } from "@/lib/questions";
 import {
   INITIAL_SCORE,
   applyDelta,
   type Answer,
   type AxisKey,
+  type Question,
   type VectorScore,
 } from "@/lib/scoring";
 
-type Step = "primary" | "followup-1" | "followup-2";
+type Step = "primary" | "followup";
+
+function pickRandomQuestions<T>(items: T[], count: number): T[] {
+  return [...items].sort(() => Math.random() - 0.5).slice(0, count);
+}
+
+function shuffleAnswers(question: Question): Question {
+  return {
+    ...question,
+    answers: [...question.answers].sort(() => Math.random() - 0.5),
+  };
+}
 
 export default function StartPage() {
   const router = useRouter();
@@ -20,19 +33,37 @@ export default function StartPage() {
   const [step, setStep] = useState<Step>("primary");
   const [score, setScore] = useState<VectorScore>(INITIAL_SCORE);
   const [primary, setPrimary] = useState<AxisKey | null>(null);
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const currentQuestion = useMemo(() => {
+    return questions[currentIndex];
+  }, [questions, currentIndex]);
 
   const handlePrimary = (axis: AxisKey) => {
+    const selectedOption = primaryOptions.find((option) => option.id === axis);
+
+    if (!selectedOption) return;
+
+    const selectedQuestions = pickRandomQuestions(
+      selectedOption.followUps,
+      QUESTIONS_PER_SESSION
+    ).map(shuffleAnswers);
+
     setPrimary(axis);
-    setScore((prev) => applyDelta(prev, { [axis]: 3 }));
-    setStep("followup-1");
+    setQuestions(selectedQuestions);
+    setCurrentIndex(0);
+    setScore(applyDelta(INITIAL_SCORE, { [axis]: 3 }));
+    setStep("followup");
   };
 
   const handleFollowUp = (answer: Answer) => {
     const updatedScore = applyDelta(score, answer.delta);
+    const nextIndex = currentIndex + 1;
 
-    if (step === "followup-1") {
+    if (nextIndex < questions.length) {
       setScore(updatedScore);
-      setStep("followup-2");
+      setCurrentIndex(nextIndex);
       return;
     }
 
@@ -53,12 +84,9 @@ export default function StartPage() {
     <main className="min-h-screen grid-background flex items-center justify-center px-4 py-6 sm:px-6 md:px-12 md:py-12">
       <div className="w-full max-w-6xl">
         <section className="relative overflow-hidden rounded-[28px] border border-black/5 bg-[linear-gradient(180deg,#ffffff_0%,#f5efe6_100%)] px-6 py-9 shadow-[0_30px_80px_rgba(0,0,0,0.08)] sm:px-8 sm:py-12 md:rounded-[32px] md:px-16 md:py-16">
-
-          {/* LIGHT EFFECTS */}
           <div className="pointer-events-none absolute right-0 top-0 h-64 w-64 translate-x-1/3 -translate-y-1/3 rounded-full bg-[#315f8c]/10 blur-3xl" />
           <div className="pointer-events-none absolute bottom-0 left-0 h-64 w-64 -translate-x-1/3 translate-y-1/3 rounded-full bg-[#c8a46b]/14 blur-3xl" />
 
-          {/* HEADER */}
           <div className="relative mb-14 flex flex-col items-center gap-4 text-center sm:flex-row sm:items-start sm:justify-between sm:text-left">
             <Signature />
 
@@ -67,26 +95,22 @@ export default function StartPage() {
             </div>
           </div>
 
-          {/* ÉTAPE 1 */}
           {step === "primary" && (
             <section>
               <h1 className="relative max-w-4xl font-serif text-[34px] leading-[1.12] tracking-[-0.02em] text-[#14110d] sm:text-[48px] md:text-[60px]">
-  Quel type de rôle êtes-vous réellement en capacité d’assumer&nbsp;?
-</h1>
+                Quel type de rôle êtes-vous réellement en capacité
+                d’assumer&nbsp;?
+              </h1>
 
               <div className="relative mt-6 max-w-2xl space-y-3 text-[16px] leading-8 text-black/60 md:text-[17px]">
                 <p>
-                  Trois logiques d’intervention distinctes. Une seule correspond à votre manière d’agir lorsque cela compte.
+                  Trois logiques d’intervention distinctes. Une seule correspond
+                  à votre manière d’agir lorsque cela compte.
                 </p>
-                <p>
-                  Identifiez celle dans laquelle vous êtes réellement fiable.
-                </p>
+                <p>Identifiez celle dans laquelle vous êtes réellement fiable.</p>
               </div>
 
-              {/* CARTES */}
               <div className="relative mt-14 grid grid-cols-1 gap-5 md:grid-cols-3 md:gap-6">
-
-                {/* STRUCTURER */}
                 <button
                   onClick={() => handlePrimary("structuration")}
                   className={cardClass}
@@ -98,11 +122,13 @@ export default function StartPage() {
                   </h2>
 
                   <p className="mt-3 text-[14px] leading-6 text-black/55">
-                    Mettre en place un cadre, organiser et rendre une activité réellement opérationnelle.
+                    Mettre en place un cadre, organiser et rendre une activité
+                    réellement opérationnelle.
                   </p>
 
                   <p className="mt-4 text-[13px] italic text-black/40">
-                    Vous prenez naturellement le rôle de celui qui organise et rend les choses solides.
+                    Vous prenez naturellement le rôle de celui qui organise et
+                    rend les choses solides.
                   </p>
 
                   <div className="mt-6 flex items-center justify-between border-t border-black/7 pt-4">
@@ -115,7 +141,6 @@ export default function StartPage() {
                   </div>
                 </button>
 
-                {/* COMPRENDRE */}
                 <button
                   onClick={() => handlePrimary("comprehension")}
                   className={cardClass}
@@ -127,11 +152,13 @@ export default function StartPage() {
                   </h2>
 
                   <p className="mt-3 text-[14px] leading-6 text-black/55">
-                    Analyser une situation, en comprendre les mécanismes et apporter une lecture exploitable.
+                    Analyser une situation, en comprendre les mécanismes et
+                    apporter une lecture exploitable.
                   </p>
 
                   <p className="mt-4 text-[13px] italic text-black/40">
-                    Vous cherchez à comprendre avant d’agir, pour éviter les erreurs de lecture.
+                    Vous cherchez à comprendre avant d’agir, pour éviter les
+                    erreurs de lecture.
                   </p>
 
                   <div className="mt-6 flex items-center justify-between border-t border-black/7 pt-4">
@@ -144,7 +171,6 @@ export default function StartPage() {
                   </div>
                 </button>
 
-                {/* VALORISER */}
                 <button
                   onClick={() => handlePrimary("valorisation")}
                   className={cardClass}
@@ -156,11 +182,13 @@ export default function StartPage() {
                   </h2>
 
                   <p className="mt-3 text-[14px] leading-6 text-black/55">
-                    Améliorer la perception, renforcer l’impact et rendre une offre réellement visible.
+                    Améliorer la perception, renforcer l’impact et rendre une
+                    offre réellement visible.
                   </p>
 
                   <p className="mt-4 text-[13px] italic text-black/40">
-                    Vous voyez immédiatement comment améliorer l’impact et la perception.
+                    Vous voyez immédiatement comment améliorer l’impact et la
+                    perception.
                   </p>
 
                   <div className="mt-6 flex items-center justify-between border-t border-black/7 pt-4">
@@ -172,65 +200,23 @@ export default function StartPage() {
                     </span>
                   </div>
                 </button>
-
               </div>
             </section>
           )}
 
-          {/* ÉTAPE 2 */}
-          {step === "followup-1" && (
+          {step === "followup" && currentQuestion && (
             <div className="relative">
+              <div className="mb-5 text-center text-[10px] uppercase tracking-[0.22em] text-[#8b6d43]">
+                Question {currentIndex + 1} / {questions.length}
+              </div>
+
               <QuestionCard
-                prompt="Face à une situation à gérer, votre premier réflexe est :"
-                answers={[
-                  {
-                    id: "structurer",
-                    label: "Poser un cadre et organiser",
-                    delta: { structuration: 2 },
-                  },
-                  {
-                    id: "comprendre",
-                    label: "Analyser avant d’agir",
-                    delta: { comprehension: 2 },
-                  },
-                  {
-                    id: "valoriser",
-                    label: "Améliorer ce qui est visible",
-                    delta: { valorisation: 2 },
-                  },
-                ]}
+                prompt={currentQuestion.prompt}
+                answers={currentQuestion.answers}
                 onSelect={handleFollowUp}
               />
             </div>
           )}
-
-          {/* ÉTAPE 3 */}
-          {step === "followup-2" && (
-            <div className="relative">
-              <QuestionCard
-                prompt="Dans un projet, vous êtes le plus à l’aise pour :"
-                answers={[
-                  {
-                    id: "systeme",
-                    label: "Construire une structure efficace",
-                    delta: { structuration: 2 },
-                  },
-                  {
-                    id: "analyse",
-                    label: "Apporter une compréhension fine",
-                    delta: { comprehension: 2 },
-                  },
-                  {
-                    id: "impact",
-                    label: "Rendre le résultat plus impactant",
-                    delta: { valorisation: 2 },
-                  },
-                ]}
-                onSelect={handleFollowUp}
-              />
-            </div>
-          )}
-
         </section>
       </div>
     </main>
