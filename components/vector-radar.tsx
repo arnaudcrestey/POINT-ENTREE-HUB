@@ -1,15 +1,32 @@
-import type { VectorScore } from "@/lib/scoring";
+import type { AxisKey } from "@/lib/scoring";
 
-type VectorRadarProps = {
-  score: VectorScore;
+type RoleRadarProps = {
+  axis: AxisKey;
   color: string;
 };
 
-type RadarPoint = {
-  key: keyof VectorScore;
-  angle: number;
+type RoleMetric = {
+  key: string;
   label: string;
   value: number;
+};
+
+const roleMetrics: Record<AxisKey, RoleMetric[]> = {
+  structuration: [
+    { key: "clarte", label: "Clarté", value: 1 },
+    { key: "methode", label: "Méthode", value: 0.86 },
+    { key: "fiabilite", label: "Fiabilité", value: 0.78 },
+  ],
+  comprehension: [
+    { key: "discernement", label: "Discernement", value: 1 },
+    { key: "ecoute", label: "Écoute", value: 0.84 },
+    { key: "signaux", label: "Signaux faibles", value: 0.76 },
+  ],
+  valorisation: [
+    { key: "perception", label: "Perception", value: 1 },
+    { key: "impact", label: "Impact", value: 0.86 },
+    { key: "lisibilite", label: "Lisibilité", value: 0.8 },
+  ],
 };
 
 function polarToCartesian(
@@ -26,35 +43,16 @@ function polarToCartesian(
   };
 }
 
-export function VectorRadar({ score, color }: VectorRadarProps) {
+export function VectorRadar({ axis, color }: RoleRadarProps) {
   const center = 145;
   const radius = 88;
 
-  // IMPORTANT :
-  // Ce composant reçoit un score normalisé entre 0 et 1.
-  // Exemple : 1 = axe dominant, 0.75 = 75%, 0.25 = 25%.
-  const maxScore = 1;
+  const metrics = roleMetrics[axis];
 
-  const points: RadarPoint[] = [
-    {
-      key: "structuration",
-      angle: -90,
-      label: "Structuration",
-      value: score.structuration,
-    },
-    {
-      key: "valorisation",
-      angle: 30,
-      label: "Valorisation",
-      value: score.valorisation,
-    },
-    {
-      key: "comprehension",
-      angle: 150,
-      label: "Compréhension",
-      value: score.comprehension,
-    },
-  ];
+  const points = metrics.map((metric, index) => ({
+    ...metric,
+    angle: [-90, 30, 150][index],
+  }));
 
   const polygonPoints = points
     .map((point) => {
@@ -62,7 +60,7 @@ export function VectorRadar({ score, color }: VectorRadarProps) {
         center,
         radius,
         point.angle,
-        point.value / maxScore
+        point.value
       );
 
       return `${position.x},${position.y}`;
@@ -78,7 +76,7 @@ export function VectorRadar({ score, color }: VectorRadarProps) {
           viewBox="0 0 280 280"
           className="h-auto w-full"
           role="img"
-          aria-label="Répartition vectorielle du profil"
+          aria-label="Radar de lecture du rôle dominant"
         >
           <defs>
             <filter id="radarGlow" x="-40%" y="-40%" width="180%" height="180%">
@@ -149,7 +147,7 @@ export function VectorRadar({ score, color }: VectorRadarProps) {
               center,
               radius,
               point.angle,
-              point.value / maxScore
+              point.value
             );
 
             return (
@@ -168,13 +166,13 @@ export function VectorRadar({ score, color }: VectorRadarProps) {
           {points.map((point) => {
             const labelPosition = polarToCartesian(
               center,
-              radius + 30,
+              radius + 32,
               point.angle,
               1
             );
 
             return (
-              <g key={point.label}>
+              <g key={point.key}>
                 <text
                   x={labelPosition.x}
                   y={labelPosition.y}
