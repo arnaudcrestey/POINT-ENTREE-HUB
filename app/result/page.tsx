@@ -175,38 +175,6 @@ export default function ResultPage({
               }`}
             >
               <VectorRadar score={norm} color={meta.color} />
-
-              <div className="mt-6 space-y-3 text-sm">
-                {Object.entries(rawScore).map(([key, value]) => {
-                  const axis = key as AxisKey;
-
-                  return (
-                    <div key={axis}>
-                      <div className="mb-1 flex justify-between gap-4">
-                        <span>{axisMeta[axis].name}</span>
-                        <span className="opacity-60">{value}</span>
-                      </div>
-
-                      <div
-                        className={`h-2 rounded-full ${
-                          isDark ? "bg-white/10" : "bg-black/5"
-                        }`}
-                      >
-                        <div
-                          className="h-2 rounded-full"
-                          style={{
-                            width: `${Math.min(
-  100,
-  Math.max(0, norm[axis] * 100)
-)}%`,
-                            backgroundColor: meta.color,
-                          }}
-                        />
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
             </div>
           </div>
         </section>
@@ -374,7 +342,7 @@ export default function ResultPage({
               isDark ? "border-white/20" : "border-black/10 bg-white/60"
             }`}
           >
-            Retour Accueil
+            Voir la suite
           </a>
         </div>
       </div>
