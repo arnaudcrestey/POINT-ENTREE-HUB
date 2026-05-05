@@ -1,20 +1,5 @@
 import { NextResponse } from "next/server";
 
-function extractJSON(text: string) {
-  try {
-    return JSON.parse(text);
-  } catch {
-    const match = text.match(/\{[\s\S]*\}/);
-    if (!match) return null;
-
-    try {
-      return JSON.parse(match[0]);
-    } catch {
-      return null;
-    }
-  }
-}
-
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -26,89 +11,72 @@ export async function POST(req: Request) {
       valorisation,
     } = body;
 
-    // 🔍 DEBUG CLÉ
-    console.log("👉 OPENAI KEY:", process.env.OPENAI_API_KEY);
-
     const prompt = `
 Analyse ce profil professionnel.
 
-Scores :
-- Structuration : ${structuration}
-- Compréhension : ${comprehension}
-- Valorisation : ${valorisation}
+Structuration : ${structuration}
+Compréhension : ${comprehension}
+Valorisation : ${valorisation}
 
 Axe dominant : ${dominant}
 
-Réponds uniquement en JSON :
+Réponds STRICTEMENT en JSON avec ce format :
 
 {
-  "lecture": "analyse claire",
-  "projection": "rôle concret",
-  "attention": ["point 1", "point 2"],
-  "suite": ["action 1", "action 2"]
+  "lecture": "...",
+  "projection": "...",
+  "attention": ["...", "..."],
+  "suite": ["...", "..."]
 }
 `;
 
-    const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
+    const response = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: [
-          {
-            role: "system",
-            content:
-              "Tu es un expert en positionnement professionnel. Réponds uniquement en JSON valide.",
-          },
-          {
-            role: "user",
-            content: prompt,
-          },
-        ],
-        temperature: 0.4,
+        model: "gpt-4.1-mini",
+        input: prompt,
       }),
     });
 
-    // 🔴 SI ERREUR HTTP
-    if (!openaiRes.ok) {
-      const errorText = await openaiRes.text();
-      console.error("❌ OPENAI HTTP ERROR:", errorText);
+    if (!response.ok) {
+      const error = await response.text();
+      console.error("OPENAI ERROR:", error);
 
       throw new Error("OpenAI request failed");
     }
 
-    const data = await openaiRes.json();
+    const data = await response.json();
 
-    // 🔍 DEBUG RÉPONSE
-    console.log("👉 OPENAI RAW RESPONSE:", JSON.stringify(data, null, 2));
+    console.log("RAW:", data);
 
-    const content = data.choices?.[0]?.message?.content;
+    const text = data.output?.[0]?.content?.[0]?.text;
 
-    console.log("👉 CONTENT:", content);
-
-    if (!content) {
-      throw new Error("No content from OpenAI");
+    if (!text) {
+      throw new Error("No text returned");
     }
 
-    const parsed = extractJSON(content);
+    let parsed;
 
-    if (!parsed) {
-      console.error("❌ JSON PARSE FAILED:", content);
+    try {
+      parsed = JSON.parse(text);
+    } catch (e) {
+      console.error("PARSE ERROR:", text);
 
       return NextResponse.json({
         lecture: "Analyse indisponible pour le moment.",
         projection: "Le positionnement reste exploitable.",
-        attention: ["Réponse IA non exploitable"],
+        attention: ["Réponse IA non structurée"],
         suite: ["Réessayer dans quelques instants"],
       });
     }
 
     return NextResponse.json(parsed);
   } catch (error) {
-    console.error("❌ GLOBAL ERROR:", error);
+    console.error("GLOBAL ERROR:", error);
 
     return NextResponse.json({
       lecture: "Analyse indisponible pour le moment.",
