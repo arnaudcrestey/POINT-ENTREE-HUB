@@ -36,6 +36,7 @@ const axisMeta: Record<
       "rendre un système plus fiable et plus lisible",
     ],
   },
+
   comprehension: {
     name: "Compréhension",
     entity: "Cabinet Astraé",
@@ -52,6 +53,7 @@ const axisMeta: Record<
       "formuler une lecture claire et utile",
     ],
   },
+
   valorisation: {
     name: "Valorisation",
     entity: "QLYK",
@@ -83,13 +85,39 @@ function parseScore(
   };
 }
 
+function getLockedAxis(
+  searchParams: Record<string, string | string[] | undefined>
+): AxisKey | null {
+  const axisParam = Array.isArray(searchParams.axis)
+    ? searchParams.axis[0]
+    : searchParams.axis;
+
+  if (
+    axisParam === "structuration" ||
+    axisParam === "comprehension" ||
+    axisParam === "valorisation"
+  ) {
+    return axisParam;
+  }
+
+  return null;
+}
+
 export default function ResultPage({
   searchParams,
 }: {
   searchParams: Record<string, string | string[] | undefined>;
 }) {
   const rawScore = parseScore(searchParams);
-  const dominant = computeDominantAxis(rawScore);
+
+  // Axe verrouillé depuis le premier choix :
+  // Structurer -> SYSTIA
+  // Comprendre -> Cabinet Astraé
+  // Valoriser -> QLYK
+  const lockedAxis = getLockedAxis(searchParams);
+
+  const dominant: AxisKey = lockedAxis ?? computeDominantAxis(rawScore);
+
   const hybrid = getHybridAxes(rawScore);
   const norm = normalizeScore(rawScore);
   const meta = axisMeta[dominant];
