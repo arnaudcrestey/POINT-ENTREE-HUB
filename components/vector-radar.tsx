@@ -20,7 +20,8 @@ const roleMetrics: Record<AxisKey, RoleMetric[]> = {
   comprehension: [
     { key: "discernement", label: "Discernement", value: 1 },
     { key: "ecoute", label: "Écoute", value: 0.84 },
-    { key: "signaux", label: "Signaux faibles", value: 0.76 },
+    { key: "clarte", label: "Clarte", value: 0.76 },
+],
   ],
   valorisation: [
     { key: "perception", label: "Perception", value: 1 },
