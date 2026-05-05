@@ -278,18 +278,18 @@ export const primaryOptions: PrimaryOption[] = [
           { id: "v7c", label: "Comprendre", delta: { comprehension: 2 } }
         ]
       },
-      {
-        id: "v8",
-        prompt: "Vous êtes reconnu pour :",
-        answers: [
-          { id: "v8a", label: "Votre sens du rendu et de l’image", delta: { valorisation: 3 } },
-          { id: "v8b", label: "Votre rigueur", delta: { structuration: 2 } },
-          { id: "v8c", label: "Votre compréhension", delta: { comprehension: 2 } }
-        ]
+  {
+  id: "v8",
+  prompt: "Quand un rendu manque d’impact, votre premier réflexe est :",
+  answers: [
+    { id: "v8a", label: "Repenser immédiatement la perception pour le rendre plus désirable", delta: { valorisation: 3 } },
+    { id: "v8b", label: "Structurer le contenu pour le rendre plus clair", delta: { structuration: 2 } },
+    { id: "v8c", label: "Analyser ce qui ne fonctionne pas", delta: { comprehension: 2 } }
+       ]
       },
       {
         id: "v9",
-        prompt: "Face à une voiture ou un produit :",
+        prompt: "Face un produit ou une offre :",
         answers: [
           { id: "v9a", label: "Vous voyez son potentiel visuel immédiatement", delta: { valorisation: 3 } },
           { id: "v9b", label: "Vous analysez", delta: { comprehension: 2 } },
