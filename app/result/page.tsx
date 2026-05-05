@@ -17,10 +17,7 @@ const axisMeta: Record<
     entity: string;
     gradient: string;
     color: string;
-    promise: string;
-    reading: string;
     priorities: string[];
-    ctaTitle: string;
   }
 > = {
   structuration: {
@@ -28,48 +25,33 @@ const axisMeta: Record<
     entity: "SYSTIA",
     gradient: "from-[#f7f9ff] via-[#edf3ff] to-[#f6efe6]",
     color: "#315f8c",
-    promise:
-      "Vous êtes naturellement orienté vers la mise en ordre, la clarification et la construction de systèmes fiables.",
-    reading:
-      "Votre résultat indique une capacité à repérer ce qui manque de cadre, ce qui se disperse et ce qui doit être transformé en méthode.",
     priorities: [
-      "Clarifier le périmètre exact du rôle.",
-      "Identifier les situations où votre sens de l’organisation crée de la valeur.",
-      "Évaluer votre capacité à piloter un système sans l’alourdir.",
+      "Clarifier le périmètre du rôle",
+      "Identifier où votre organisation crée de la valeur",
+      "Évaluer votre capacité à piloter sans complexifier",
     ],
-    ctaTitle: "Allons plus loin dans votre capacité à structurer",
   },
   comprehension: {
     name: "Compréhension",
     entity: "Cabinet Astraé",
     gradient: "from-[#fff7f5] via-[#f8eee8] to-[#eef3ff]",
     color: "#b46b7d",
-    promise:
-      "Vous êtes naturellement orienté vers l’analyse, la lecture des situations et la clarification des signaux faibles.",
-    reading:
-      "Votre résultat montre une capacité à comprendre ce qui se joue derrière une situation apparente, avec nuance et discernement.",
     priorities: [
-      "Identifier votre manière de lire une situation complexe.",
-      "Évaluer votre capacité à formuler une synthèse utile.",
-      "Voir si votre posture correspond à l’univers Cabinet Astraé.",
+      "Lire correctement une situation complexe",
+      "Formuler une synthèse utile",
+      "Valider votre posture d’analyse",
     ],
-    ctaTitle: "Approfondissons votre capacité d’analyse",
   },
   valorisation: {
     name: "Valorisation",
     entity: "QLYK",
     gradient: "from-[#111827] via-[#172033] to-[#eef3ff]",
     color: "#7f8bff",
-    promise:
-      "Vous êtes naturellement orienté vers l’impact perçu, la présentation et la valeur ressentie.",
-    reading:
-      "Votre résultat indique une sensibilité forte à la manière dont une chose est vue, comprise et ressentie.",
     priorities: [
-      "Comprendre votre rapport à la perception et à l’image.",
-      "Identifier les supports où votre œil crée immédiatement de la valeur.",
-      "Évaluer votre compatibilité avec l’univers QLYK.",
+      "Comprendre votre rapport à la perception",
+      "Identifier où votre œil crée de la valeur",
+      "Tester votre impact sur des supports concrets",
     ],
-    ctaTitle: "Explorons votre capacité à valoriser",
   },
 };
 
@@ -100,85 +82,76 @@ export default function ResultPage({
 
   return (
     <main
-      className={`min-h-screen bg-gradient-to-br ${meta.gradient} px-4 py-8 sm:px-6 md:px-12 md:py-12 ${
+      className={`min-h-screen bg-gradient-to-br ${meta.gradient} px-4 py-8 ${
         isDark ? "text-white" : "text-ink"
       }`}
     >
       <div className="mx-auto w-full max-w-6xl space-y-8">
+
+        {/* HEADER */}
         <div className="flex items-center justify-between">
           <Signature />
-
-          <div
-            className={`rounded-full border px-4 py-2 text-[10px] uppercase tracking-[0.28em] ${
-              isDark
-                ? "border-white/20 bg-white/10"
-                : "border-black/10 bg-white/70"
-            }`}
-          >
+          <div className={`rounded-full border px-4 py-2 text-[10px] uppercase tracking-[0.28em] ${
+            isDark ? "border-white/20 bg-white/10" : "border-black/10 bg-white/70"
+          }`}>
             Lecture professionnelle
           </div>
         </div>
 
-        <section
-          className={`overflow-hidden rounded-[32px] border p-6 shadow-[0_30px_90px_rgba(15,23,42,0.10)] backdrop-blur md:p-10 ${
-            isDark
-              ? "border-white/10 bg-white/10"
-              : "border-black/5 bg-white/85"
-          }`}
-        >
-          <div className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
+        {/* RESULT */}
+        <section className={`rounded-[32px] border p-6 md:p-10 ${
+          isDark ? "border-white/10 bg-white/10" : "border-black/5 bg-white/90"
+        }`}>
+          <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] items-center">
+
+            {/* TEXTE */}
             <div>
               <p className="text-xs uppercase tracking-[0.32em] opacity-60">
                 Résultat du positionnement
               </p>
 
-              <h1 className="mt-4 font-serif text-4xl leading-tight md:text-6xl">
-                Votre axe naturel : <br />
+              <h1 className="mt-4 font-serif text-4xl md:text-6xl">
+                Votre manière d’agir dominante :
+                <br />
                 <span style={{ color: meta.color }}>{meta.name}</span>
               </h1>
 
-              <p className="mt-4 text-sm opacity-70">
-                Orientation privilégiée : {meta.entity}
+              <p className="mt-6 text-lg opacity-90">
+                Vous intervenez naturellement sur la perception, la lisibilité et l’impact d’un projet.
               </p>
 
-              <p className="mt-8 max-w-3xl text-lg leading-relaxed opacity-90">
-                {meta.promise}
+              <p className="mt-3 text-sm opacity-70">
+                Votre réflexe est d’améliorer ce qui est vu, compris et ressenti.
               </p>
 
-              <p className="mt-5 max-w-3xl text-sm leading-7 opacity-75">
-                {meta.reading}
-              </p>
+              {/* Lecture rapide */}
+              <div className="mt-6 rounded-xl border border-white/10 p-4 text-sm opacity-80">
+                <p className="font-medium mb-2">Lecture rapide :</p>
+                <p>Dominant : {meta.name}</p>
+                <p>Secondaire : axe complémentaire présent</p>
+                <p>À renforcer : axe moins sollicité</p>
+              </div>
 
               {hybrid.length > 1 && (
-                <div
-                  className={`mt-6 rounded-2xl border p-4 text-sm leading-6 ${
-                    isDark
-                      ? "border-white/10 bg-white/10"
-                      : "border-black/5 bg-[#f4f7fb]"
-                  }`}
-                >
-                  Profil hybride détecté :{" "}
+                <div className="mt-4 text-sm opacity-70">
+                  Profil hybride :{" "}
                   <strong>
                     {hybrid.map((axis) => axisMeta[axis].name).join(" / ")}
                   </strong>
-                  . L’axe dominant indique simplement le meilleur point d’entrée
-                  pour commencer.
                 </div>
               )}
             </div>
 
-            <div
-              className={`rounded-[28px] border p-5 ${
-                isDark
-                  ? "border-white/10 bg-black/20"
-                  : "border-black/5 bg-[#f7f9fc]"
-              }`}
-            >
+            {/* RADAR */}
+            <div className={`rounded-[28px] border p-5 ${
+              isDark ? "border-white/10 bg-black/20" : "border-black/5 bg-[#f7f9fc]"
+            }`}>
               <VectorRadar score={norm} color={meta.color} />
             </div>
           </div>
         </section>
 
+        {/* ANALYSE IA */}
         <AiResultAnalysis
           dominant={dominant}
           entity={meta.entity}
@@ -189,160 +162,96 @@ export default function ResultPage({
           isDark={isDark}
         />
 
-        <section
-          className={`rounded-[32px] border p-6 shadow-[0_30px_90px_rgba(15,23,42,0.10)] md:p-10 ${
-            isDark
-              ? "border-white/10 bg-white/10"
-              : "border-[#315f8c]/15 bg-white/90"
-          }`}
-        >
-          <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
-            <div>
-              <p className="text-xs uppercase tracking-[0.28em] opacity-50">
-                Étape suivante
-              </p>
+        {/* PROJECTION */}
+        <section className={`rounded-[32px] border p-6 md:p-10 ${
+          isDark ? "border-white/10 bg-white/10" : "border-black/5 bg-white/90"
+        }`}>
+          <h3 className="font-serif text-2xl">
+            Rôle dans lequel vous pouvez être utile immédiatement :
+          </h3>
 
-              <h2 className="mt-3 font-serif text-4xl leading-tight">
-                {meta.ctaTitle}
-              </h2>
+          <p className="mt-3 font-medium">
+            {meta.entity} — {meta.name}
+          </p>
 
-              <p className="mt-5 text-sm leading-7 opacity-75">
-                Votre résultat donne une première orientation. Pour savoir si ce
-                rôle peut devenir une vraie piste de collaboration, il faut
-                maintenant regarder votre situation réelle, votre parcours, vos
-                réflexes de travail et votre manière d’agir.
-              </p>
+          <ul className="mt-4 space-y-2 text-sm opacity-80">
+            <li>• améliorer la perception d’une offre</li>
+            <li>• rendre un contenu plus lisible</li>
+            <li>• renforcer l’impact d’un projet</li>
+          </ul>
 
-              <div className="mt-6 space-y-3 text-sm leading-6">
-                {meta.priorities.map((item, index) => (
-                  <div key={item} className="flex gap-3">
-                    <span
-                      className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs text-white"
-                      style={{ backgroundColor: meta.color }}
-                    >
-                      {index + 1}
-                    </span>
-                    <span className="opacity-75">{item}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <form
-              action="/api/result-lead"
-              method="POST"
-              className={`rounded-[26px] border p-5 md:p-6 ${
-                isDark
-                  ? "border-white/10 bg-black/20"
-                  : "border-black/5 bg-[#f8fafc]"
-              }`}
-            >
-              <input type="hidden" name="dominant" value={dominant} />
-              <input type="hidden" name="entity" value={meta.entity} />
-              <input
-                type="hidden"
-                name="structuration"
-                value={rawScore.structuration}
-              />
-              <input
-                type="hidden"
-                name="comprehension"
-                value={rawScore.comprehension}
-              />
-              <input
-                type="hidden"
-                name="valorisation"
-                value={rawScore.valorisation}
-              />
-
-              <div className="grid gap-4 sm:grid-cols-2">
-                <label className="space-y-2 text-xs">
-                  <span className="opacity-70">Prénom</span>
-                  <input
-                    required
-                    name="firstName"
-                    placeholder="Votre prénom"
-                    className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-[#315f8c]"
-                  />
-                </label>
-
-                <label className="space-y-2 text-xs">
-                  <span className="opacity-70">Email</span>
-                  <input
-                    required
-                    type="email"
-                    name="email"
-                    placeholder="vous@exemple.com"
-                    className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-[#315f8c]"
-                  />
-                </label>
-
-                <label className="space-y-2 text-xs">
-                  <span className="opacity-70">Activité actuelle</span>
-                  <input
-                    required
-                    name="activity"
-                    placeholder="Votre métier, activité ou projet"
-                    className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-[#315f8c]"
-                  />
-                </label>
-
-                <label className="space-y-2 text-xs">
-                  <span className="opacity-70">Lien utile</span>
-                  <input
-                    name="website"
-                    placeholder="LinkedIn, site ou page principale"
-                    className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-[#315f8c]"
-                  />
-                </label>
-              </div>
-
-              <label className="mt-4 block space-y-2 text-xs">
-                <span className="opacity-70">
-                  Votre situation en quelques lignes
-                </span>
-
-                <textarea
-                  required
-                  name="message"
-                  rows={5}
-                  placeholder="Expliquez brièvement ce qui vous intéresse, votre situation actuelle, ou pourquoi ce résultat vous parle."
-                  className="w-full resize-none rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-[#315f8c]"
-                />
-              </label>
-
-              <button
-                type="submit"
-                className="mt-5 w-full rounded-full px-6 py-3 text-sm font-medium text-white shadow-[0_18px_40px_rgba(49,95,140,0.25)]"
-                style={{ backgroundColor: meta.color }}
-              >
-                Demander une lecture personnalisée
-              </button>
-
-              <p className="mt-3 text-center text-xs opacity-60">
-                Réponse directe à votre demande, sans engagement.
-              </p>
-            </form>
-          </div>
+          <p className="mt-4 text-sm opacity-70">
+            Votre valeur se situe dans la transformation de la perception.
+          </p>
         </section>
 
-        <div className="flex justify-center gap-3 pb-8">
-          <Link
-            href="/start"
-            className={`rounded-full border px-5 py-2.5 text-sm ${
-              isDark ? "border-white/20" : "border-black/10 bg-white/60"
-            }`}
+        {/* TRANSITION BUSINESS */}
+        <section className={`rounded-[32px] border p-6 md:p-10 ${
+          isDark ? "border-white/10 bg-white/10" : "border-black/5 bg-white/90"
+        }`}>
+          <h3 className="font-serif text-2xl">
+            Ce que ce positionnement peut devenir
+          </h3>
+
+          <p className="mt-4 text-sm opacity-80">
+            Ce résultat correspond à un rôle réel.
+          </p>
+
+          <p className="mt-2 text-sm opacity-70">
+            Certaines personnes utilisent cette capacité ponctuellement.
+            D’autres en font une activité structurée avec des méthodes,
+            un cadre et des supports existants.
+          </p>
+
+          <p className="mt-2 text-sm opacity-70">
+            C’est ce type d’activité qui est en train d’être développé ici.
+          </p>
+        </section>
+
+        {/* FORMULAIRE */}
+        <form
+          action="/api/result-lead"
+          method="POST"
+          className={`rounded-[28px] border p-6 ${
+            isDark ? "border-white/10 bg-black/20" : "border-black/5 bg-white"
+          }`}
+        >
+          <div className="grid gap-4 sm:grid-cols-2">
+            <input name="firstName" placeholder="Prénom" required className="input" />
+            <input name="email" placeholder="Email" required className="input" />
+            <input name="activity" placeholder="Activité" required className="input" />
+            <input name="website" placeholder="Lien utile" className="input" />
+          </div>
+
+          <textarea
+            name="message"
+            required
+            rows={4}
+            placeholder="Votre situation"
+            className="input mt-4"
+          />
+
+          <button
+            type="submit"
+            className="mt-5 w-full rounded-full py-3 text-sm text-white"
+            style={{ backgroundColor: meta.color }}
           >
-            Refaire le positionnement
+            Voir si ce rôle peut devenir une activité
+          </button>
+
+          <p className="mt-2 text-center text-xs opacity-60">
+            Analyse rapide de votre situation.
+          </p>
+        </form>
+
+        {/* FOOTER */}
+        <div className="flex justify-center gap-3">
+          <Link href="/start" className="btn">
+            Refaire le test
           </Link>
 
-          <a
-            href="https://arnaudcrestey.com"
-            className={`rounded-full border px-5 py-2.5 text-sm ${
-              isDark ? "border-white/20" : "border-black/10 bg-white/60"
-            }`}
-          >
-            Voir la suite
+          <a href="https://arnaudcrestey.com" className="btn">
+            Approfondir ce résultat
           </a>
         </div>
       </div>
