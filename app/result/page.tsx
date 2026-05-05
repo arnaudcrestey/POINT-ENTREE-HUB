@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Signature } from "@/components/signature";
 import { VectorRadar } from "@/components/vector-radar";
+import { AiResultAnalysis } from "@/components/ai-result-analysis";
 import {
   computeDominantAxis,
   getHybridAxes,
@@ -18,8 +19,6 @@ const axisMeta: Record<
     color: string;
     promise: string;
     reading: string;
-    roleProjection: string;
-    attention: string[];
     priorities: string[];
     ctaTitle: string;
   }
@@ -32,14 +31,7 @@ const axisMeta: Record<
     promise:
       "Vous êtes naturellement orienté vers la mise en ordre, la clarification et la construction de systèmes fiables.",
     reading:
-      "Votre résultat indique une capacité à repérer ce qui manque de cadre, ce qui se disperse et ce qui doit être transformé en méthode. Ce profil est précieux dans un environnement où les idées existent déjà, mais doivent être organisées pour devenir réellement opérationnelles.",
-    roleProjection:
-      "Dans l’écosystème, ce profil peut trouver sa place dans des missions de structuration d’offre, de suivi de projet, de formalisation de processus ou de pilotage opérationnel.",
-    attention: [
-      "Éviter de vouloir tout structurer avant de passer à l’action.",
-      "Garder une logique simple : priorité, méthode, exécution.",
-      "Transformer les idées en livrables concrets et transmissibles.",
-    ],
+      "Votre résultat indique une capacité à repérer ce qui manque de cadre, ce qui se disperse et ce qui doit être transformé en méthode.",
     priorities: [
       "Clarifier le périmètre exact du rôle.",
       "Identifier les situations où votre sens de l’organisation crée de la valeur.",
@@ -55,14 +47,7 @@ const axisMeta: Record<
     promise:
       "Vous êtes naturellement orienté vers l’analyse, la lecture des situations et la clarification des signaux faibles.",
     reading:
-      "Votre résultat montre une capacité à comprendre ce qui se joue derrière une situation apparente. Vous semblez fonctionner par observation, nuance et discernement. Ce profil est utile lorsqu’il faut écouter, analyser, reformuler et accompagner une personne ou un contexte avec justesse.",
-    roleProjection:
-      "Dans l’écosystème, ce profil peut s’inscrire dans des missions d’analyse de situation, d’accompagnement, de diagnostic, de reformulation ou de clarification stratégique.",
-    attention: [
-      "Ne pas rester trop longtemps dans l’analyse sans produire une orientation claire.",
-      "Savoir transformer une lecture fine en décision simple.",
-      "Préserver une posture professionnelle, sobre et non psychologisante.",
-    ],
+      "Votre résultat montre une capacité à comprendre ce qui se joue derrière une situation apparente, avec nuance et discernement.",
     priorities: [
       "Identifier votre manière de lire une situation complexe.",
       "Évaluer votre capacité à formuler une synthèse utile.",
@@ -78,14 +63,7 @@ const axisMeta: Record<
     promise:
       "Vous êtes naturellement orienté vers l’impact perçu, la présentation et la valeur ressentie.",
     reading:
-      "Votre résultat indique une sensibilité forte à la manière dont une chose est vue, comprise et ressentie. Vous repérez ce qui manque d’impact, ce qui affaiblit la perception et ce qui pourrait être présenté avec plus de force, de cohérence ou de désirabilité.",
-    roleProjection:
-      "Dans l’écosystème, ce profil peut trouver sa place dans des missions liées à l’image, à la valorisation de contenus, à la présentation commerciale, aux visuels ou à la perception premium.",
-    attention: [
-      "Ne pas confondre embellissement et valorisation stratégique.",
-      "Garder une exigence de cohérence avant l’effet visuel.",
-      "S’assurer que l’impact sert toujours un objectif clair.",
-    ],
+      "Votre résultat indique une sensibilité forte à la manière dont une chose est vue, comprise et ressentie.",
     priorities: [
       "Comprendre votre rapport à la perception et à l’image.",
       "Identifier les supports où votre œil crée immédiatement de la valeur.",
@@ -183,9 +161,8 @@ export default function ResultPage({
                   <strong>
                     {hybrid.map((axis) => axisMeta[axis].name).join(" / ")}
                   </strong>
-                  . Cela signifie que votre profil ne se limite pas à un seul
-                  registre. L’axe dominant indique simplement le meilleur point
-                  d’entrée pour commencer.
+                  . L’axe dominant indique simplement le meilleur point d’entrée
+                  pour commencer.
                 </div>
               )}
             </div>
@@ -234,50 +211,15 @@ export default function ResultPage({
           </div>
         </section>
 
-        <div className="grid gap-6 md:grid-cols-2">
-          <section
-            className={`rounded-[28px] border p-6 md:p-8 ${
-              isDark
-                ? "border-white/10 bg-white/10"
-                : "border-black/5 bg-white/85"
-            }`}
-          >
-            <p className="text-xs uppercase tracking-[0.28em] opacity-50">
-              Projection concrète
-            </p>
-
-            <h2 className="mt-3 font-serif text-3xl">Votre place possible</h2>
-
-            <p className="mt-5 text-sm leading-7 opacity-75">
-              {meta.roleProjection}
-            </p>
-          </section>
-
-          <section
-            className={`rounded-[28px] border p-6 md:p-8 ${
-              isDark
-                ? "border-white/10 bg-white/10"
-                : "border-black/5 bg-white/85"
-            }`}
-          >
-            <p className="text-xs uppercase tracking-[0.28em] opacity-50">
-              Points d’attention
-            </p>
-
-            <h2 className="mt-3 font-serif text-3xl">
-              À vérifier avant d’aller plus loin
-            </h2>
-
-            <ul className="mt-5 space-y-3 text-sm leading-6 opacity-75">
-              {meta.attention.map((item) => (
-                <li key={item} className="flex gap-3">
-                  <span style={{ color: meta.color }}>•</span>
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-          </section>
-        </div>
+        <AiResultAnalysis
+          dominant={dominant}
+          entity={meta.entity}
+          structuration={rawScore.structuration}
+          comprehension={rawScore.comprehension}
+          valorisation={rawScore.valorisation}
+          color={meta.color}
+          isDark={isDark}
+        />
 
         <section
           className={`rounded-[32px] border p-6 shadow-[0_30px_90px_rgba(15,23,42,0.10)] md:p-10 ${
