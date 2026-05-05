@@ -53,11 +53,13 @@ export default function StartPage() {
     <main className="min-h-screen grid-background flex items-center justify-center px-4 py-6 sm:px-6 md:px-12 md:py-12">
       <div className="w-full max-w-6xl">
         <section className="relative overflow-hidden rounded-[28px] border border-black/5 bg-[linear-gradient(180deg,#ffffff_0%,#f5efe6_100%)] px-6 py-9 shadow-[0_30px_80px_rgba(0,0,0,0.08)] sm:px-8 sm:py-12 md:rounded-[32px] md:px-16 md:py-16">
+
+          {/* LIGHT EFFECTS */}
           <div className="pointer-events-none absolute right-0 top-0 h-64 w-64 translate-x-1/3 -translate-y-1/3 rounded-full bg-[#315f8c]/10 blur-3xl" />
           <div className="pointer-events-none absolute bottom-0 left-0 h-64 w-64 -translate-x-1/3 translate-y-1/3 rounded-full bg-[#c8a46b]/14 blur-3xl" />
 
           {/* HEADER */}
-          <div className="relative mb-14 flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+          <div className="relative mb-14 flex flex-col items-center gap-4 text-center sm:flex-row sm:items-start sm:justify-between sm:text-left">
             <Signature />
 
             <div className="w-fit rounded-full border border-[#d8c7ad] bg-white/55 px-4 py-2 text-[10px] uppercase tracking-[0.2em] text-[#8b6d43]">
@@ -68,92 +70,109 @@ export default function StartPage() {
           {/* ÉTAPE 1 */}
           {step === "primary" && (
             <section>
-              <h1 className="relative max-w-4xl font-serif text-[35px] leading-[1.08] tracking-[-0.02em] text-[#14110d] sm:text-[46px] md:text-[56px]">
-                Quel type de rôle êtes-vous capable d’assumer ?
+              <h1 className="relative max-w-4xl font-serif text-[36px] leading-[1.08] tracking-[-0.02em] text-[#14110d] sm:text-[48px] md:text-[60px]">
+                Quel type de rôle êtes-vous réellement en capacité d’assumer ?
               </h1>
 
               <div className="relative mt-6 max-w-2xl space-y-3 text-[16px] leading-8 text-black/60 md:text-[17px]">
                 <p>
-                  Trois logiques d’action différentes. Trois manières
-                  d’intervenir.
+                  Trois logiques d’intervention distinctes. Une seule correspond à votre manière d’agir lorsque cela compte.
                 </p>
                 <p>
-                  Identifiez celle dans laquelle vous êtes réellement solide.
+                  Identifiez celle dans laquelle vous êtes réellement fiable.
                 </p>
               </div>
 
-              <div className="relative mt-14 grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6">
+              {/* CARTES */}
+              <div className="relative mt-14 grid grid-cols-1 gap-5 md:grid-cols-3 md:gap-6">
+
+                {/* STRUCTURER */}
                 <button
                   onClick={() => handlePrimary("structuration")}
                   className={cardClass}
                 >
-                  <div className="absolute inset-x-0 top-0 h-1 bg-[linear-gradient(90deg,#315f8c,#c8a46b)] opacity-80" />
+                  <div className="absolute inset-x-0 top-0 h-1 bg-[linear-gradient(90deg,#315f8c,#c8a46b)] opacity-90" />
 
                   <h2 className="font-serif text-[24px] text-[#14110d]">
                     Structurer
                   </h2>
 
                   <p className="mt-3 text-[14px] leading-6 text-black/55">
-                    Mettre en place, organiser, construire un cadre solide.
+                    Mettre en place un cadre, organiser et rendre une activité réellement opérationnelle.
+                  </p>
+
+                  <p className="mt-4 text-[13px] italic text-black/40">
+                    Vous prenez naturellement le rôle de celui qui organise et rend les choses solides.
                   </p>
 
                   <div className="mt-6 flex items-center justify-between border-t border-black/7 pt-4">
                     <span className="text-[10px] uppercase tracking-[0.14em] text-[#8b6d43]">
-                      Sélectionner
+                      Choisir ce rôle
                     </span>
-                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#315f8c]/12 text-[#315f8c] transition-all duration-300 group-hover:translate-x-1 group-hover:bg-[#315f8c] group-hover:text-white">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#315f8c]/15 text-[#315f8c] transition-all duration-300 group-hover:translate-x-1 group-hover:bg-[#315f8c] group-hover:text-white">
                       →
                     </span>
                   </div>
                 </button>
 
+                {/* COMPRENDRE */}
                 <button
                   onClick={() => handlePrimary("comprehension")}
                   className={cardClass}
                 >
-                  <div className="absolute inset-x-0 top-0 h-1 bg-[linear-gradient(90deg,#315f8c,#c8a46b)] opacity-80" />
+                  <div className="absolute inset-x-0 top-0 h-1 bg-[linear-gradient(90deg,#315f8c,#c8a46b)] opacity-90" />
 
                   <h2 className="font-serif text-[24px] text-[#14110d]">
                     Comprendre
                   </h2>
 
                   <p className="mt-3 text-[14px] leading-6 text-black/55">
-                    Analyser, interpréter, apporter une lecture claire.
+                    Analyser une situation, en comprendre les mécanismes et apporter une lecture exploitable.
+                  </p>
+
+                  <p className="mt-4 text-[13px] italic text-black/40">
+                    Vous cherchez à comprendre avant d’agir, pour éviter les erreurs de lecture.
                   </p>
 
                   <div className="mt-6 flex items-center justify-between border-t border-black/7 pt-4">
                     <span className="text-[10px] uppercase tracking-[0.14em] text-[#8b6d43]">
-                      Sélectionner
+                      Choisir ce rôle
                     </span>
-                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#315f8c]/12 text-[#315f8c] transition-all duration-300 group-hover:translate-x-1 group-hover:bg-[#315f8c] group-hover:text-white">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#315f8c]/15 text-[#315f8c] transition-all duration-300 group-hover:translate-x-1 group-hover:bg-[#315f8c] group-hover:text-white">
                       →
                     </span>
                   </div>
                 </button>
 
+                {/* VALORISER */}
                 <button
                   onClick={() => handlePrimary("valorisation")}
                   className={cardClass}
                 >
-                  <div className="absolute inset-x-0 top-0 h-1 bg-[linear-gradient(90deg,#315f8c,#c8a46b)] opacity-80" />
+                  <div className="absolute inset-x-0 top-0 h-1 bg-[linear-gradient(90deg,#315f8c,#c8a46b)] opacity-90" />
 
                   <h2 className="font-serif text-[24px] text-[#14110d]">
                     Valoriser
                   </h2>
 
                   <p className="mt-3 text-[14px] leading-6 text-black/55">
-                    Améliorer l’impact, rendre visible et attractif.
+                    Améliorer la perception, renforcer l’impact et rendre une offre réellement visible.
+                  </p>
+
+                  <p className="mt-4 text-[13px] italic text-black/40">
+                    Vous voyez immédiatement comment améliorer l’impact et la perception.
                   </p>
 
                   <div className="mt-6 flex items-center justify-between border-t border-black/7 pt-4">
                     <span className="text-[10px] uppercase tracking-[0.14em] text-[#8b6d43]">
-                      Sélectionner
+                      Choisir ce rôle
                     </span>
-                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#315f8c]/12 text-[#315f8c] transition-all duration-300 group-hover:translate-x-1 group-hover:bg-[#315f8c] group-hover:text-white">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#315f8c]/15 text-[#315f8c] transition-all duration-300 group-hover:translate-x-1 group-hover:bg-[#315f8c] group-hover:text-white">
                       →
                     </span>
                   </div>
                 </button>
+
               </div>
             </section>
           )}
@@ -211,6 +230,7 @@ export default function StartPage() {
               />
             </div>
           )}
+
         </section>
       </div>
     </main>
