@@ -13,7 +13,7 @@ export default function HomePage() {
           <div className="relative mb-14 flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
             <Signature />
 
-            <div className="w-fit rounded-full border border-[#d8c7ad] bg-white/55 px-4 py-2 text-[10px] uppercase tracking-[0.2em] text-[#8b6d43]">
+            <div className="w-fit rounded-full border border-[#d8c7ad] bg-white/60 px-4 py-2 text-[10px] uppercase tracking-[0.2em] text-[#8b6d43] shadow-[0_12px_35px_rgba(139,109,67,0.08)]">
               Lecture de positionnement
             </div>
           </div>
@@ -24,30 +24,44 @@ export default function HomePage() {
               Où êtes-vous réellement utile ?
             </h1>
 
-            <div className="mt-7 max-w-2xl space-y-3 text-[16px] leading-8 text-black/60 md:text-[18px]">
-              <p>
-                Trois manières d’intervenir. Une seule correspond réellement à
-                votre façon d’agir.
+            <div className="mt-8 max-w-2xl space-y-4 text-[16px] leading-8 text-black/60 md:text-[18px]">
+              <p className="flex items-start gap-3">
+                <span className="mt-[12px] h-[5px] w-[5px] shrink-0 rounded-full bg-[#315f8c]" />
+                <span>
+                  Trois manières d’intervenir. Une seule correspond réellement à
+                  votre façon d’agir.
+                </span>
               </p>
-              <p>
-                Identifiez votre position naturelle en quelques questions, sans
-                inscription.
+
+              <p className="flex items-start gap-3">
+                <span className="mt-[12px] h-[5px] w-[5px] shrink-0 rounded-full bg-[#c8a46b]" />
+                <span>
+                  Identifiez votre position naturelle en quelques questions,
+                  sans inscription.
+                </span>
               </p>
             </div>
 
-            <p className="mt-7 max-w-xl text-[14px] leading-7 text-black/45">
-              Pas un test. Une lecture courte pour comprendre dans quel rôle
-              vous pouvez réellement apporter de la valeur.
-            </p>
+            <div className="mt-8 max-w-xl rounded-2xl border border-black/5 bg-white/45 px-5 py-4 shadow-[0_14px_35px_rgba(0,0,0,0.035)] backdrop-blur-sm">
+              <p className="flex items-start gap-3 text-[14px] leading-7 text-black/45">
+                <span className="mt-[11px] h-[4px] w-[4px] shrink-0 rounded-full bg-[#8b6d43]" />
+                <span>
+                  Pas un test. Une lecture courte pour comprendre dans quel rôle
+                  vous pouvez réellement apporter de la valeur.
+                </span>
+              </p>
+            </div>
 
             {/* CTA */}
             <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
               <Link
                 href="/start"
-                className="inline-flex w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#315f8c_0%,#223f60_100%)] px-8 py-4 text-sm font-medium text-white shadow-[0_18px_45px_rgba(49,95,140,0.28)] transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_22px_55px_rgba(49,95,140,0.34)] sm:w-auto"
+                className="group inline-flex w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,#315f8c_0%,#223f60_100%)] px-8 py-4 text-sm font-medium text-white shadow-[0_18px_45px_rgba(49,95,140,0.28)] transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_22px_55px_rgba(49,95,140,0.34)] sm:w-auto"
               >
                 Se positionner
-                <span className="ml-2">→</span>
+                <span className="ml-2 transition-transform duration-300 group-hover:translate-x-1">
+                  →
+                </span>
               </Link>
 
               <div className="text-center text-[13px] leading-6 text-black/40 sm:text-left">
