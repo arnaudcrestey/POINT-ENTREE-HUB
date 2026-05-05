@@ -28,7 +28,7 @@ export const primaryOptions: PrimaryOption[] = [
       },
       {
         id: "s2",
-        prompt: "On vous confie un projet flou. Dans l’heure, vous :",
+        prompt: "On vous confie un projet flou. Dans l’heure, vous",
         answers: [
           { id: "s2a", label: "Définissez un cadre, des étapes et un plan d’action", delta: { structuration: 3 } },
           { id: "s2b", label: "Posez des questions pour comprendre", delta: { comprehension: 2 } },
@@ -280,7 +280,7 @@ export const primaryOptions: PrimaryOption[] = [
       },
   {
   id: "v8",
-  prompt: "Quand un rendu manque d’impact, votre premier réflexe est :",
+  prompt: "Quand un rendu manque d’impact, votre premier réflexe est",
   answers: [
     { id: "v8a", label: "Repenser immédiatement la perception pour le rendre plus désirable", delta: { valorisation: 3 } },
     { id: "v8b", label: "Structurer le contenu pour le rendre plus clair", delta: { structuration: 2 } },
