@@ -45,14 +45,19 @@ Réponds STRICTEMENT en JSON :
     if (!response.ok) {
       const err = await response.text();
       console.error("❌ OPENAI ERROR:", err);
-      throw new Error("OpenAI failed");
+
+      return NextResponse.json({
+        debug: true,
+        error: "OpenAI request failed",
+        raw: err,
+      });
     }
 
     const data = await response.json();
 
-    console.log("RAW FULL:", JSON.stringify(data, null, 2));
+    console.log("RAW FULL >>>>>>>", JSON.stringify(data, null, 2));
 
-    // ✅ EXTRACTION ROBUSTE
+    // 🔥 EXTRACTION ROBUSTE
     let text = "";
 
     if (data.output && Array.isArray(data.output)) {
@@ -67,36 +72,21 @@ Réponds STRICTEMENT en JSON :
       }
     }
 
-    console.log("TEXT EXTRACTED:", text);
+    console.log("TEXT EXTRACTED >>>>>>>", text);
 
-    if (!text) {
-      throw new Error("No text returned from OpenAI");
-    }
+    // 🔴 MODE DEBUG FRONT
+    return NextResponse.json({
+      debug: true,
+      raw: text,
+      full: data,
+    });
 
-    let parsed;
-
-    try {
-      parsed = JSON.parse(text);
-    } catch (e) {
-      console.error("PARSE ERROR:", text);
-
-      return NextResponse.json({
-        lecture: "Analyse indisponible pour le moment.",
-        projection: "Le positionnement reste exploitable.",
-        attention: ["Réponse IA non structurée"],
-        suite: ["Réessayer dans quelques instants"],
-      });
-    }
-
-    return NextResponse.json(parsed);
   } catch (error) {
     console.error("GLOBAL ERROR:", error);
 
     return NextResponse.json({
-      lecture: "Analyse indisponible pour le moment.",
-      projection: "Le positionnement reste exploitable.",
-      attention: ["Erreur technique"],
-      suite: ["Réessayer plus tard"],
+      debug: true,
+      error: "Global error",
     });
   }
 }
