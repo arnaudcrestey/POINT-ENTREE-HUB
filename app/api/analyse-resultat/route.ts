@@ -7,80 +7,31 @@ type AnalysisResult = {
   suite: string[];
 };
 
-const fallbackResult: AnalysisResult = {
+const fallback: AnalysisResult = {
   lecture:
-    "Analyse indisponible pour le moment. Le résultat reste exploitable et peut être transmis pour une lecture personnalisée.",
+    "Analyse indisponible pour le moment. Le résultat reste néanmoins exploitable.",
   projection:
-    "Votre positionnement indique une orientation professionnelle identifiable, à préciser dans un échange plus qualitatif.",
-  attention: [
-    "Ne pas tirer de conclusion définitive à partir d’un seul résultat.",
-    "Vérifier la cohérence entre le score, le parcours réel et les motivations profondes.",
-  ],
-  suite: [
-    "Transmettre votre situation via le formulaire.",
-    "Recevoir une lecture plus fine de votre positionnement possible dans l’écosystème.",
-  ],
+    "Votre positionnement suggère une orientation possible dans l’écosystème.",
+  attention: ["Réponse IA non exploitable"],
+  suite: ["Réessayer dans quelques instants"],
 };
-
-function cleanJsonContent(content: string) {
-  return content
-    .replace(/```json/g, "")
-    .replace(/```/g, "")
-    .trim();
-}
-
-function normalizeResult(data: Partial<AnalysisResult>): AnalysisResult {
-  return {
-    lecture:
-      typeof data.lecture === "string" && data.lecture.trim()
-        ? data.lecture.trim()
-        : fallbackResult.lecture,
-
-    projection:
-      typeof data.projection === "string" && data.projection.trim()
-        ? data.projection.trim()
-        : fallbackResult.projection,
-
-    attention:
-      Array.isArray(data.attention) && data.attention.length > 0
-        ? data.attention
-            .filter((item) => typeof item === "string" && item.trim())
-            .slice(0, 3)
-        : fallbackResult.attention,
-
-    suite:
-      Array.isArray(data.suite) && data.suite.length > 0
-        ? data.suite
-            .filter((item) => typeof item === "string" && item.trim())
-            .slice(0, 3)
-        : fallbackResult.suite,
-  };
-}
 
 export async function POST(req: Request) {
   try {
-    if (!process.env.OPENAI_API_KEY) {
-      console.error("OPENAI_API_KEY missing");
-      return NextResponse.json(fallbackResult);
-    }
-
     const body = await req.json();
 
-    const dominant = body.dominant;
-    const structuration = Number(body.structuration ?? 0);
-    const comprehension = Number(body.comprehension ?? 0);
-    const valorisation = Number(body.valorisation ?? 0);
+    const { dominant, structuration, comprehension, valorisation } = body;
 
     const prompt = `
 Tu analyses un résultat de positionnement professionnel.
 
-Ce dispositif n'est pas un quiz grand public.
-C'est un point d'entrée premium destiné à orienter un profil LinkedIn vers une place possible dans un écosystème professionnel.
+Ce dispositif n'est pas un quiz.
+C'est un point d'entrée destiné à orienter un profil vers un rôle réel.
 
 Écosystème :
-- Structuration : SYSTIA — clarifier, organiser, construire des systèmes numériques et opérationnels.
-- Compréhension : Cabinet Astraé — analyser une situation, lire les signaux faibles, accompagner une clarification.
-- Valorisation : QLYK — améliorer la perception, mettre en valeur un produit, une offre ou un contenu.
+- Structuration : SYSTIA
+- Compréhension : Cabinet Astraé
+- Valorisation : QLYK
 
 Scores :
 - Structuration : ${structuration}
@@ -89,79 +40,88 @@ Scores :
 
 Axe dominant : ${dominant}
 
-Règles de rédaction :
-- ton sobre, humain, précis
-- niveau cabinet
-- aucune phrase marketing
-- aucune flatterie excessive
-- parler de potentiel, pas de vérité absolue
-- analyse courte mais utile
-- projection concrète vers un rôle réel
-- phrases élégantes, professionnelles, directement affichables sur une page premium
+Règles :
+- ton sobre, professionnel
+- pas de marketing
+- pas de flatterie
+- pas de phrases génériques
+- parler de potentiel et de rôle concret
 
-Réponds uniquement en JSON valide.
-Aucun markdown.
-Aucun texte avant ou après.
+Structure :
 
-Format strict :
+lecture :
+Décrire ce que la personne fait naturellement + une limite
+
+projection :
+Expliquer où elle peut être utile dans l’écosystème
+
+attention :
+2 points concrets
+
+suite :
+2 actions concrètes
+
+Réponds uniquement en JSON valide :
+
 {
-  "lecture": "Une lecture fine du profil en 2 à 4 phrases.",
-  "projection": "Une projection concrète dans l’écosystème en 2 à 4 phrases.",
-  "attention": ["Point d’attention 1", "Point d’attention 2"],
-  "suite": ["Suite logique 1", "Suite logique 2"]
+  "lecture": "...",
+  "projection": "...",
+  "attention": ["...", "..."],
+  "suite": ["...", "..."]
 }
 `;
 
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: "gpt-4o-mini",
-        temperature: 0.35,
-        max_tokens: 450,
-        response_format: { type: "json_object" },
-        messages: [
-          {
-            role: "system",
-            content:
-              "Tu es un consultant senior en positionnement professionnel. Tu produis uniquement du JSON valide, sobre, précis et exploitable.",
-          },
-          {
-            role: "user",
-            content: prompt,
-          },
-        ],
-      }),
-    });
+    const response = await fetch(
+      "https://api.openai.com/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: "gpt-4o-mini",
+          temperature: 0.35,
+          max_tokens: 350,
+          response_format: { type: "json_object" },
+          messages: [
+            {
+              role: "system",
+              content:
+                "Tu es un consultant senior. Tu réponds uniquement en JSON valide.",
+            },
+            {
+              role: "user",
+              content: prompt,
+            },
+          ],
+        }),
+      }
+    );
 
     if (!response.ok) {
-      const err = await response.text();
-      console.error("OPENAI ERROR:", err);
-      return NextResponse.json(fallbackResult);
+      console.error(await response.text());
+      return NextResponse.json(fallback);
     }
 
     const data = await response.json();
     const content = data.choices?.[0]?.message?.content;
 
     if (!content) {
-      console.error("No OpenAI content returned:", data);
-      return NextResponse.json(fallbackResult);
+      return NextResponse.json(fallback);
     }
+
+    let parsed: AnalysisResult;
 
     try {
-      const parsed = JSON.parse(cleanJsonContent(content));
-      const result = normalizeResult(parsed);
-
-      return NextResponse.json(result);
-    } catch (error) {
-      console.error("JSON PARSE ERROR:", content);
-      return NextResponse.json(fallbackResult);
+      parsed = JSON.parse(content);
+    } catch {
+      return NextResponse.json(fallback);
     }
-  } catch (error) {
-    console.error("GLOBAL ERROR:", error);
-    return NextResponse.json(fallbackResult);
+
+    return NextResponse.json(parsed);
+  } catch (e) {
+    console.error(e);
+    return NextResponse.json(fallback);
   }
 }
