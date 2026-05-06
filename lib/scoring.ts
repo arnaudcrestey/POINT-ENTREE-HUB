@@ -90,7 +90,9 @@ export function applySubSignals(
   current: SubSignals,
   incoming?: Partial<SubSignals>
 ): SubSignals {
-  if (!incoming) return current;
+  if (!incoming) {
+    return current;
+  }
 
   return {
     clarte:
@@ -103,7 +105,8 @@ export function applySubSignals(
       current.pilotage + (incoming.pilotage ?? 0),
 
     discernement:
-      current.discernement + (incoming.discernement ?? 0),
+      current.discernement +
+      (incoming.discernement ?? 0),
 
     ecoute:
       current.ecoute + (incoming.ecoute ?? 0),
@@ -112,13 +115,15 @@ export function applySubSignals(
       current.lecture + (incoming.lecture ?? 0),
 
     perception:
-      current.perception + (incoming.perception ?? 0),
+      current.perception +
+      (incoming.perception ?? 0),
 
     impact:
       current.impact + (incoming.impact ?? 0),
 
     lisibilite:
-      current.lisibilite + (incoming.lisibilite ?? 0),
+      current.lisibilite +
+      (incoming.lisibilite ?? 0),
   };
 }
 
@@ -131,7 +136,9 @@ export function computeDominantAxis(
 ): AxisKey {
   const ranked: [AxisKey, number][] = [
     ["structuration", score.structuration],
+
     ["comprehension", score.comprehension],
+
     ["valorisation", score.valorisation],
   ];
 
@@ -192,6 +199,41 @@ export function normalizeScore(
 }
 
 /* =========================
+   PREMIUM RADAR NORMALIZATION
+========================= */
+
+export function normalizeRadarValue(
+  value: number,
+  max: number
+): number {
+  if (max <= 0) {
+    return 52;
+  }
+
+  const ratio = value / max;
+
+  /*
+    Compression premium :
+    - évite les 0%
+    - évite les 100%
+    - garde des écarts crédibles
+    - produit une sensation humaine
+  */
+
+  const normalized =
+    42 + ratio * 46;
+
+  /*
+    Petit amortisseur
+    pour éviter les triangles trop agressifs
+  */
+
+  return Math.round(
+    Math.min(92, Math.max(42, normalized))
+  );
+}
+
+/* =========================
    NORMALIZE SUB SIGNALS
 ========================= */
 
@@ -199,12 +241,32 @@ export function normalizeSubSignals(
   signals: Partial<SubSignals>,
   keys: SubSignalKey[]
 ) {
-  const values = keys.map((key) => signals[key] ?? 0);
+  const values = keys.map(
+    (key) => signals[key] ?? 0
+  );
 
   const max = Math.max(...values, 1);
 
-  return keys.map((key) => ({
-    key,
-    value: Number(((signals[key] ?? 0) / max).toFixed(2)),
-  }));
+  return keys.map((key) => {
+    const raw = signals[key] ?? 0;
+
+    const normalized =
+      normalizeRadarValue(raw, max);
+
+    return {
+      key,
+
+      /*
+        valeur 0-1 pour le radar SVG
+      */
+      value: Number(
+        (normalized / 100).toFixed(2)
+      ),
+
+      /*
+        valeur affichable UI
+      */
+      percent: normalized,
+    };
+  });
 }
