@@ -36,7 +36,7 @@ const analysisSteps = [
   "Repérage de l’axe professionnel dominant",
   "Croisement avec les signaux secondaires",
   "Évaluation de la compatibilité avec l’écosystème",
-  "Préparation d’une orientation exploitable",
+  "Préparation de votre orientation professionnelle",
 ];
 
 function toDisplayPercent(value: number) {
@@ -134,66 +134,66 @@ export function ResultExperience({
         .reveal-5 { animation: revealUp .75s ease-out both; animation-delay: .85s; }
 
         .analysis-ring {
-          position: relative;
-          width: 92px;
-          height: 92px;
-          border-radius: 9999px;
-          background:
-            conic-gradient(
-              from 90deg,
-              transparent 0deg,
-              transparent 38deg,
-              ${meta.color} 74deg,
-              rgba(255,255,255,.82) 105deg,
-              transparent 145deg,
-              transparent 214deg,
-              ${meta.color} 260deg,
-              rgba(255,255,255,.72) 292deg,
-              transparent 340deg
-            );
-          animation: rotateRing 5.2s linear infinite;
-          box-shadow:
-            0 0 34px ${meta.color}30,
-            inset 0 0 26px rgba(255,255,255,.18);
-        }
+  position: relative;
+  width: 92px;
+  height: 92px;
+  border-radius: 9999px;
+  background:
+    conic-gradient(
+      from 110deg,
+      transparent 0deg,
+      transparent 34deg,
+      ${meta.color} 72deg,
+      rgba(255,255,255,.92) 104deg,
+      transparent 148deg,
+      transparent 214deg,
+      ${meta.color} 262deg,
+      rgba(255,255,255,.86) 294deg,
+      transparent 342deg
+    );
+  animation: rotateRing 5.4s linear infinite;
+  box-shadow:
+    0 0 28px ${meta.color}34,
+    0 18px 44px rgba(15,23,42,.12);
+}
 
-        .analysis-ring::before {
-          content: "";
-          position: absolute;
-          inset: 5px;
-          border-radius: 9999px;
-          border: 1px solid rgba(255,255,255,.38);
-          background:
-            radial-gradient(circle at 50% 50%, rgba(255,255,255,.82), rgba(255,255,255,.28) 42%, transparent 64%);
-          box-shadow:
-            inset 0 0 24px rgba(255,255,255,.18),
-            0 0 18px ${meta.color}22;
-        }
+.analysis-ring::before {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255,255,255,.58);
+  background:
+    radial-gradient(circle at 38% 32%, rgba(255,255,255,.92), rgba(255,255,255,.42) 34%, transparent 62%),
+    radial-gradient(circle at 50% 50%, ${meta.color}22, transparent 68%);
+  box-shadow:
+    inset 0 0 18px rgba(255,255,255,.34),
+    inset 0 0 32px ${meta.color}18;
+}
 
-        .analysis-ring::after {
-          content: "";
-          position: absolute;
-          inset: 18px;
-          border-radius: 9999px;
-          background:
-            radial-gradient(circle at 35% 30%, rgba(255,255,255,.92), ${meta.color}30 45%, ${meta.color} 100%);
-          box-shadow:
-            0 0 28px ${meta.color}55,
-            inset 0 0 16px rgba(255,255,255,.55);
-          animation: slowBreath 3.8s ease-in-out infinite;
-        }
+.analysis-ring::after {
+  content: "";
+  position: absolute;
+  inset: 23px;
+  border-radius: 9999px;
+  background:
+    radial-gradient(circle at 35% 30%, rgba(255,255,255,.96), ${meta.color}42 46%, ${meta.color} 100%);
+  box-shadow:
+    0 0 20px ${meta.color}62,
+    inset 0 0 12px rgba(255,255,255,.72);
+  animation: slowBreath 4.2s ease-in-out infinite;
+}
 
-        .analysis-core {
-          position: absolute;
-          inset: 35px;
-          z-index: 2;
-          border-radius: 9999px;
-          background: rgba(255,255,255,.72);
-          box-shadow:
-            0 0 18px rgba(255,255,255,.55),
-            0 0 34px ${meta.color}45;
-        }
-
+.analysis-core {
+  position: absolute;
+  inset: 37px;
+  z-index: 2;
+  border-radius: 9999px;
+  background: rgba(255,255,255,.82);
+  box-shadow:
+    0 0 14px rgba(255,255,255,.72),
+    0 0 24px ${meta.color}50;
+}
         .scan-panel {
           position: relative;
           overflow: hidden;
@@ -256,7 +256,7 @@ export function ResultExperience({
                   </p>
 
                   <div className="mt-6 flex items-center justify-between text-xs opacity-70">
-                    <span>Analyse</span>
+                    <span>Progression de lecture</span>
                     <span>{Math.min(100, 20 + activeStep * 20)}%</span>
                   </div>
 
