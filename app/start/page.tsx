@@ -5,19 +5,13 @@ import { useRouter } from "next/navigation";
 
 import { QuestionCard } from "@/components/question-card";
 import { Signature } from "@/components/signature";
-
-import {
-  primaryOptions,
-  QUESTIONS_PER_SESSION,
-} from "@/lib/questions";
+import { primaryOptions, QUESTIONS_PER_SESSION } from "@/lib/questions";
 
 import {
   INITIAL_SCORE,
   INITIAL_SUBSIGNALS,
-
   applyDelta,
   applySubSignals,
-
   type Answer,
   type AxisKey,
   type Question,
@@ -27,76 +21,46 @@ import {
 
 type Step = "primary" | "followup";
 
-function pickRandomQuestions<T>(
-  items: T[],
-  count: number
-): T[] {
-  return [...items]
-    .sort(() => Math.random() - 0.5)
-    .slice(0, count);
+function pickRandomQuestions<T>(items: T[], count: number): T[] {
+  return [...items].sort(() => Math.random() - 0.5).slice(0, count);
 }
 
-function shuffleAnswers(
-  question: Question
-): Question {
+function shuffleAnswers(question: Question): Question {
   return {
     ...question,
-
-    answers: [...question.answers].sort(
-      () => Math.random() - 0.5
-    ),
+    answers: [...question.answers].sort(() => Math.random() - 0.5),
   };
 }
 
 export default function StartPage() {
   const router = useRouter();
 
-  const [step, setStep] =
-    useState<Step>("primary");
-
-  const [score, setScore] =
-    useState<VectorScore>(
-      INITIAL_SCORE
-    );
-
-  const [subSignals, setSubSignals] =
-    useState<SubSignals>(
-      INITIAL_SUBSIGNALS
-    );
-
-  const [primary, setPrimary] =
-    useState<AxisKey | null>(null);
-
-  const [questions, setQuestions] =
-    useState<Question[]>([]);
-
-  const [currentIndex, setCurrentIndex] =
-    useState(0);
+  const [step, setStep] = useState<Step>("primary");
+  const [score, setScore] = useState<VectorScore>(INITIAL_SCORE);
+  const [subSignals, setSubSignals] = useState<SubSignals>(INITIAL_SUBSIGNALS);
+  const [primary, setPrimary] = useState<AxisKey | null>(null);
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const currentQuestion = useMemo(() => {
-    return questions[currentIndex];
+    return questions[currentIndex] ?? null;
   }, [questions, currentIndex]);
 
-  const handlePrimary = (
-    axis: AxisKey
-  ) => {
-    const selectedOption =
-      primaryOptions.find(
-        (option) => option.id === axis
-      );
+  const handlePrimary = (axis: AxisKey) => {
+    const selectedOption = primaryOptions.find((option) => option.id === axis);
 
-    if (!selectedOption) return;
+    if (!selectedOption || selectedOption.followUps.length === 0) {
+      console.error(`Aucune question trouvée pour l’axe : ${axis}`);
+      return;
+    }
 
-    const selectedQuestions =
-      pickRandomQuestions(
-        selectedOption.followUps,
-        QUESTIONS_PER_SESSION
-      ).map(shuffleAnswers);
+    const selectedQuestions = pickRandomQuestions(
+      selectedOption.followUps,
+      QUESTIONS_PER_SESSION
+    ).map(shuffleAnswers);
 
     setPrimary(axis);
-
     setQuestions(selectedQuestions);
-
     setCurrentIndex(0);
 
     setScore({
@@ -104,112 +68,50 @@ export default function StartPage() {
       [axis]: 100,
     });
 
-    setSubSignals(
-      INITIAL_SUBSIGNALS
-    );
-
+    setSubSignals(INITIAL_SUBSIGNALS);
     setStep("followup");
   };
 
-  const handleFollowUp = (
-    answer: Answer
-  ) => {
+  const handleFollowUp = (answer: Answer) => {
     if (!primary) return;
 
-    const updatedScore =
-      applyDelta(
-        score,
-        answer.delta
-      );
-
-    const updatedSubSignals =
-      applySubSignals(
-        subSignals,
-        answer.subSignals
-      );
+    const updatedScore = applyDelta(score, answer.delta);
+    const updatedSubSignals = applySubSignals(subSignals, answer.subSignals);
 
     const lockedScore: VectorScore = {
       ...updatedScore,
-
-      [primary]: Math.max(
-        updatedScore[primary],
-        100
-      ),
+      [primary]: Math.max(updatedScore[primary], 100),
     };
 
-    const nextIndex =
-      currentIndex + 1;
+    const nextIndex = currentIndex + 1;
 
-    if (
-      nextIndex < questions.length
-    ) {
+    if (nextIndex < questions.length) {
       setScore(lockedScore);
-
-      setSubSignals(
-        updatedSubSignals
-      );
-
+      setSubSignals(updatedSubSignals);
       setCurrentIndex(nextIndex);
-
       return;
     }
 
-    const params =
-      new URLSearchParams({
-        s: String(
-          lockedScore.structuration
-        ),
+    const params = new URLSearchParams({
+      s: String(lockedScore.structuration),
+      c: String(lockedScore.comprehension),
+      v: String(lockedScore.valorisation),
+      axis: primary,
 
-        c: String(
-          lockedScore.comprehension
-        ),
+      clarte: String(updatedSubSignals.clarte),
+      methode: String(updatedSubSignals.methode),
+      pilotage: String(updatedSubSignals.pilotage),
 
-        v: String(
-          lockedScore.valorisation
-        ),
+      discernement: String(updatedSubSignals.discernement),
+      ecoute: String(updatedSubSignals.ecoute),
+      lecture: String(updatedSubSignals.lecture),
 
-        axis: primary,
+      perception: String(updatedSubSignals.perception),
+      impact: String(updatedSubSignals.impact),
+      lisibilite: String(updatedSubSignals.lisibilite),
+    });
 
-        clarte: String(
-          updatedSubSignals.clarte
-        ),
-
-        methode: String(
-          updatedSubSignals.methode
-        ),
-
-        pilotage: String(
-          updatedSubSignals.pilotage
-        ),
-
-        discernement: String(
-          updatedSubSignals.discernement
-        ),
-
-        ecoute: String(
-          updatedSubSignals.ecoute
-        ),
-
-        lecture: String(
-          updatedSubSignals.lecture
-        ),
-
-        perception: String(
-          updatedSubSignals.perception
-        ),
-
-        impact: String(
-          updatedSubSignals.impact
-        ),
-
-        lisibilite: String(
-          updatedSubSignals.lisibilite
-        ),
-      });
-
-    router.push(
-      `/result?${params.toString()}`
-    );
+    router.push(`/result?${params.toString()}`);
   };
 
   const cardClass =
@@ -219,9 +121,7 @@ export default function StartPage() {
     <main className="min-h-screen grid-background flex items-center justify-center px-4 py-6 sm:px-6 md:px-12 md:py-12">
       <div className="w-full max-w-6xl">
         <section className="relative rounded-[28px] border border-black/5 bg-[linear-gradient(180deg,#ffffff_0%,#f5efe6_100%)] px-6 py-9 shadow-[0_30px_80px_rgba(0,0,0,0.08)] sm:px-8 sm:py-12 md:rounded-[32px] md:px-16 md:py-16">
-
           <div className="pointer-events-none absolute right-0 top-0 h-64 w-64 translate-x-1/3 -translate-y-1/3 rounded-full bg-[#315f8c]/10 blur-3xl" />
-
           <div className="pointer-events-none absolute bottom-0 left-0 h-64 w-64 -translate-x-1/3 translate-y-1/3 rounded-full bg-[#c8a46b]/14 blur-3xl" />
 
           <div className="relative mb-14 flex flex-col items-center gap-6 text-center md:flex-row md:items-start md:justify-between md:text-left">
@@ -246,137 +146,80 @@ export default function StartPage() {
                   Trois logiques d’intervention distinctes. Une seule correspond
                   à votre manière d’agir lorsque cela compte.
                 </p>
-
                 <p>
                   Identifiez celle dans laquelle vous êtes réellement fiable.
                 </p>
               </div>
 
               <div className="relative mt-14 grid grid-cols-1 gap-5 md:grid-cols-3 md:gap-6">
+                {[
+                  {
+                    axis: "structuration" as AxisKey,
+                    title: "Structurer",
+                    text: "Mettre en place un cadre, organiser et rendre une activité réellement opérationnelle.",
+                    note: "Vous prenez naturellement le rôle de celui qui organise et rend les choses solides.",
+                  },
+                  {
+                    axis: "comprehension" as AxisKey,
+                    title: "Comprendre",
+                    text: "Analyser une situation, comprendre les mécanismes et apporter une lecture exploitable.",
+                    note: "Vous cherchez à comprendre avant d’agir pour éviter les erreurs de lecture.",
+                  },
+                  {
+                    axis: "valorisation" as AxisKey,
+                    title: "Valoriser",
+                    text: "Améliorer la perception, renforcer l’impact et rendre une offre réellement visible.",
+                    note: "Vous voyez immédiatement comment améliorer l’impact et la perception.",
+                  },
+                ].map((card) => (
+                  <button
+                    key={card.axis}
+                    type="button"
+                    onClick={() => handlePrimary(card.axis)}
+                    className={cardClass}
+                  >
+                    <div className="absolute inset-x-0 top-0 h-1 bg-[linear-gradient(90deg,#315f8c,#c8a46b)] opacity-90" />
 
-                <button
-                  onClick={() =>
-                    handlePrimary(
-                      "structuration"
-                    )
-                  }
-                  className={cardClass}
-                >
-                  <div className="absolute inset-x-0 top-0 h-1 bg-[linear-gradient(90deg,#315f8c,#c8a46b)] opacity-90" />
+                    <h2 className="font-serif text-[24px] text-[#14110d]">
+                      {card.title}
+                    </h2>
 
-                  <h2 className="font-serif text-[24px] text-[#14110d]">
-                    Structurer
-                  </h2>
+                    <p className="mt-3 text-[14px] leading-6 text-black/55">
+                      {card.text}
+                    </p>
 
-                  <p className="mt-3 text-[14px] leading-6 text-black/55">
-                    Mettre en place un cadre, organiser et rendre une activité réellement opérationnelle.
-                  </p>
+                    <p className="mt-4 text-[13px] italic text-black/40">
+                      {card.note}
+                    </p>
 
-                  <p className="mt-4 text-[13px] italic text-black/40">
-                    Vous prenez naturellement le rôle de celui qui organise et rend les choses solides.
-                  </p>
+                    <div className="mt-6 flex items-center justify-between border-t border-black/7 pt-4">
+                      <span className="text-[10px] uppercase tracking-[0.14em] text-[#8b6d43]">
+                        Choisir ce rôle
+                      </span>
 
-                  <div className="mt-6 flex items-center justify-between border-t border-black/7 pt-4">
-                    <span className="text-[10px] uppercase tracking-[0.14em] text-[#8b6d43]">
-                      Choisir ce rôle
-                    </span>
-
-                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#315f8c]/15 text-[#315f8c] transition-all duration-300 group-hover:translate-x-1 group-hover:bg-[#315f8c] group-hover:text-white">
-                      →
-                    </span>
-                  </div>
-                </button>
-
-                <button
-                  onClick={() =>
-                    handlePrimary(
-                      "comprehension"
-                    )
-                  }
-                  className={cardClass}
-                >
-                  <div className="absolute inset-x-0 top-0 h-1 bg-[linear-gradient(90deg,#315f8c,#c8a46b)] opacity-90" />
-
-                  <h2 className="font-serif text-[24px] text-[#14110d]">
-                    Comprendre
-                  </h2>
-
-                  <p className="mt-3 text-[14px] leading-6 text-black/55">
-                    Analyser une situation, comprendre les mécanismes et apporter une lecture exploitable.
-                  </p>
-
-                  <p className="mt-4 text-[13px] italic text-black/40">
-                    Vous cherchez à comprendre avant d’agir pour éviter les erreurs de lecture.
-                  </p>
-
-                  <div className="mt-6 flex items-center justify-between border-t border-black/7 pt-4">
-                    <span className="text-[10px] uppercase tracking-[0.14em] text-[#8b6d43]">
-                      Choisir ce rôle
-                    </span>
-
-                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#315f8c]/15 text-[#315f8c] transition-all duration-300 group-hover:translate-x-1 group-hover:bg-[#315f8c] group-hover:text-white">
-                      →
-                    </span>
-                  </div>
-                </button>
-
-                <button
-                  onClick={() =>
-                    handlePrimary(
-                      "valorisation"
-                    )
-                  }
-                  className={cardClass}
-                >
-                  <div className="absolute inset-x-0 top-0 h-1 bg-[linear-gradient(90deg,#315f8c,#c8a46b)] opacity-90" />
-
-                  <h2 className="font-serif text-[24px] text-[#14110d]">
-                    Valoriser
-                  </h2>
-
-                  <p className="mt-3 text-[14px] leading-6 text-black/55">
-                    Améliorer la perception, renforcer l’impact et rendre une offre réellement visible.
-                  </p>
-
-                  <p className="mt-4 text-[13px] italic text-black/40">
-                    Vous voyez immédiatement comment améliorer l’impact et la perception.
-                  </p>
-
-                  <div className="mt-6 flex items-center justify-between border-t border-black/7 pt-4">
-                    <span className="text-[10px] uppercase tracking-[0.14em] text-[#8b6d43]">
-                      Choisir ce rôle
-                    </span>
-
-                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#315f8c]/15 text-[#315f8c] transition-all duration-300 group-hover:translate-x-1 group-hover:bg-[#315f8c] group-hover:text-white">
-                      →
-                    </span>
-                  </div>
-                </button>
-
+                      <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#315f8c]/15 text-[#315f8c] transition-all duration-300 group-hover:translate-x-1 group-hover:bg-[#315f8c] group-hover:text-white">
+                        →
+                      </span>
+                    </div>
+                  </button>
+                ))}
               </div>
             </section>
           )}
 
-          {step === "followup" &&
-            currentQuestion && (
-              <div className="relative overflow-visible pb-6">
-                <div className="mb-5 text-center text-[10px] uppercase tracking-[0.22em] text-[#8b6d43]">
-                  Question {currentIndex + 1} / {questions.length}
-                </div>
-
-                <QuestionCard
-                  prompt={
-                    currentQuestion.prompt
-                  }
-                  answers={
-                    currentQuestion.answers
-                  }
-                  onSelect={
-                    handleFollowUp
-                  }
-                />
+          {step === "followup" && currentQuestion && (
+            <div className="relative overflow-visible pb-6">
+              <div className="mb-5 text-center text-[10px] uppercase tracking-[0.22em] text-[#8b6d43]">
+                Question {currentIndex + 1} / {questions.length}
               </div>
-            )}
+
+              <QuestionCard
+                prompt={currentQuestion.prompt}
+                answers={currentQuestion.answers}
+                onSelect={handleFollowUp}
+              />
+            </div>
+          )}
         </section>
       </div>
     </main>
