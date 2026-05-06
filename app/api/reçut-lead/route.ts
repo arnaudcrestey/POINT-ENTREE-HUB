@@ -268,12 +268,16 @@ arnaudcrestey.com
             </div>
           </div>
         </div>
-      `,
+           `,
     });
 
-    return NextResponse.json({
-  success: true,
-});
+    return Response.redirect(
+      new URL("/merci", request.url),
+      302
+    );
+
+  } catch (error) {
+    console.error(error);
 
     return NextResponse.json(
       { error: "Une erreur est survenue pendant l’envoi." },
