@@ -22,7 +22,7 @@ export async function POST(req: Request) {
 
     const { dominant, structuration, comprehension, valorisation } = body;
 
-    const prompt = `
+   
 const prompt = `
 Tu analyses un résultat de positionnement professionnel.
 
