@@ -93,17 +93,21 @@ export function AiResultAnalysis({
     };
   }, [dominant, entity, structuration, comprehension, valorisation]);
 
+  const cardClass = `rounded-[32px] border p-6 shadow-[0_30px_90px_rgba(15,23,42,0.08)] md:p-9 ${
+    isDark ? "border-white/10 bg-white/10" : "border-white/70 bg-white/88"
+  }`;
+
   if (loading) {
     return (
-      <section
-        className={`rounded-[32px] border p-6 md:p-8 ${
-          isDark ? "border-white/10 bg-white/10" : "border-black/5 bg-white/85"
-        }`}
-      >
+      <section className={cardClass}>
         <p className="text-xs uppercase tracking-[0.28em] opacity-50">
           Analyse personnalisée
         </p>
-        <h2 className="mt-3 font-serif text-3xl">Lecture en cours…</h2>
+
+        <h2 className="mt-3 font-serif text-3xl leading-tight">
+          Lecture en cours…
+        </h2>
+
         <p className="mt-5 text-sm leading-7 opacity-70">
           Votre résultat est en cours d’interprétation.
         </p>
@@ -113,112 +117,109 @@ export function AiResultAnalysis({
 
   if (!analysis) {
     return (
-      <section
-        className={`rounded-[32px] border p-6 md:p-8 ${
-          isDark ? "border-white/10 bg-white/10" : "border-black/5 bg-white/85"
-        }`}
-      >
+      <section className={cardClass}>
         <p className="text-xs uppercase tracking-[0.28em] opacity-50">
           Analyse personnalisée
         </p>
-        <h2 className="mt-3 font-serif text-3xl">
+
+        <h2 className="mt-3 font-serif text-3xl leading-tight">
           Analyse indisponible pour le moment
         </h2>
+
         <p className="mt-5 text-sm leading-7 opacity-70">
           Le résultat reste exploitable. Vous pouvez transmettre votre situation
-          via le formulaire ci-dessous pour recevoir une lecture personnalisée.
+          via le formulaire ci-dessous pour recevoir une lecture plus précise.
         </p>
       </section>
     );
   }
 
   return (
-    <>
-      <section
-        className={`rounded-[32px] border p-6 md:p-8 ${
-          isDark ? "border-white/10 bg-white/10" : "border-black/5 bg-white/85"
-        }`}
-      >
-        <p className="text-xs uppercase tracking-[0.28em] opacity-50">
-          Analyse personnalisée
-        </p>
-
-        <h2 className="mt-3 font-serif text-3xl">Lecture fine du résultat</h2>
-
-        <p className="mt-5 whitespace-pre-line text-sm leading-7 opacity-75">
-          {analysis.lecture}
-        </p>
-      </section>
-
-      <div className="grid gap-6 md:grid-cols-2">
-        <section
-          className={`rounded-[28px] border p-6 md:p-8 ${
-            isDark ? "border-white/10 bg-white/10" : "border-black/5 bg-white/85"
-          }`}
-        >
+    <section className={cardClass}>
+      <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+        <div>
           <p className="text-xs uppercase tracking-[0.28em] opacity-50">
-            Projection concrète
+            Analyse personnalisée
           </p>
 
-          <h2 className="mt-3 font-serif text-3xl">Votre place possible</h2>
-
-          <p className="mt-5 whitespace-pre-line text-sm leading-7 opacity-75">
-            {analysis.projection}
-          </p>
-        </section>
-
-        <section
-          className={`rounded-[28px] border p-6 md:p-8 ${
-            isDark ? "border-white/10 bg-white/10" : "border-black/5 bg-white/85"
-          }`}
-        >
-          <p className="text-xs uppercase tracking-[0.28em] opacity-50">
-            Points d’attention
-          </p>
-
-          <h2 className="mt-3 font-serif text-3xl">
-            À vérifier avant d’aller plus loin
+          <h2 className="mt-3 font-serif text-3xl leading-tight md:text-4xl">
+            Lecture professionnelle du résultat
           </h2>
+        </div>
 
-          <ul className="mt-5 space-y-3 text-sm leading-6 opacity-75">
-            {analysis.attention.map((item, index) => (
+        <p
+          className="w-fit rounded-full border px-4 py-2 text-[10px] uppercase tracking-[0.22em]"
+          style={{
+            color,
+            borderColor: `${color}40`,
+            backgroundColor: `${color}10`,
+          }}
+        >
+          {entity}
+        </p>
+      </div>
+
+      <div className="mt-8 grid gap-8 lg:grid-cols-[1.15fr_0.85fr]">
+        <div>
+          <p className="text-sm leading-7 opacity-78 whitespace-pre-line">
+            {analysis.lecture}
+          </p>
+
+          <div className="mt-7 border-t pt-6 opacity-90">
+            <p className="text-xs uppercase tracking-[0.22em] opacity-45">
+              Projection
+            </p>
+
+            <p className="mt-3 text-sm leading-7 opacity-75 whitespace-pre-line">
+              {analysis.projection}
+            </p>
+          </div>
+        </div>
+
+        <div
+          className={`rounded-[24px] border p-5 ${
+            isDark
+              ? "border-white/10 bg-black/15"
+              : "border-black/5 bg-[#f8fafc]"
+          }`}
+        >
+          <p className="text-xs uppercase tracking-[0.22em] opacity-45">
+            Points à vérifier
+          </p>
+
+          <ul className="mt-4 space-y-3 text-sm leading-6">
+            {analysis.attention.slice(0, 2).map((item, index) => (
               <li key={`${item}-${index}`} className="flex gap-3">
-                <span style={{ color }}>•</span>
-                <span>{item}</span>
+                <span
+                  className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full"
+                  style={{ backgroundColor: color }}
+                />
+                <span className="opacity-75">{item}</span>
               </li>
             ))}
           </ul>
-        </section>
-      </div>
 
-      <section
-        className={`rounded-[28px] border p-6 md:p-8 ${
-          isDark ? "border-white/10 bg-white/10" : "border-black/5 bg-white/85"
-        }`}
-      >
-        <p className="text-xs uppercase tracking-[0.28em] opacity-50">
-          Suite logique
-        </p>
+          <div className="mt-6 border-t pt-5">
+            <p className="text-xs uppercase tracking-[0.22em] opacity-45">
+              Suite utile
+            </p>
 
-        <h2 className="mt-3 font-serif text-3xl">
-          Ce qu’il faut regarder maintenant
-        </h2>
-
-        <div className="mt-5 space-y-3 text-sm leading-6">
-          {analysis.suite.map((item, index) => (
-            <div key={`${item}-${index}`} className="flex gap-3">
-              <span
-                className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs text-white"
-                style={{ backgroundColor: color }}
-              >
-                {index + 1}
-              </span>
-              <span className="opacity-75">{item}</span>
-            </div>
-          ))}
+            <ul className="mt-4 space-y-3 text-sm leading-6">
+              {analysis.suite.slice(0, 2).map((item, index) => (
+                <li key={`${item}-${index}`} className="flex gap-3">
+                  <span
+                    className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] text-white"
+                    style={{ backgroundColor: color }}
+                  >
+                    {index + 1}
+                  </span>
+                  <span className="opacity-75">{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 }
-
