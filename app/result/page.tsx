@@ -73,7 +73,7 @@ const axisMeta: Record<
 
   valorisation: {
     name: "Valorisation",
-    entity: "QLYK",
+    entity: "QLYK Studio",
 
     gradient:
       "from-[#101827] via-[#172033] to-[#eef3ff]",
@@ -86,7 +86,7 @@ const axisMeta: Record<
     reflex:
       "Votre réflexe est d’améliorer ce qui est vu, compris et ressenti.",
 
-    role: "QLYK — Valorisation",
+    role: "QLYK Studio — Valorisation",
 
     actions: [
       "améliorer la perception d’une offre",
