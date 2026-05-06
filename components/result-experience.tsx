@@ -369,7 +369,7 @@ export function ResultExperience({
               <div className="grid gap-10 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
                 <div>
                   <p className="text-xs uppercase tracking-[0.32em] opacity-60">
-                    Résultat de compatibilité
+                    Dynamique observee
                   </p>
 
                   <h1 className="mt-4 font-serif text-4xl leading-tight md:text-6xl">
