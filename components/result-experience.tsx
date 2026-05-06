@@ -276,7 +276,7 @@ export function ResultExperience({
                     className="text-xs font-semibold uppercase tracking-[0.32em]"
                     style={{ color: meta.color }}
                   >
-                    Lecture de compatibilité en cours
+                    Lecture de positionnement en cours
                   </p>
 
                   <h1 className="mt-3 font-serif text-3xl leading-tight md:text-4xl">
