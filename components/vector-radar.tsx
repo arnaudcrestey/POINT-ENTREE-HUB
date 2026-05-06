@@ -1,32 +1,18 @@
-import type { AxisKey } from "@/lib/scoring";
+import type {
+  AxisKey,
+  SubSignals,
+} from "@/lib/scoring";
 
 type RoleRadarProps = {
   axis: AxisKey;
   color: string;
+  subSignals: Partial<SubSignals>;
 };
 
 type RoleMetric = {
   key: string;
   label: string;
   value: number;
-};
-
-const roleMetrics: Record<AxisKey, RoleMetric[]> = {
-  structuration: [
-    { key: "clarte", label: "Clarté", value: 1 },
-    { key: "methode", label: "Méthode", value: 0.86 },
-    { key: "fiabilite", label: "Fiabilité", value: 0.78 },
-  ],
-  comprehension: [
-    { key: "discernement", label: "Discernement", value: 1 },
-    { key: "ecoute", label: "Écoute", value: 0.84 },
-    { key: "clarte", label: "Clarte", value: 0.76 },
-],
-  valorisation: [
-    { key: "perception", label: "Perception", value: 1 },
-    { key: "impact", label: "Impact", value: 0.86 },
-    { key: "lisibilite", label: "Lisibilité", value: 0.8 },
-  ],
 };
 
 function polarToCartesian(
@@ -43,11 +29,81 @@ function polarToCartesian(
   };
 }
 
-export function VectorRadar({ axis, color }: RoleRadarProps) {
+export function VectorRadar({
+  axis,
+  color,
+  subSignals,
+}: RoleRadarProps) {
   const center = 145;
   const radius = 88;
 
-  const metrics = roleMetrics[axis];
+  const metricsByAxis: Record<AxisKey, RoleMetric[]> = {
+    structuration: [
+      {
+        key: "clarte",
+        label: "Clarté",
+        value: subSignals.clarte ?? 0,
+      },
+      {
+        key: "methode",
+        label: "Méthode",
+        value: subSignals.methode ?? 0,
+      },
+      {
+        key: "pilotage",
+        label: "Pilotage",
+        value: subSignals.pilotage ?? 0,
+      },
+    ],
+
+    comprehension: [
+      {
+        key: "discernement",
+        label: "Discernement",
+        value: subSignals.discernement ?? 0,
+      },
+      {
+        key: "ecoute",
+        label: "Écoute",
+        value: subSignals.ecoute ?? 0,
+      },
+      {
+        key: "lecture",
+        label: "Lecture",
+        value: subSignals.lecture ?? 0,
+      },
+    ],
+
+    valorisation: [
+      {
+        key: "perception",
+        label: "Perception",
+        value: subSignals.perception ?? 0,
+      },
+      {
+        key: "impact",
+        label: "Impact",
+        value: subSignals.impact ?? 0,
+      },
+      {
+        key: "lisibilite",
+        label: "Lisibilité",
+        value: subSignals.lisibilite ?? 0,
+      },
+    ],
+  };
+
+  const rawMetrics = metricsByAxis[axis];
+
+  const max = Math.max(
+    ...rawMetrics.map((metric) => metric.value),
+    1
+  );
+
+  const metrics = rawMetrics.map((metric) => ({
+    ...metric,
+    value: Number((metric.value / max).toFixed(2)),
+  }));
 
   const points = metrics.map((metric, index) => ({
     ...metric,
@@ -79,33 +135,61 @@ export function VectorRadar({ axis, color }: RoleRadarProps) {
           aria-label="Radar de lecture du rôle dominant"
         >
           <defs>
-            <filter id="radarGlow" x="-40%" y="-40%" width="180%" height="180%">
-              <feGaussianBlur stdDeviation="4" result="blur" />
+            <filter
+              id="radarGlow"
+              x="-40%"
+              y="-40%"
+              width="180%"
+              height="180%"
+            >
+              <feGaussianBlur
+                stdDeviation="4"
+                result="blur"
+              />
+
               <feMerge>
                 <feMergeNode in="blur" />
                 <feMergeNode in="SourceGraphic" />
               </feMerge>
             </filter>
 
-            <radialGradient id="radarBackground" cx="50%" cy="45%" r="60%">
-              <stop offset="0%" stopColor="rgba(255,255,255,0.65)" />
-              <stop offset="100%" stopColor="rgba(255,255,255,0)" />
+            <radialGradient
+              id="radarBackground"
+              cx="50%"
+              cy="45%"
+              r="60%"
+            >
+              <stop
+                offset="0%"
+                stopColor="rgba(255,255,255,0.65)"
+              />
+
+              <stop
+                offset="100%"
+                stopColor="rgba(255,255,255,0)"
+              />
             </radialGradient>
           </defs>
 
-          <circle cx={center} cy={center} r="104" fill="url(#radarBackground)" />
+          <circle
+            cx={center}
+            cy={center}
+            r="104"
+            fill="url(#radarBackground)"
+          />
 
           {[1, 0.75, 0.5, 0.25].map((level) => (
             <polygon
               key={level}
               points={points
                 .map((point) => {
-                  const position = polarToCartesian(
-                    center,
-                    radius,
-                    point.angle,
-                    level
-                  );
+                  const position =
+                    polarToCartesian(
+                      center,
+                      radius,
+                      point.angle,
+                      level
+                    );
 
                   return `${position.x},${position.y}`;
                 })
@@ -117,7 +201,12 @@ export function VectorRadar({ axis, color }: RoleRadarProps) {
           ))}
 
           {points.map((point) => {
-            const axisEnd = polarToCartesian(center, radius, point.angle, 1);
+            const axisEnd = polarToCartesian(
+              center,
+              radius,
+              point.angle,
+              1
+            );
 
             return (
               <line
@@ -164,12 +253,13 @@ export function VectorRadar({ axis, color }: RoleRadarProps) {
           })}
 
           {points.map((point) => {
-            const labelPosition = polarToCartesian(
-              center,
-              radius + 32,
-              point.angle,
-              1
-            );
+            const labelPosition =
+              polarToCartesian(
+                center,
+                radius + 32,
+                point.angle,
+                1
+              );
 
             return (
               <g key={point.key}>
@@ -182,6 +272,7 @@ export function VectorRadar({ axis, color }: RoleRadarProps) {
                 >
                   {point.label}
                 </text>
+
                 <text
                   x={labelPosition.x}
                   y={labelPosition.y + 13}
@@ -202,14 +293,19 @@ export function VectorRadar({ axis, color }: RoleRadarProps) {
           <div key={point.key}>
             <div className="mb-1 flex items-center justify-between gap-4 text-[11px] text-white/75">
               <span>{point.label}</span>
-              <span>{Math.round(point.value * 100)}%</span>
+
+              <span>
+                {Math.round(point.value * 100)}%
+              </span>
             </div>
 
             <div className="h-[3px] overflow-hidden rounded-full bg-white/10">
               <div
                 className="h-full rounded-full"
                 style={{
-                  width: `${Math.round(point.value * 100)}%`,
+                  width: `${Math.round(
+                    point.value * 100
+                  )}%`,
                   backgroundColor: color,
                   boxShadow: `0 0 18px ${color}`,
                 }}
