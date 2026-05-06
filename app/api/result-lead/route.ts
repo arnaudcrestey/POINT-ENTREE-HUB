@@ -108,9 +108,11 @@ ${message}
               <p style="margin:0 0 14px;font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#8a7557;">
                 arnaudcrestey.com
               </p>
+
               <h1 style="margin:0;font-family:Georgia,serif;font-size:28px;line-height:1.2;font-weight:400;color:#111827;">
                 Situation professionnelle transmise
               </h1>
+
               <p style="margin:14px 0 0;font-size:14px;line-height:1.7;color:#6b7280;">
                 Une nouvelle situation a été déposée à partir du point d’entrée de positionnement.
               </p>
@@ -181,64 +183,62 @@ ${message}
     await transporter.sendMail({
       from: process.env.MAIL_FROM,
       to: email,
-      subject: "Votre situation professionnelle a bien été transmise",
+      subject: "Situation bien transmise",
       text: `
 Bonjour ${firstName},
 
 Votre situation professionnelle a bien été transmise.
 
-Elle sera relue à partir des éléments communiqués et de la première lecture de positionnement réalisée sur arnaudcrestey.com.
+Elle sera relue à partir des éléments communiqués et de la première lecture réalisée lors du parcours de positionnement.
 
 Cette étape ne constitue ni une sélection automatique, ni un engagement mutuel. Elle permet simplement d’évaluer si une cohérence professionnelle peut être approfondie.
 
+Bien à vous,
+
 Arnaud Crestey
-arnaudcrestey.com
       `,
       html: `
         <div style="margin:0;padding:36px;background:#f3f4f0;font-family:Arial,Helvetica,sans-serif;color:#111827;">
           <div style="max-width:640px;margin:0 auto;background:#ffffff;border:1px solid #e5e1d8;border-radius:28px;overflow:hidden;">
-            <div style="padding:34px 38px;border-bottom:1px solid #ebe7df;background:#fbfaf7;">
-              <p style="margin:0 0 14px;font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#8a7557;">
-                arnaudcrestey.com
+            <div style="padding:38px 42px 30px;border-bottom:1px solid #ebe7df;background:#fbfaf7;">
+              <p style="margin:0 0 18px;font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:#8a7557;">
+                Confirmation
               </p>
-              <h1 style="margin:0;font-family:Georgia,serif;font-size:27px;line-height:1.25;font-weight:400;color:#111827;">
+
+              <h1 style="margin:0;font-family:Georgia,serif;font-size:30px;line-height:1.22;font-weight:400;color:#111827;">
                 Situation bien transmise
               </h1>
             </div>
 
-            <div style="padding:34px 38px;">
-              <p style="margin:0 0 18px;font-size:15px;line-height:1.8;color:#374151;">
+            <div style="padding:38px 42px 42px;">
+              <p style="margin:0 0 22px;font-size:15px;line-height:1.85;color:#374151;">
                 Bonjour ${escapeHtml(firstName)},
               </p>
 
-              <p style="margin:0 0 18px;font-size:15px;line-height:1.8;color:#374151;">
+              <p style="margin:0 0 22px;font-size:15px;line-height:1.85;color:#374151;">
                 Votre situation professionnelle a bien été transmise.
               </p>
 
-              <p style="margin:0 0 18px;font-size:15px;line-height:1.8;color:#374151;">
-                Elle sera relue à partir des éléments communiqués et de la première lecture de positionnement réalisée sur arnaudcrestey.com.
+              <p style="margin:0 0 28px;font-size:15px;line-height:1.85;color:#374151;">
+                Elle sera relue à partir des éléments communiqués et de la première lecture réalisée lors du parcours de positionnement.
               </p>
 
-              <div style="margin:28px 0;padding:20px 22px;background:#fbfaf7;border:1px solid #e7e2d8;border-radius:18px;">
-                <p style="margin:0;font-size:13px;line-height:1.8;color:#6b7280;">
+              <div style="margin:30px 0 38px;padding:22px 24px;background:#fbfaf7;border:1px solid #e7e2d8;border-radius:18px;">
+                <p style="margin:0;font-size:13px;line-height:1.85;color:#6b7280;">
                   Cette étape ne constitue ni une sélection automatique, ni un engagement mutuel. Elle permet simplement d’évaluer si une cohérence professionnelle peut être approfondie.
                 </p>
               </div>
 
-              <div style="margin:42px 0 0;padding-top:28px;border-top:1px solid #ebe7df;text-align:center;">
-                <p style="margin:0 0 18px;font-size:13px;letter-spacing:0.08em;color:#6b7280;">
+              <div style="margin-top:36px;padding-top:28px;border-top:1px solid #ebe7df;">
+                <p style="margin:0 0 8px;font-size:14px;line-height:1.7;color:#374151;">
                   Bien à vous,
                 </p>
 
-                <div style="font-family:Georgia,serif;font-size:64px;line-height:1;color:#1f3f75;margin-bottom:10px;">
-                  AC
-                </div>
-
-                <div style="width:54px;height:1px;background:#c9a86a;margin:0 auto 14px;"></div>
-
-                <p style="margin:0;font-size:13px;color:#6b7280;letter-spacing:0.03em;">
-                  arnaudcrestey.com
+                <p style="margin:0;font-family:Georgia,serif;font-size:21px;line-height:1.4;color:#111827;">
+                  Arnaud Crestey
                 </p>
+
+                <div style="width:42px;height:1px;background:#c9a86a;margin:14px 0 0;"></div>
               </div>
             </div>
           </div>
