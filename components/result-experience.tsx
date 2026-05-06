@@ -552,7 +552,7 @@ export function ResultExperience({
             required
             name="message"
             rows={12}
-            placeholder="Décrivez votre activité actuelle, votre manière de travailler, votre niveau d’autonomie, votre rapport aux outils, les situations que vous gérez concrètement et les raisons pour lesquelles cette lecture vous semble cohérente avec votre contexte professionnel."
+            placeholder="Décrivez votre activité actuelle, votre manière de travailler, votre niveau d’autonomie, les situations que vous gérez concrètement et les raisons pour lesquelles cette lecture vous semble cohérente avec votre contexte professionnel."
             className="min-h-[320px] w-full resize-y rounded-[26px] border border-black/10 bg-white px-5 py-5 text-sm leading-7 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-[#315f8c]"
           />
         </label>
@@ -608,7 +608,7 @@ export function ResultExperience({
           className="mt-8 w-full rounded-full px-6 py-4 text-sm font-medium text-white shadow-[0_18px_40px_rgba(49,95,140,0.25)] transition hover:-translate-y-0.5"
           style={{ backgroundColor: meta.color }}
         >
-          Transmettre ma situation professionnelle
+          Présenter ma situation 
         </button>
 
         <p className="mx-auto mt-5 max-w-lg text-center text-xs leading-6 opacity-55">
