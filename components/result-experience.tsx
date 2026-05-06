@@ -418,175 +418,186 @@ export function ResultExperience({
               />
             </div>
 
-            <section
-              id="collaboration"
-              className={`reveal-3 overflow-hidden rounded-[34px] border shadow-[0_34px_100px_rgba(15,23,42,0.12)] ${
-                isDark
-                  ? "border-white/10 bg-white/10"
-                  : "border-white/70 bg-white/88"
-              }`}
+           <section
+  id="collaboration"
+  className={`reveal-3 overflow-hidden rounded-[34px] border shadow-[0_34px_100px_rgba(15,23,42,0.12)] ${
+    isDark
+      ? "border-white/10 bg-white/10"
+      : "border-white/70 bg-white/88"
+  }`}
+>
+  <div className="grid gap-0 lg:grid-cols-[0.92fr_1.08fr]">
+    <div className="p-6 md:p-10 lg:p-12">
+      <p className="text-xs uppercase tracking-[0.32em] opacity-45">
+        Analyse de contexte
+      </p>
+
+      <h2 className="mt-4 font-serif text-3xl leading-tight md:text-5xl">
+        Déposer une situation professionnelle
+      </h2>
+
+      <div className="mt-8 space-y-6 text-sm leading-8 opacity-75">
+        <p>
+          Cette seconde étape permet d’approfondir la lecture initiale à partir
+          d’une situation concrète.
+        </p>
+
+        <p>
+          Elle concerne principalement des indépendants, des profils
+          opérationnels ou des personnes amenées à intervenir dans un
+          environnement structuré.
+        </p>
+
+        <p>
+          L’objectif n’est pas d’évaluer un parcours, mais de comprendre votre
+          manière d’intervenir, votre niveau d’autonomie, votre rapport aux
+          outils et votre capacité à porter une situation réelle.
+        </p>
+      </div>
+
+      <div className="mt-10 space-y-5 text-sm leading-6">
+        {[
+          "Vous transmettez une situation professionnelle réelle.",
+          "Une seconde lecture permet d’évaluer la cohérence opérationnelle du profil.",
+          "Une compatibilité peut ensuite ouvrir vers un échange complémentaire.",
+        ].map((item, index) => (
+          <div key={item} className="flex gap-4">
+            <span
+              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px] text-white shadow-sm"
+              style={{ backgroundColor: meta.color }}
             >
-              <div className="grid gap-0 lg:grid-cols-[0.9fr_1.1fr]">
-                <div className="p-6 md:p-10">
-                  <p className="text-xs uppercase tracking-[0.28em] opacity-50">
-                    Vérification freelance
-                  </p>
+              {index + 1}
+            </span>
 
-                  <h2 className="mt-3 font-serif text-3xl leading-tight md:text-4xl">
-                    Présenter votre situation réelle
-                  </h2>
+            <span className="pt-[2px] opacity-75">{item}</span>
+          </div>
+        ))}
+      </div>
+    </div>
 
-                  <p className="mt-5 text-sm leading-7 opacity-75">
-                    Cette première lecture ne constitue pas une sélection. Elle
-                    ouvre une seconde étape réservée aux profils indépendants,
-                    freelances ou personnes prêtes à fonctionner en autonomie
-                    dans un cadre structuré.
-                  </p>
+    <div
+      className={`border-t p-4 sm:p-6 lg:border-l lg:border-t-0 lg:p-8 ${
+        isDark ? "border-white/10" : "border-black/5"
+      }`}
+    >
+      <form
+        action="/api/result-lead"
+        method="POST"
+        className={`rounded-[34px] border p-5 shadow-[0_26px_80px_rgba(15,23,42,0.14)] sm:p-7 md:p-8 ${
+          isDark
+            ? "border-white/10 bg-black/20"
+            : "border-black/5 bg-[#f8fafc]"
+        }`}
+      >
+        <input type="hidden" name="dominant" value={dominant} />
+        <input type="hidden" name="entity" value={meta.entity} />
+        <input
+          type="hidden"
+          name="structuration"
+          value={rawScore.structuration}
+        />
+        <input
+          type="hidden"
+          name="comprehension"
+          value={rawScore.comprehension}
+        />
+        <input
+          type="hidden"
+          name="valorisation"
+          value={rawScore.valorisation}
+        />
 
-                  <p className="mt-4 text-sm leading-7 opacity-70">
-                    Votre contexte sera analysé à partir de votre parcours, de
-                    votre niveau d’autonomie, de votre rapport aux outils et de
-                    votre capacité à porter une mission concrète.
-                  </p>
+        <div className="mb-8">
+          <p
+            className="text-xs font-medium uppercase tracking-[0.28em]"
+            style={{ color: meta.color }}
+          >
+            Transmission du contexte
+          </p>
 
-                  <div className="mt-8 space-y-4 text-sm leading-6">
-                    {[
-                      "Vous présentez votre situation avec des éléments concrets.",
-                      "Une seconde lecture vérifie la compatibilité opérationnelle.",
-                      "Deux voies restent possibles : échange envisageable ou compatibilité non confirmée.",
-                    ].map((item, index) => (
-                      <div key={item} className="flex gap-3">
-                        <span
-                          className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs text-white"
-                          style={{ backgroundColor: meta.color }}
-                        >
-                          {index + 1}
-                        </span>
-                        <span className="opacity-75">{item}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+          <p className="mt-3 max-w-xl text-sm leading-7 opacity-65">
+            Les éléments transmis permettent une lecture complémentaire plus
+            précise de votre situation professionnelle.
+          </p>
+        </div>
 
-                <div
-                  className={`border-t p-4 sm:p-6 lg:border-l lg:border-t-0 lg:p-8 ${
-                    isDark ? "border-white/10" : "border-black/5"
-                  }`}
-                >
-                  <form
-                    action="/api/result-lead"
-                    method="POST"
-                    className={`rounded-[30px] border p-5 shadow-[0_26px_80px_rgba(15,23,42,0.14)] sm:p-6 md:p-7 ${
-                      isDark
-                        ? "border-white/10 bg-black/20"
-                        : "border-black/5 bg-[#f8fafc]"
-                    }`}
-                  >
-                    <input type="hidden" name="dominant" value={dominant} />
-                    <input type="hidden" name="entity" value={meta.entity} />
-                    <input
-                      type="hidden"
-                      name="structuration"
-                      value={rawScore.structuration}
-                    />
-                    <input
-                      type="hidden"
-                      name="comprehension"
-                      value={rawScore.comprehension}
-                    />
-                    <input
-                      type="hidden"
-                      name="valorisation"
-                      value={rawScore.valorisation}
-                    />
+        <label className="block space-y-3 text-xs">
+          <span className="opacity-60">
+            Situation professionnelle
+          </span>
 
-                    <div className="mb-6">
-                      <p
-                        className="text-xs font-medium uppercase tracking-[0.22em]"
-                        style={{ color: meta.color }}
-                      >
-                        Dépôt de situation
-                      </p>
-                      <p className="mt-2 text-sm leading-6 opacity-65">
-                        Renseignez les éléments utiles à une première lecture
-                        opérationnelle. La zone principale est volontairement
-                        large pour permettre une réponse réelle.
-                      </p>
-                    </div>
+          <textarea
+            required
+            name="message"
+            rows={12}
+            placeholder="Décrivez votre activité actuelle, votre manière de travailler, votre niveau d’autonomie, votre rapport aux outils, les situations que vous gérez concrètement et les raisons pour lesquelles cette lecture vous semble cohérente avec votre contexte professionnel."
+            className="min-h-[320px] w-full resize-y rounded-[26px] border border-black/10 bg-white px-5 py-5 text-sm leading-7 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-[#315f8c]"
+          />
+        </label>
 
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      <label className="space-y-2 text-xs">
-                        <span className="opacity-70">Prénom</span>
-                        <input
-                          required
-                          name="firstName"
-                          placeholder="Votre prénom"
-                          className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#315f8c]"
-                        />
-                      </label>
+        <div className="mt-7 grid gap-4 sm:grid-cols-2">
+          <label className="space-y-2 text-xs">
+            <span className="opacity-60">Prénom</span>
 
-                      <label className="space-y-2 text-xs">
-                        <span className="opacity-70">Email</span>
-                        <input
-                          required
-                          type="email"
-                          name="email"
-                          placeholder="vous@exemple.com"
-                          className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#315f8c]"
-                        />
-                      </label>
+            <input
+              required
+              name="firstName"
+              placeholder="Votre prénom"
+              className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#315f8c]"
+            />
+          </label>
 
-                      <label className="space-y-2 text-xs">
-                        <span className="opacity-70">Activité actuelle</span>
-                        <input
-                          required
-                          name="activity"
-                          placeholder="Métier, activité ou projet"
-                          className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#315f8c]"
-                        />
-                      </label>
+          <label className="space-y-2 text-xs">
+            <span className="opacity-60">Email</span>
 
-                      <label className="space-y-2 text-xs">
-                        <span className="opacity-70">Lien utile</span>
-                        <input
-                          name="website"
-                          placeholder="LinkedIn, site ou page principale"
-                          className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#315f8c]"
-                        />
-                      </label>
-                    </div>
+            <input
+              required
+              type="email"
+              name="email"
+              placeholder="vous@exemple.com"
+              className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#315f8c]"
+            />
+          </label>
 
-                    <label className="mt-5 block space-y-2 text-xs">
-                      <span className="opacity-70">
-                        Votre situation professionnelle
-                      </span>
+          <label className="space-y-2 text-xs">
+            <span className="opacity-60">Activité actuelle</span>
 
-                      <textarea
-                        required
-                        name="message"
-                        rows={11}
-                        placeholder="Décrivez votre activité actuelle, votre manière de travailler, votre niveau d’autonomie, votre rapport aux outils et les raisons pour lesquelles cette lecture vous semble cohérente avec votre situation."
-                        className="min-h-[260px] w-full resize-y rounded-2xl border border-black/10 bg-white px-4 py-4 text-sm leading-6 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-[#315f8c]"
-                      />
-                    </label>
+            <input
+              required
+              name="activity"
+              placeholder="Métier, activité ou projet"
+              className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#315f8c]"
+            />
+          </label>
 
-                    <button
-                      type="submit"
-                      className="mt-6 w-full rounded-full px-6 py-3.5 text-sm font-medium text-white shadow-[0_18px_40px_rgba(49,95,140,0.25)] transition hover:-translate-y-0.5"
-                      style={{ backgroundColor: meta.color }}
-                    >
-                      Soumettre ma situation professionnelle
-                    </button>
+          <label className="space-y-2 text-xs">
+            <span className="opacity-60">Lien utile</span>
 
-                    <p className="mx-auto mt-4 max-w-md text-center text-xs leading-5 opacity-60">
-                      Cette étape permet uniquement une première vérification de
-                      compatibilité. Elle ne constitue pas une sélection
-                      automatique.
-                    </p>
-                  </form>
-                </div>
-              </div>
-            </section>
+            <input
+              name="website"
+              placeholder="LinkedIn, site ou page principale"
+              className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#315f8c]"
+            />
+          </label>
+        </div>
+
+        <button
+          type="submit"
+          className="mt-8 w-full rounded-full px-6 py-4 text-sm font-medium text-white shadow-[0_18px_40px_rgba(49,95,140,0.25)] transition hover:-translate-y-0.5"
+          style={{ backgroundColor: meta.color }}
+        >
+          Transmettre ma situation
+        </button>
+
+        <p className="mx-auto mt-5 max-w-lg text-center text-xs leading-6 opacity-55">
+          Cette étape permet uniquement une lecture complémentaire de
+          compatibilité professionnelle. Elle ne constitue ni une sélection
+          automatique ni un engagement mutuel.
+        </p>
+      </form>
+    </div>
+  </div>
+</section>
           </div>
         )}
       </div>
