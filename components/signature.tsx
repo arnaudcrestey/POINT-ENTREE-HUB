@@ -5,7 +5,8 @@ export function Signature() {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Ouvrir arnaudcrestey.com"
-      className="inline-flex w-fit shrink-0 flex-col items-center justify-center overflow-visible text-center no-underline"
+      className="inline-flex w-fit flex-col items-center text-center no-underline"
+      style={{ paddingBottom: "14px" }}
     >
       <span
         className="font-serif text-black"
@@ -31,7 +32,13 @@ export function Signature() {
 
       <span
         aria-hidden="true"
-        className="mt-4 block h-px w-[72px] shrink-0 bg-[#c8a46b]"
+        style={{
+          display: "block",
+          width: "72px",
+          height: "1px",
+          marginTop: "16px",
+          backgroundColor: "#c8a46b",
+        }}
       />
     </a>
   );
