@@ -318,7 +318,7 @@ export function ResultExperience({
                     : "border-black/10 bg-white/70"
                 }`}
               >
-                Orientation professionnelle
+                Lecture de positionnement
               </div>
             </div>
 
