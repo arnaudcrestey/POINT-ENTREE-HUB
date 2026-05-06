@@ -319,20 +319,46 @@ Exemple :
 STRUCTURE :
 
 lecture :
-2 à 4 phrases.
-Décrire ce que vous semblez faire naturellement, ce que cela produit concrètement, puis une limite possible.
+2 phrases maximum.
+Chaque phrase doit être courte, dense et directement utile.
+
+Décrire :
+- ce que vous semblez faire naturellement,
+- ce que cela produit concrètement,
+- puis une limite ou une tension possible.
 
 projection :
-2 à 4 phrases.
-Expliquer où cette logique pourrait être utile dans ${axisContext.universe}, avec une valeur concrète, sans promesse.
+2 phrases maximum.
+Aucune phrase longue.
+Ne pas expliquer. Observer.
+
+Décrire :
+- où cette logique pourrait être utile dans ${axisContext.universe},
+- dans quel type de situation réelle,
+- avec quelle valeur concrète,
+- sans promesse.
 
 attention :
-2 phrases courtes.
+2 phrases courtes maximum.
+12 mots maximum par phrase.
 Chaque phrase commence par "Vous".
 
 suite :
-2 actions réalistes et professionnelles.
+2 actions professionnelles maximum.
+10 mots maximum par phrase.
 Chaque phrase commence par un verbe d’action.
+
+LONGUEUR MAXIMALE :
+- lecture : 55 mots maximum
+- projection : 45 mots maximum
+- attention : très court
+- suite : très court
+
+Le texte doit ressembler à :
+- une note de lecture professionnelle,
+- une observation concise,
+- un retour de cabinet,
+- jamais à un rapport explicatif.
 
 FORMAT STRICT :
 Réponds uniquement en JSON valide.
@@ -347,35 +373,45 @@ Aucun texte après.
 }
 `;
 
-    const response = await fetch(
-      "https://api.openai.com/v1/chat/completions",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+const response = await fetch(
+  "https://api.openai.com/v1/chat/completions",
+  {
+    method: "POST",
+
+    headers: {
+      "Content-Type": "application/json",
+
+      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+    },
+
+    body: JSON.stringify({
+      model: "gpt-4.1",
+
+      temperature: 0.24,
+
+      max_tokens: 360,
+
+      response_format: {
+        type: "json_object",
+      },
+
+      messages: [
+        {
+          role: "system",
+
+          content:
+            "Vous êtes un consultant senior spécialisé dans les logiques d’intervention professionnelles, la structuration d’écosystèmes et le discernement opérationnel. Vous rédigez des analyses sobres, humaines, crédibles et directement exploitables dans une interface premium. Vous évitez tout ton marketing, RH, psychologique ou inspirationnel. Vous écrivez comme une note de lecture professionnelle rédigée par un consultant expérimenté. Vous privilégiez les formulations courtes, denses et observatrices plutôt que les explications longues. Vous répondez uniquement en JSON valide.",
         },
-        body: JSON.stringify({
-          model: "gpt-4.1",
-          temperature: 0.28,
-          max_tokens: 620,
-          response_format: {
-            type: "json_object",
-          },
-          messages: [
-            {
-              role: "system",
-              content:
-                "Vous êtes un consultant senior spécialisé dans les logiques d’intervention professionnelles, la structuration d’écosystèmes et le discernement opérationnel. Vous rédigez des analyses sobres, humaines, crédibles et directement exploitables dans une interface premium. Vous évitez tout ton marketing, RH, psychologique ou inspirationnel. Vous écrivez comme une note de lecture professionnelle rédigée par un consultant expérimenté. Vous répondez uniquement en JSON valide.",
-            },
-            {
-              role: "user",
-              content: prompt,
-            },
-          ],
-        }),
-      }
-    );
+
+        {
+          role: "user",
+
+          content: prompt,
+        },
+      ],
+    }),
+  }
+);
 
     if (!response.ok) {
       console.error(await response.text());
