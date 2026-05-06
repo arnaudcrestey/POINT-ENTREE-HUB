@@ -12,18 +12,28 @@ const fallback: AnalysisResult = {
     "Votre résultat reste exploitable, mais l’analyse personnalisée n’a pas pu être générée pour le moment.",
   projection:
     "Votre positionnement indique une orientation possible dans l’écosystème, à préciser par une lecture plus fine.",
-  attention: ["Vérifier la cohérence entre le score et votre situation réelle."],
-  suite: ["Transmettre votre situation pour recevoir une lecture personnalisée."],
+  attention: [
+    "Vous devez vérifier la cohérence entre ce résultat et votre situation réelle.",
+    "Vous pouvez avoir besoin d’un regard complémentaire avant toute projection.",
+  ],
+  suite: [
+    "Présenter votre situation actuelle avec des exemples concrets.",
+    "Préciser le type d’environnement dans lequel vous intervenez aujourd’hui.",
+  ],
 };
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    const { dominant, structuration, comprehension, valorisation } = body;
+    const {
+      dominant,
+      structuration,
+      comprehension,
+      valorisation,
+    } = body;
 
-   
-const prompt = `
+    const prompt = `
 Tu analyses un résultat de positionnement professionnel.
 
 IMPORTANT :
@@ -91,7 +101,7 @@ RÈGLES DE RÉDACTION :
 - aucune phrase générique
 - pas de jargon psychologique
 - pas de langage startup
-- éviter les tournures “inspirantes”
+- éviter les tournures inspirantes
 - écrire des phrases naturelles et directement affichables dans une interface premium
 - privilégier les formulations concrètes et professionnelles
 - parler de potentiel et de compatibilité, jamais de certitude absolue
@@ -157,30 +167,33 @@ Format STRICT :
 }
 `;
 
-const response = await fetch("https://api.openai.com/v1/chat/completions", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    Authorization: \`Bearer \${process.env.OPENAI_API_KEY}\`,
-  },
-  body: JSON.stringify({
-    model: "gpt-4o-mini",
-    temperature: 0.2,
-    max_tokens: 520,
-    response_format: { type: "json_object" },
-    messages: [
+    const response = await fetch(
+      "https://api.openai.com/v1/chat/completions",
       {
-        role: "system",
-        content:
-          "Vous êtes un consultant senior en orientation et compatibilité professionnelle. Vous rédigez des analyses sobres, précises et crédibles destinées à un dispositif premium de positionnement professionnel. Vous vous adressez toujours directement à la personne avec vous/votre/vos. Vous ne produisez jamais de contenu marketing, psychologique ou inspirationnel. Vous répondez uniquement en JSON valide.",
-      },
-      {
-        role: "user",
-        content: prompt,
-      },
-    ],
-  }),
-});
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: "gpt-4o-mini",
+          temperature: 0.2,
+          max_tokens: 520,
+          response_format: { type: "json_object" },
+          messages: [
+            {
+              role: "system",
+              content:
+                "Vous êtes un consultant senior en orientation et compatibilité professionnelle. Vous rédigez des analyses sobres, précises et crédibles destinées à un dispositif premium de positionnement professionnel. Vous vous adressez toujours directement à la personne avec vous/votre/vos. Vous ne produisez jamais de contenu marketing, psychologique ou inspirationnel. Vous répondez uniquement en JSON valide.",
+            },
+            {
+              role: "user",
+              content: prompt,
+            },
+          ],
+        }),
+      }
+    );
 
     if (!response.ok) {
       console.error(await response.text());
@@ -188,6 +201,7 @@ const response = await fetch("https://api.openai.com/v1/chat/completions", {
     }
 
     const data = await response.json();
+
     const content = data.choices?.[0]?.message?.content;
 
     if (!content) {
@@ -196,12 +210,15 @@ const response = await fetch("https://api.openai.com/v1/chat/completions", {
 
     try {
       const parsed = JSON.parse(content) as AnalysisResult;
+
       return NextResponse.json(parsed);
-    } catch {
+    } catch (error) {
+      console.error(error);
       return NextResponse.json(fallback);
     }
-  } catch (e) {
-    console.error(e);
+  } catch (error) {
+    console.error(error);
+
     return NextResponse.json(fallback);
   }
 }
