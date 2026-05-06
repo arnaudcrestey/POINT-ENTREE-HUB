@@ -1,7 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { AxisKey } from "@/lib/scoring";
+
+import type {
+  AxisKey,
+  SubSignals,
+} from "@/lib/scoring";
 
 type AiAnalysis = {
   lecture: string;
@@ -18,26 +22,50 @@ type Props = {
   valorisation: number;
   color: string;
   isDark: boolean;
+  subSignals?: Partial<SubSignals>;
 };
 
-function normalizeAnalysis(data: any): AiAnalysis | null {
-  if (!data || typeof data !== "object") return null;
+function normalizeAnalysis(data: unknown): AiAnalysis | null {
+  if (!data || typeof data !== "object") {
+    return null;
+  }
+
+  const result = data as Partial<AiAnalysis>;
 
   return {
     lecture:
-      typeof data.lecture === "string"
-        ? data.lecture
+      typeof result.lecture === "string" &&
+      result.lecture.trim().length > 0
+        ? result.lecture
         : "L’analyse personnalisée n’a pas pu être générée correctement pour le moment.",
+
     projection:
-      typeof data.projection === "string"
-        ? data.projection
+      typeof result.projection === "string" &&
+      result.projection.trim().length > 0
+        ? result.projection
         : "Votre résultat indique néanmoins une orientation exploitable dans l’écosystème.",
-    attention: Array.isArray(data.attention)
-      ? data.attention
-      : ["Vérifier la cohérence entre le résultat et votre situation réelle."],
-    suite: Array.isArray(data.suite)
-      ? data.suite
-      : ["Transmettre quelques éléments de contexte pour affiner la lecture."],
+
+    attention:
+      Array.isArray(result.attention) &&
+      result.attention.length > 0
+        ? result.attention
+            .filter((item): item is string => typeof item === "string")
+            .slice(0, 2)
+        : [
+            "Vous devez vérifier la cohérence entre ce résultat et votre situation réelle.",
+            "Vous pouvez avoir besoin d’un regard complémentaire avant toute projection.",
+          ],
+
+    suite:
+      Array.isArray(result.suite) &&
+      result.suite.length > 0
+        ? result.suite
+            .filter((item): item is string => typeof item === "string")
+            .slice(0, 2)
+        : [
+            "Présenter votre situation actuelle avec des exemples concrets.",
+            "Préciser le type d’environnement dans lequel vous intervenez aujourd’hui.",
+          ],
   };
 }
 
@@ -49,6 +77,7 @@ export function AiResultAnalysis({
   valorisation,
   color,
   isDark,
+  subSignals = {},
 }: Props) {
   const [analysis, setAnalysis] = useState<AiAnalysis | null>(null);
   const [loading, setLoading] = useState(true);
@@ -57,22 +86,29 @@ export function AiResultAnalysis({
     let active = true;
 
     async function load() {
+      setLoading(true);
+
       try {
         const response = await fetch("/api/analyse-resultat", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify({
             dominant,
             entity,
             structuration,
             comprehension,
             valorisation,
+            subSignals,
           }),
         });
 
         const data = await response.json();
 
-        if (!active) return;
+        if (!active) {
+          return;
+        }
 
         if (!response.ok || data.error) {
           setAnalysis(null);
@@ -80,9 +116,13 @@ export function AiResultAnalysis({
           setAnalysis(normalizeAnalysis(data));
         }
       } catch {
-        if (active) setAnalysis(null);
+        if (active) {
+          setAnalysis(null);
+        }
       } finally {
-        if (active) setLoading(false);
+        if (active) {
+          setLoading(false);
+        }
       }
     }
 
@@ -91,10 +131,19 @@ export function AiResultAnalysis({
     return () => {
       active = false;
     };
-  }, [dominant, entity, structuration, comprehension, valorisation]);
+  }, [
+    dominant,
+    entity,
+    structuration,
+    comprehension,
+    valorisation,
+    subSignals,
+  ]);
 
   const cardClass = `rounded-[32px] border p-6 shadow-[0_30px_90px_rgba(15,23,42,0.08)] md:p-9 ${
-    isDark ? "border-white/10 bg-white/10" : "border-white/70 bg-white/88"
+    isDark
+      ? "border-white/10 bg-white/10"
+      : "border-white/70 bg-white/88"
   }`;
 
   if (loading) {
@@ -161,7 +210,7 @@ export function AiResultAnalysis({
 
       <div className="mt-8 grid gap-8 lg:grid-cols-[1.15fr_0.85fr]">
         <div>
-          <p className="text-sm leading-7 opacity-78 whitespace-pre-line">
+          <p className="whitespace-pre-line text-sm leading-7 opacity-80">
             {analysis.lecture}
           </p>
 
@@ -170,7 +219,7 @@ export function AiResultAnalysis({
               Projection
             </p>
 
-            <p className="mt-3 text-sm leading-7 opacity-75 whitespace-pre-line">
+            <p className="mt-3 whitespace-pre-line text-sm leading-7 opacity-75">
               {analysis.projection}
             </p>
           </div>
@@ -194,6 +243,7 @@ export function AiResultAnalysis({
                   className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full"
                   style={{ backgroundColor: color }}
                 />
+
                 <span className="opacity-75">{item}</span>
               </li>
             ))}
@@ -213,6 +263,7 @@ export function AiResultAnalysis({
                   >
                     {index + 1}
                   </span>
+
                   <span className="opacity-75">{item}</span>
                 </li>
               ))}
