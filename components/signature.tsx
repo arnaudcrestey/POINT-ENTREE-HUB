@@ -6,7 +6,7 @@ export function Signature() {
       href="https://www.arnaudcrestey.com"
       target="_blank"
       rel="noopener noreferrer"
-      className="group inline-flex flex-col items-center justify-center leading-none no-underline"
+      className="group inline-flex flex-col items-center sm:items-start justify-center pb-2 no-underline"
     >
       <span className="font-serif text-[64px] tracking-[-0.14em] text-black">
         AC
@@ -16,7 +16,7 @@ export function Signature() {
         arnaudcrestey.com
       </span>
 
-      <span className="mt-4 block h-px w-16 bg-[#d8c8ad] transition-all duration-300 group-hover:w-20" />
+      <span className="mt-4 block h-px w-16 bg-[#cdb892] transition-all duration-300 group-hover:w-20" />
     </a>
   );
 }
