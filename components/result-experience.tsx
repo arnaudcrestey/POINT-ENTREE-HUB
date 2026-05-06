@@ -612,7 +612,7 @@ export function ResultExperience({
         </button>
 
         <p className="mx-auto mt-5 max-w-lg text-center text-xs leading-6 opacity-55">
-          Cette étape permet uniquement une lecture complémentaire de
+          Cette étape permet d'approfondir la lecture du profil et d'évaluer une éventuelle
           compatibilité professionnelle. Elle ne constitue ni une sélection
           automatique ni un engagement mutuel.
         </p>
