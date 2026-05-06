@@ -23,54 +23,131 @@ export async function POST(req: Request) {
     const { dominant, structuration, comprehension, valorisation } = body;
 
     const prompt = `
+const prompt = `
 Tu analyses un résultat de positionnement professionnel.
 
 IMPORTANT :
 Tu t’adresses directement à la personne.
-Tu dois utiliser uniquement "vous", "votre", "vos".
-Tu ne dois jamais écrire : "la personne", "cette personne", "le profil", "l’utilisateur", "le candidat".
+Tu dois utiliser uniquement :
+- "vous"
+- "votre"
+- "vos"
 
-Ce dispositif n'est pas un quiz.
-C'est un point d'entrée premium destiné à orienter un profil LinkedIn vers une place possible dans un écosystème professionnel.
+INTERDICTIONS ABSOLUES :
+Ne jamais écrire :
+- "la personne"
+- "ce profil"
+- "le profil"
+- "l’utilisateur"
+- "le candidat"
+- "ce type de personnalité"
 
-Écosystème :
-- Structuration : SYSTIA — clarifier, organiser, cadrer, construire des systèmes numériques et opérationnels.
-- Compréhension : Cabinet Astraé — analyser une situation, lire les signaux faibles, éclairer une décision ou une trajectoire.
-- Valorisation : QLYK — améliorer la perception, renforcer l’impact visuel, présenter une offre, un produit ou un contenu avec plus de force.
+Ce dispositif n’est PAS un quiz psychologique.
+Ce n’est PAS un test de personnalité.
+Ce n’est PAS un bilan de compétences.
 
-Scores :
+Il s’agit d’un point d’entrée professionnel premium conçu pour :
+- détecter une logique d’intervention dominante,
+- identifier un environnement professionnel compatible,
+- orienter un indépendant ou un futur collaborateur vers un univers dans lequel il pourrait devenir réellement utile.
+
+Le système repose sur trois environnements :
+
+SYSTIA :
+Structuration, organisation, clarification, systèmes numériques, cadrage opérationnel, logique, méthode, continuité, pilotage.
+
+Cabinet Astraé :
+Compréhension de situation, discernement, analyse humaine, lecture des signaux faibles, clarification de trajectoire, aide à la décision.
+
+QLYK :
+Valorisation, perception, impact visuel, lisibilité d’une offre, amélioration de la présentation et de l’image perçue.
+
+OBJECTIF DE L’ANALYSE :
+Tu ne dois pas décrire une personnalité.
+Tu dois analyser :
+- une manière naturelle d’intervenir,
+- une logique de travail dominante,
+- une capacité potentiellement exploitable dans un environnement structuré.
+
+Tu dois donner la sensation :
+- d’une lecture sérieuse,
+- d’un niveau cabinet,
+- d’un système de discernement professionnel,
+- jamais d’un contenu marketing ou développement personnel.
+
+SCORES :
 - Structuration : ${structuration}
 - Compréhension : ${comprehension}
 - Valorisation : ${valorisation}
 
-Axe dominant : ${dominant}
+AXE DOMINANT :
+${dominant}
 
-Règles :
-- ton sobre, professionnel, niveau cabinet
-- pas de marketing
-- pas de flatterie
-- pas de phrases génériques
-- parler de potentiel, pas de vérité absolue
-- relier clairement l’analyse à un rôle possible dans SYSTIA, Cabinet Astraé ou QLYK
-- écrire en phrases naturelles et directement affichables
+RÈGLES DE RÉDACTION :
+- ton sobre, calme, précis
+- niveau cabinet / direction
+- aucune flatterie
+- aucune promesse
+- aucune phrase générique
+- pas de jargon psychologique
+- pas de langage startup
+- éviter les tournures “inspirantes”
+- écrire des phrases naturelles et directement affichables dans une interface premium
+- privilégier les formulations concrètes et professionnelles
+- parler de potentiel et de compatibilité, jamais de certitude absolue
 
-Structure attendue :
+IMPORTANT :
+L’analyse doit progressivement orienter vers :
+- SYSTIA,
+- Cabinet Astraé,
+- ou QLYK,
+
+sans donner l’impression de vendre quoi que ce soit.
+
+Tu dois faire ressentir :
+- qu’un environnement professionnel existe déjà,
+- que certaines logiques y deviennent utiles,
+- et qu’une collaboration structurée pourrait éventuellement avoir du sens.
+
+STRUCTURE ATTENDUE :
 
 lecture :
-2 à 4 phrases en "vous".
-Décrire ce que vous semblez faire naturellement, ce que cela produit concrètement, puis une limite possible.
+2 à 4 phrases.
+Décrire :
+- ce que vous semblez faire naturellement,
+- ce que cela produit concrètement,
+- dans quel type de situation cette logique devient utile,
+- puis une limite ou un point de vigilance possible.
 
 projection :
-2 à 4 phrases en "vous".
-Expliquer où vous pourriez être utile dans l’écosystème, avec une valeur concrète.
+2 à 4 phrases.
+Expliquer :
+- où cette logique pourrait devenir utile dans l’écosystème,
+- dans quel rôle ou type d’intervention,
+- avec quelle valeur concrète.
 
 attention :
-2 points concrets en "vous".
+2 points courts et concrets.
+Commencer chaque phrase par "Vous".
 
 suite :
-2 actions concrètes en "vous".
+2 actions réalistes et professionnelles.
+Commencer chaque phrase par un verbe d’action.
 
-Réponds uniquement en JSON valide :
+STYLE ATTENDU :
+Mots-clés implicites :
+- discernement
+- structure
+- continuité
+- cohérence
+- responsabilité
+- lisibilité
+- méthode
+- contribution réelle
+
+Réponds UNIQUEMENT en JSON valide.
+
+Format STRICT :
 
 {
   "lecture": "...",
@@ -80,30 +157,30 @@ Réponds uniquement en JSON valide :
 }
 `;
 
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+const response = await fetch("https://api.openai.com/v1/chat/completions", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: \`Bearer \${process.env.OPENAI_API_KEY}\`,
+  },
+  body: JSON.stringify({
+    model: "gpt-4o-mini",
+    temperature: 0.2,
+    max_tokens: 520,
+    response_format: { type: "json_object" },
+    messages: [
+      {
+        role: "system",
+        content:
+          "Vous êtes un consultant senior en orientation et compatibilité professionnelle. Vous rédigez des analyses sobres, précises et crédibles destinées à un dispositif premium de positionnement professionnel. Vous vous adressez toujours directement à la personne avec vous/votre/vos. Vous ne produisez jamais de contenu marketing, psychologique ou inspirationnel. Vous répondez uniquement en JSON valide.",
       },
-      body: JSON.stringify({
-        model: "gpt-4o-mini",
-        temperature: 0.25,
-        max_tokens: 420,
-        response_format: { type: "json_object" },
-        messages: [
-          {
-            role: "system",
-            content:
-              "Tu es un consultant senior en positionnement professionnel. Tu t’adresses toujours directement à la personne avec vous/votre/vos. Tu réponds uniquement en JSON valide.",
-          },
-          {
-            role: "user",
-            content: prompt,
-          },
-        ],
-      }),
-    });
+      {
+        role: "user",
+        content: prompt,
+      },
+    ],
+  }),
+});
 
     if (!response.ok) {
       console.error(await response.text());
