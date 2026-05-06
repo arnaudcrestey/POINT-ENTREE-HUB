@@ -78,7 +78,7 @@ export function ResultExperience({
 
   return (
     <main
-      className={`relative min-h-screen overflow-hidden bg-gradient-to-br ${meta.gradient} px-4 py-8 sm:px-6 md:px-12 md:py-12 ${
+      className={`relative min-h-screen overflow-hidden bg-gradient-to-br ${meta.gradient} px-4 py-7 sm:px-6 md:px-12 md:py-12 ${
         isDark ? "text-white" : "text-ink"
       }`}
     >
@@ -308,7 +308,7 @@ export function ResultExperience({
           </section>
         ) : (
           <div className="space-y-7 md:space-y-8">
-            <div className="reveal-1 flex items-center justify-between gap-4">
+            <div className="reveal-1 flex flex-col items-center justify-center gap-4 text-center md:flex-row md:justify-between md:text-left">
               <Signature />
 
               <div
@@ -420,14 +420,14 @@ export function ResultExperience({
 
             <section
               id="collaboration"
-              className={`reveal-3 rounded-[34px] border p-6 shadow-[0_34px_100px_rgba(15,23,42,0.12)] md:p-10 ${
+              className={`reveal-3 overflow-hidden rounded-[34px] border shadow-[0_34px_100px_rgba(15,23,42,0.12)] ${
                 isDark
                   ? "border-white/10 bg-white/10"
                   : "border-white/70 bg-white/88"
               }`}
             >
-              <div className="grid gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:items-start">
-                <div>
+              <div className="grid gap-0 lg:grid-cols-[0.9fr_1.1fr]">
+                <div className="p-6 md:p-10">
                   <p className="text-xs uppercase tracking-[0.28em] opacity-50">
                     Vérification freelance
                   </p>
@@ -449,11 +449,11 @@ export function ResultExperience({
                     votre capacité à porter une mission concrète.
                   </p>
 
-                  <div className="mt-7 space-y-3 text-sm leading-6">
+                  <div className="mt-8 space-y-4 text-sm leading-6">
                     {[
-                      "Vous présentez brièvement votre situation.",
-                      "Une seconde lecture vérifie la compatibilité réelle.",
-                      "Deux voies possibles : échange envisageable ou compatibilité non confirmée.",
+                      "Vous présentez votre situation avec des éléments concrets.",
+                      "Une seconde lecture vérifie la compatibilité opérationnelle.",
+                      "Deux voies restent possibles : échange envisageable ou compatibilité non confirmée.",
                     ].map((item, index) => (
                       <div key={item} className="flex gap-3">
                         <span
@@ -468,102 +468,123 @@ export function ResultExperience({
                   </div>
                 </div>
 
-                <form
-                  action="/api/result-lead"
-                  method="POST"
-                  className={`rounded-[26px] border p-5 shadow-[0_24px_70px_rgba(15,23,42,0.12)] md:p-6 ${
-                    isDark
-                      ? "border-white/10 bg-black/20"
-                      : "border-black/5 bg-[#f8fafc]"
+                <div
+                  className={`border-t p-4 sm:p-6 lg:border-l lg:border-t-0 lg:p-8 ${
+                    isDark ? "border-white/10" : "border-black/5"
                   }`}
                 >
-                  <input type="hidden" name="dominant" value={dominant} />
-                  <input type="hidden" name="entity" value={meta.entity} />
-                  <input
-                    type="hidden"
-                    name="structuration"
-                    value={rawScore.structuration}
-                  />
-                  <input
-                    type="hidden"
-                    name="comprehension"
-                    value={rawScore.comprehension}
-                  />
-                  <input
-                    type="hidden"
-                    name="valorisation"
-                    value={rawScore.valorisation}
-                  />
-
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <label className="space-y-2 text-xs">
-                      <span className="opacity-70">Prénom</span>
-                      <input
-                        required
-                        name="firstName"
-                        placeholder="Votre prénom"
-                        className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#315f8c]"
-                      />
-                    </label>
-
-                    <label className="space-y-2 text-xs">
-                      <span className="opacity-70">Email</span>
-                      <input
-                        required
-                        type="email"
-                        name="email"
-                        placeholder="vous@exemple.com"
-                        className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#315f8c]"
-                      />
-                    </label>
-
-                    <label className="space-y-2 text-xs">
-                      <span className="opacity-70">Activité actuelle</span>
-                      <input
-                        required
-                        name="activity"
-                        placeholder="Métier, activité ou projet"
-                        className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#315f8c]"
-                      />
-                    </label>
-
-                    <label className="space-y-2 text-xs">
-                      <span className="opacity-70">Lien utile</span>
-                      <input
-                        name="website"
-                        placeholder="LinkedIn, site ou page principale"
-                        className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#315f8c]"
-                      />
-                    </label>
-                  </div>
-
-                  <label className="mt-4 block space-y-2 text-xs">
-                    <span className="opacity-70">
-                      Votre situation en quelques lignes
-                    </span>
-
-                    <textarea
-                      required
-                      name="message"
-                      rows={6}
-                      placeholder="Expliquez brièvement votre parcours, votre statut actuel, votre rapport au travail indépendant, votre niveau d’autonomie et pourquoi ce résultat fait écho à votre manière de travailler."
-                      className="w-full resize-none rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#315f8c]"
-                    />
-                  </label>
-
-                  <button
-                    type="submit"
-                    className="mt-5 w-full rounded-full px-6 py-3 text-sm font-medium text-white shadow-[0_18px_40px_rgba(49,95,140,0.25)] transition hover:-translate-y-0.5"
-                    style={{ backgroundColor: meta.color }}
+                  <form
+                    action="/api/result-lead"
+                    method="POST"
+                    className={`rounded-[30px] border p-5 shadow-[0_26px_80px_rgba(15,23,42,0.14)] sm:p-6 md:p-7 ${
+                      isDark
+                        ? "border-white/10 bg-black/20"
+                        : "border-black/5 bg-[#f8fafc]"
+                    }`}
                   >
-                    Soumettre ma situation professionnelle
-                  </button>
+                    <input type="hidden" name="dominant" value={dominant} />
+                    <input type="hidden" name="entity" value={meta.entity} />
+                    <input
+                      type="hidden"
+                      name="structuration"
+                      value={rawScore.structuration}
+                    />
+                    <input
+                      type="hidden"
+                      name="comprehension"
+                      value={rawScore.comprehension}
+                    />
+                    <input
+                      type="hidden"
+                      name="valorisation"
+                      value={rawScore.valorisation}
+                    />
 
-                  <p className="mt-3 text-center text-xs opacity-60">
-                    Cette étape permet uniquement une première vérification de
-                    compatibilité.
-                  </p>
-                </form>
+                    <div className="mb-6">
+                      <p
+                        className="text-xs font-medium uppercase tracking-[0.22em]"
+                        style={{ color: meta.color }}
+                      >
+                        Dépôt de situation
+                      </p>
+                      <p className="mt-2 text-sm leading-6 opacity-65">
+                        Renseignez les éléments utiles à une première lecture
+                        opérationnelle. La zone principale est volontairement
+                        large pour permettre une réponse réelle.
+                      </p>
+                    </div>
+
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <label className="space-y-2 text-xs">
+                        <span className="opacity-70">Prénom</span>
+                        <input
+                          required
+                          name="firstName"
+                          placeholder="Votre prénom"
+                          className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#315f8c]"
+                        />
+                      </label>
+
+                      <label className="space-y-2 text-xs">
+                        <span className="opacity-70">Email</span>
+                        <input
+                          required
+                          type="email"
+                          name="email"
+                          placeholder="vous@exemple.com"
+                          className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#315f8c]"
+                        />
+                      </label>
+
+                      <label className="space-y-2 text-xs">
+                        <span className="opacity-70">Activité actuelle</span>
+                        <input
+                          required
+                          name="activity"
+                          placeholder="Métier, activité ou projet"
+                          className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#315f8c]"
+                        />
+                      </label>
+
+                      <label className="space-y-2 text-xs">
+                        <span className="opacity-70">Lien utile</span>
+                        <input
+                          name="website"
+                          placeholder="LinkedIn, site ou page principale"
+                          className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#315f8c]"
+                        />
+                      </label>
+                    </div>
+
+                    <label className="mt-5 block space-y-2 text-xs">
+                      <span className="opacity-70">
+                        Votre situation professionnelle
+                      </span>
+
+                      <textarea
+                        required
+                        name="message"
+                        rows={11}
+                        placeholder="Décrivez votre activité actuelle, votre manière de travailler, votre niveau d’autonomie, votre rapport aux outils et les raisons pour lesquelles cette lecture vous semble cohérente avec votre situation."
+                        className="min-h-[260px] w-full resize-y rounded-2xl border border-black/10 bg-white px-4 py-4 text-sm leading-6 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-[#315f8c]"
+                      />
+                    </label>
+
+                    <button
+                      type="submit"
+                      className="mt-6 w-full rounded-full px-6 py-3.5 text-sm font-medium text-white shadow-[0_18px_40px_rgba(49,95,140,0.25)] transition hover:-translate-y-0.5"
+                      style={{ backgroundColor: meta.color }}
+                    >
+                      Soumettre ma situation professionnelle
+                    </button>
+
+                    <p className="mx-auto mt-4 max-w-md text-center text-xs leading-5 opacity-60">
+                      Cette étape permet uniquement une première vérification de
+                      compatibilité. Elle ne constitue pas une sélection
+                      automatique.
+                    </p>
+                  </form>
+                </div>
               </div>
             </section>
           </div>
