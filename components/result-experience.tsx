@@ -4,7 +4,11 @@ import { useEffect, useMemo, useState } from "react";
 import { Signature } from "@/components/signature";
 import { VectorRadar } from "@/components/vector-radar";
 import { AiResultAnalysis } from "@/components/ai-result-analysis";
-import type { AxisKey, VectorScore } from "@/lib/scoring";
+import type {
+  AxisKey,
+  VectorScore,
+  SubSignals,
+} from "@/lib/scoring";
 
 type Meta = {
   name: string;
@@ -19,10 +23,16 @@ type Meta = {
 
 type Props = {
   rawScore: VectorScore;
+
   normalizedScore: VectorScore;
+
   dominant: AxisKey;
+
   hybrid: AxisKey[];
+
   meta: Meta;
+
+  subSignals: Partial<SubSignals>;
 };
 
 const analysisSteps = [
@@ -45,6 +55,7 @@ export function ResultExperience({
   dominant,
   hybrid,
   meta,
+  subSignals,
 }: Props) {
   const [phase, setPhase] = useState<"analysis" | "reveal">("analysis");
   const [activeStep, setActiveStep] = useState(0);
@@ -401,7 +412,11 @@ export function ResultExperience({
                   }`}
                 >
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/35 via-transparent to-transparent" />
-                  <VectorRadar axis={dominant} color={meta.color} />
+                  <VectorRadar
+  axis={dominant}
+  color={meta.color}
+  subSignals={subSignals}
+/>
                 </div>
               </div>
             </section>
