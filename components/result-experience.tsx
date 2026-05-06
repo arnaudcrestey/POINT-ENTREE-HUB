@@ -32,11 +32,11 @@ const axisLabels: Record<AxisKey, string> = {
 };
 
 const analysisSteps = [
-  "Lecture des réponses et pondération des axes",
-  "Identification de la logique dominante",
-  "Croisement avec les axes secondaires",
-  "Construction d’une lecture exploitable",
-  "Préparation d’une projection dans l’écosystème",
+  "Lecture de votre logique d’intervention",
+  "Repérage de l’axe professionnel dominant",
+  "Croisement avec les signaux secondaires",
+  "Évaluation de la compatibilité avec l’écosystème",
+  "Préparation d’une orientation exploitable",
 ];
 
 function toDisplayPercent(value: number) {
@@ -65,12 +65,12 @@ export function ResultExperience({
       setActiveStep((current) =>
         current < analysisSteps.length - 1 ? current + 1 : current
       );
-    }, 620);
+    }, 950);
 
     const revealTimer = window.setTimeout(() => {
       setPhase("reveal");
       window.clearInterval(stepTimer);
-    }, 3600);
+    }, 5200);
 
     return () => {
       window.clearInterval(stepTimer);
@@ -86,8 +86,8 @@ export function ResultExperience({
     >
       <style>{`
         @keyframes floatGlow {
-          0%, 100% { transform: translate3d(0,0,0) scale(1); opacity: .55; }
-          50% { transform: translate3d(24px,-18px,0) scale(1.08); opacity: .85; }
+          0%, 100% { transform: translate3d(0,0,0) scale(1); opacity: .48; }
+          50% { transform: translate3d(20px,-14px,0) scale(1.05); opacity: .72; }
         }
 
         @keyframes revealUp {
@@ -99,14 +99,14 @@ export function ResultExperience({
           to { transform: rotate(360deg); }
         }
 
-        @keyframes pulseDot {
-          0%, 100% { opacity: .45; transform: scale(.88); }
-          50% { opacity: 1; transform: scale(1.12); }
+        @keyframes slowBreath {
+          0%, 100% { opacity: .62; transform: scale(.94); }
+          50% { opacity: 1; transform: scale(1.06); }
         }
 
         @keyframes scanLine {
           0% { transform: translateY(-120%); opacity: 0; }
-          20% { opacity: .55; }
+          20% { opacity: .38; }
           100% { transform: translateY(420%); opacity: 0; }
         }
 
@@ -119,12 +119,12 @@ export function ResultExperience({
           position: absolute;
           border-radius: 9999px;
           filter: blur(44px);
-          animation: floatGlow 8s ease-in-out infinite;
+          animation: floatGlow 9s ease-in-out infinite;
           pointer-events: none;
         }
 
         .analysis-card {
-          animation: revealUp .75s ease-out both;
+          animation: revealUp .85s ease-out both;
         }
 
         .reveal-1 { animation: revealUp .75s ease-out both; animation-delay: .05s; }
@@ -135,32 +135,63 @@ export function ResultExperience({
 
         .analysis-ring {
           position: relative;
-          width: 96px;
-          height: 96px;
+          width: 92px;
+          height: 92px;
           border-radius: 9999px;
           background:
-            conic-gradient(from 0deg, ${meta.color}, transparent 28%, ${meta.color}, transparent 62%, ${meta.color});
-          animation: rotateRing 1.8s linear infinite;
-          box-shadow: 0 0 50px ${meta.color}33;
+            conic-gradient(
+              from 90deg,
+              transparent 0deg,
+              transparent 38deg,
+              ${meta.color} 74deg,
+              rgba(255,255,255,.82) 105deg,
+              transparent 145deg,
+              transparent 214deg,
+              ${meta.color} 260deg,
+              rgba(255,255,255,.72) 292deg,
+              transparent 340deg
+            );
+          animation: rotateRing 5.2s linear infinite;
+          box-shadow:
+            0 0 34px ${meta.color}30,
+            inset 0 0 26px rgba(255,255,255,.18);
+        }
+
+        .analysis-ring::before {
+          content: "";
+          position: absolute;
+          inset: 5px;
+          border-radius: 9999px;
+          border: 1px solid rgba(255,255,255,.38);
+          background:
+            radial-gradient(circle at 50% 50%, rgba(255,255,255,.82), rgba(255,255,255,.28) 42%, transparent 64%);
+          box-shadow:
+            inset 0 0 24px rgba(255,255,255,.18),
+            0 0 18px ${meta.color}22;
         }
 
         .analysis-ring::after {
           content: "";
           position: absolute;
-          inset: 9px;
+          inset: 18px;
           border-radius: 9999px;
-          background: rgba(255,255,255,.9);
-          box-shadow: inset 0 0 34px rgba(49,95,140,.14);
+          background:
+            radial-gradient(circle at 35% 30%, rgba(255,255,255,.92), ${meta.color}30 45%, ${meta.color} 100%);
+          box-shadow:
+            0 0 28px ${meta.color}55,
+            inset 0 0 16px rgba(255,255,255,.55);
+          animation: slowBreath 3.8s ease-in-out infinite;
         }
 
         .analysis-core {
           position: absolute;
-          inset: 32px;
+          inset: 35px;
           z-index: 2;
           border-radius: 9999px;
-          background: ${meta.color};
-          box-shadow: 0 0 34px ${meta.color};
-          animation: pulseDot 1.35s ease-in-out infinite;
+          background: rgba(255,255,255,.72);
+          box-shadow:
+            0 0 18px rgba(255,255,255,.55),
+            0 0 34px ${meta.color}45;
         }
 
         .scan-panel {
@@ -175,13 +206,13 @@ export function ResultExperience({
           right: 0;
           top: 0;
           height: 34%;
-          background: linear-gradient(to bottom, transparent, rgba(255,255,255,.48), transparent);
-          animation: scanLine 3.2s ease-in-out infinite;
+          background: linear-gradient(to bottom, transparent, rgba(255,255,255,.34), transparent);
+          animation: scanLine 4.8s ease-in-out infinite;
           pointer-events: none;
         }
 
         .progress-fill {
-          animation: progressFill 3.2s ease-out both;
+          animation: progressFill 5s cubic-bezier(.22,1,.36,1) both;
         }
       `}</style>
 
@@ -211,21 +242,21 @@ export function ResultExperience({
                     className="text-xs font-semibold uppercase tracking-[0.32em]"
                     style={{ color: meta.color }}
                   >
-                    Analyse du système en cours
+                    Lecture de compatibilité en cours
                   </p>
 
                   <h1 className="mt-3 font-serif text-3xl leading-tight md:text-4xl">
-                    Analyse de votre positionnement
+                    Analyse de votre logique professionnelle
                   </h1>
 
                   <p className="mt-4 max-w-xl text-sm leading-7 opacity-70">
-                    Nous analysons vos réponses pour identifier la logique
-                    d’intervention dans laquelle vous êtes le plus naturellement
-                    fiable.
+                    Nous croisons vos réponses pour identifier l’environnement
+                    dans lequel votre manière d’agir peut devenir réellement
+                    utile.
                   </p>
 
                   <div className="mt-6 flex items-center justify-between text-xs opacity-70">
-                    <span>Progression</span>
+                    <span>Analyse</span>
                     <span>{Math.min(100, 20 + activeStep * 20)}%</span>
                   </div>
 
@@ -248,7 +279,7 @@ export function ResultExperience({
                       return (
                         <div
                           key={step}
-                          className={`flex items-start gap-3 text-sm transition-all duration-500 ${
+                          className={`flex items-start gap-3 text-sm transition-all duration-700 ${
                             done || active ? "opacity-100" : "opacity-35"
                           }`}
                         >
@@ -290,7 +321,7 @@ export function ResultExperience({
                     : "border-black/10 bg-white/70"
                 }`}
               >
-                Lecture professionnelle
+                Orientation professionnelle
               </div>
             </div>
 
@@ -304,17 +335,17 @@ export function ResultExperience({
               <div className="grid gap-10 lg:grid-cols-[1.12fr_0.88fr] lg:items-center">
                 <div>
                   <p className="text-xs uppercase tracking-[0.32em] opacity-60">
-                    Résultat du positionnement
+                    Résultat de compatibilité
                   </p>
 
                   <h1 className="mt-4 font-serif text-4xl leading-tight md:text-6xl">
-                    Votre manière d’agir dominante :
+                    Votre logique dominante :
                     <br />
                     <span style={{ color: meta.color }}>{meta.name}</span>
                   </h1>
 
                   <p className="mt-4 text-sm opacity-70">
-                    Orientation privilégiée : {meta.entity}
+                    Environnement associé : {meta.entity}
                   </p>
 
                   <p className="mt-8 max-w-3xl text-lg leading-relaxed opacity-90">
@@ -332,10 +363,10 @@ export function ResultExperience({
                         : "border-black/5 bg-[#f4f7fb]"
                     }`}
                   >
-                   <p className="mb-2 font-medium">Lecture rapide</p>
-<p>Orientation : {meta.entity}</p>
-<p>Rôle identifié : {meta.name}</p>
-<p>Signal principal : {dominantPercent}%</p>
+                    <p className="mb-2 font-medium">Lecture synthétique</p>
+                    <p>Univers pressenti : {meta.entity}</p>
+                    <p>Logique d’intervention : {meta.name}</p>
+                    <p>Signal principal : {dominantPercent}%</p>
                   </div>
 
                   <a
@@ -380,11 +411,11 @@ export function ResultExperience({
               }`}
             >
               <p className="text-xs uppercase tracking-[0.28em] opacity-50">
-                Projection concrète
+                Projection professionnelle
               </p>
 
               <h2 className="mt-3 font-serif text-3xl leading-tight">
-                Rôle dans lequel vous pouvez être utile immédiatement
+                Où cette logique peut devenir utile
               </h2>
 
               <p className="mt-4 font-medium">{meta.role}</p>
@@ -397,8 +428,9 @@ export function ResultExperience({
 
               <p className="mt-5 text-sm leading-7 opacity-70">
                 Ce positionnement ne sert pas seulement à vous décrire. Il sert
-                à vérifier si cette manière d’agir peut devenir une contribution
-                concrète dans un cadre professionnel structuré.
+                à vérifier si votre manière d’agir peut devenir une contribution
+                concrète dans un cadre professionnel structuré, avec des méthodes,
+                des supports et une exigence de continuité.
               </p>
             </section>
 
@@ -414,22 +446,24 @@ export function ResultExperience({
               </p>
 
               <h2 className="mt-3 font-serif text-3xl leading-tight">
-                Ce que ce positionnement peut devenir
+                Vers une collaboration sous licence
               </h2>
 
               <p className="mt-5 text-sm leading-7 opacity-80">
-                Ce résultat correspond à un rôle réel.
+                Ce résultat peut correspondre à un rôle réel dans l’un des
+                environnements développés sous arnaudcrestey.com.
               </p>
 
               <p className="mt-2 text-sm leading-7 opacity-70">
-                Certaines personnes utilisent cette capacité ponctuellement.
-                D’autres peuvent en faire une activité structurée, avec des
-                méthodes, un cadre et des supports existants.
+                L’objectif n’est pas de recruter sur un intitulé de poste, mais
+                d’identifier des profils indépendants capables d’assumer une
+                logique d’intervention précise, dans un cadre déjà structuré.
               </p>
 
               <p className="mt-2 text-sm leading-7 opacity-70">
-                C’est ce type de collaboration qui est en train d’être développé
-                autour de arnaudcrestey.com.
+                Certaines personnes utiliseront cette capacité ponctuellement.
+                D’autres pourront, si la compatibilité se confirme, l’inscrire
+                dans une collaboration plus durable autour d’un univers dédié.
               </p>
             </section>
 
@@ -448,21 +482,20 @@ export function ResultExperience({
                   </p>
 
                   <h2 className="mt-3 font-serif text-3xl leading-tight">
-                    Vérifier si ce rôle peut devenir une activité
+                    Présenter votre situation
                   </h2>
 
                   <p className="mt-5 text-sm leading-7 opacity-75">
                     Si ce résultat vous parle, l’étape utile consiste à regarder
                     votre situation réelle : votre parcours, vos réflexes de
-                    travail, vos supports actuels et votre capacité à intervenir
-                    concrètement dans l’un des univers développés autour de
-                    arnaudcrestey.com.
+                    travail, votre niveau d’autonomie et votre capacité à
+                    intervenir concrètement dans l’univers concerné.
                   </p>
 
                   <div className="mt-6 space-y-3 text-sm leading-6">
                     {[
                       "Comprendre votre situation actuelle.",
-                      "Vérifier votre compatibilité avec l’univers concerné.",
+                      "Vérifier la cohérence avec l’univers concerné.",
                       "Identifier si une collaboration structurée peut avoir du sens.",
                     ].map((item, index) => (
                       <div key={item} className="flex gap-3">
@@ -532,7 +565,7 @@ export function ResultExperience({
                       <input
                         required
                         name="activity"
-                        placeholder="Votre métier, activité ou projet"
+                        placeholder="Métier, activité ou projet"
                         className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-[#315f8c]"
                       />
                     </label>
@@ -556,7 +589,7 @@ export function ResultExperience({
                       required
                       name="message"
                       rows={5}
-                      placeholder="Expliquez brièvement ce qui vous intéresse, votre situation actuelle, ou pourquoi ce résultat vous parle."
+                      placeholder="Expliquez brièvement votre parcours, ce qui vous intéresse, et pourquoi ce résultat fait écho à votre manière de travailler."
                       className="w-full resize-none rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-[#315f8c]"
                     />
                   </label>
@@ -566,12 +599,11 @@ export function ResultExperience({
                     className="mt-5 w-full rounded-full px-6 py-3 text-sm font-medium text-white shadow-[0_18px_40px_rgba(49,95,140,0.25)]"
                     style={{ backgroundColor: meta.color }}
                   >
-                    Envoyer ma situation
+                    Soumettre mon contexte professionnel
                   </button>
 
                   <p className="mt-3 text-center text-xs opacity-60">
-                    Lecture rapide de votre situation et de votre capacité à
-                    intervenir concrètement.
+                    Première lecture de votre situation avant tout échange.
                   </p>
                 </form>
               </div>
