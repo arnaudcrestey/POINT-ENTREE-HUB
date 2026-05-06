@@ -100,13 +100,15 @@ export default function StartPage() {
           <div className="pointer-events-none absolute right-0 top-0 h-64 w-64 translate-x-1/3 -translate-y-1/3 rounded-full bg-[#315f8c]/10 blur-3xl" />
           <div className="pointer-events-none absolute bottom-0 left-0 h-64 w-64 -translate-x-1/3 translate-y-1/3 rounded-full bg-[#c8a46b]/14 blur-3xl" />
 
-          <div className="relative mb-14 flex flex-col items-center gap-4 text-center sm:flex-row sm:items-start sm:justify-between sm:text-left">
-            <Signature />
+          <div className="relative mb-14 flex flex-col items-center gap-6 text-center md:flex-row md:items-start md:justify-between md:text-left">
+  <div className="flex shrink-0 flex-col items-center overflow-visible pb-6">
+    <Signature />
+  </div>
 
-            <div className="w-fit rounded-full border border-[#d8c7ad] bg-white/55 px-4 py-2 text-[10px] uppercase tracking-[0.2em] text-[#8b6d43]">
-              Lecture de positionnement
-            </div>
-          </div>
+  <div className="w-fit rounded-full border border-[#d8c7ad] bg-white/55 px-4 py-2 text-[10px] uppercase tracking-[0.2em] text-[#8b6d43] shadow-sm">
+    Lecture de positionnement
+  </div>
+</div>
 
           {step === "primary" && (
             <section>
