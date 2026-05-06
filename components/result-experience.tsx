@@ -470,31 +470,26 @@ export function ResultExperience({
               <div className="grid gap-0 lg:grid-cols-[0.92fr_1.08fr]">
                 <div className="p-6 md:p-10 lg:p-12">
                   <p className="text-xs uppercase tracking-[0.32em] opacity-45">
-                    Analyse de contexte
+                    Lecture complementaire
                   </p>
 
                   <h2 className="mt-4 font-serif text-3xl leading-tight md:text-5xl">
-                    Déposer une situation professionnelle
+                    Presenter votre situation professionnelle
                   </h2>
 
                   <div className="mt-8 space-y-6 text-sm leading-8 opacity-75">
                     <p>
-                      Cette seconde étape permet d’approfondir la lecture
-                      initiale à partir d’une situation concrète.
+                      Cette seconde étape permet d’approfondir la premiere lecture
+                      realisee lors du parcours.
                     </p>
 
                     <p>
-                      Elle concerne principalement des indépendants, des profils
-                      opérationnels ou des personnes amenées à intervenir dans
-                      un environnement structuré.
-                    </p>
+  Elle concerne principalement des indépendants, des profils opérationnels ou des personnes amenées à gérer des situations concrètes avec autonomie.
+</p>
 
-                    <p>
-                      L’objectif n’est pas d’évaluer un parcours, mais de
-                      comprendre votre manière d’intervenir, votre niveau
-                      d’autonomie, votre rapport aux outils et votre capacité à
-                      porter une situation réelle.
-                    </p>
+<p>
+  L’objectif n’est pas d’évaluer un parcours, mais de comprendre votre manière d’intervenir, votre niveau d’autonomie, votre rapport aux outils IA et votre capacité à gérer des situations réelles.
+</p>
                   </div>
 
                   <div className="mt-10 space-y-5 text-sm leading-6">
