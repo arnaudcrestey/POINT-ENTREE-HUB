@@ -420,15 +420,16 @@ export function ResultExperience({
             </section>
 
             <div className="reveal-2">
-              <AiResultAnalysis
-                dominant={dominant}
-                entity={meta.entity}
-                structuration={rawScore.structuration}
-                comprehension={rawScore.comprehension}
-                valorisation={rawScore.valorisation}
-                color={meta.color}
-                isDark={isDark}
-              />
+             <AiResultAnalysis
+  dominant={dominant}
+  entity={meta.entity}
+  structuration={rawScore.structuration}
+  comprehension={rawScore.comprehension}
+  valorisation={rawScore.valorisation}
+  color={meta.color}
+  isDark={isDark}
+  subSignals={subSignals}
+/>
             </div>
 
            <section
