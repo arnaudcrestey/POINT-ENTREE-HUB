@@ -369,7 +369,7 @@ export function ResultExperience({
               <div className="grid gap-10 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
                 <div>
                   <p className="text-xs uppercase tracking-[0.32em] opacity-60">
-                    Dynamique observee
+                    Dynamique observée
                   </p>
 
                   <h1 className="mt-4 font-serif text-4xl leading-tight md:text-6xl">
@@ -424,7 +424,7 @@ export function ResultExperience({
                     className="mt-7 inline-flex rounded-full px-6 py-3 text-sm font-medium text-white shadow-[0_18px_40px_rgba(49,95,140,0.25)] transition hover:-translate-y-0.5"
                     style={{ backgroundColor: meta.color }}
                   >
-                    Transmettre une situation professionnelle
+                    Transmettre ma situation professionnelle
                   </a>
                 </div>
 
@@ -459,186 +459,167 @@ export function ResultExperience({
               />
             </div>
 
-            <section
-              id="collaboration"
-              className={`reveal-3 overflow-hidden rounded-[34px] border shadow-[0_34px_100px_rgba(15,23,42,0.12)] ${
-                isDark
-                  ? "border-white/10 bg-white/10"
-                  : "border-white/70 bg-white/88"
-              }`}
+<section
+  id="collaboration"
+  className={`reveal-3 overflow-hidden rounded-[34px] border shadow-[0_34px_100px_rgba(15,23,42,0.12)] ${
+    isDark
+      ? "border-white/10 bg-white/10"
+      : "border-white/70 bg-white/88"
+  }`}
+>
+  <div className="grid gap-0 lg:grid-cols-[0.92fr_1.08fr]">
+    <div className="p-6 md:p-10 lg:p-12">
+      <p className="text-xs uppercase tracking-[0.32em] opacity-45">
+        Lecture complémentaire
+      </p>
+
+      <h2 className="mt-4 font-serif text-3xl leading-tight md:text-5xl">
+        Présenter votre situation professionnelle
+      </h2>
+
+      <div className="mt-8 space-y-6 text-sm leading-8 opacity-75">
+        <p>
+          Cette seconde étape permet d’approfondir la première lecture
+          réalisée lors du parcours.
+        </p>
+
+        <p>
+          Elle concerne principalement des indépendants, des profils
+          opérationnels ou des personnes amenées à gérer des situations
+          concrètes avec autonomie.
+        </p>
+
+        <p>
+          L’objectif n’est pas d’évaluer un parcours, mais de comprendre votre
+          manière d’intervenir, votre niveau d’autonomie, votre rapport aux
+          outils IA et votre capacité à gérer des situations réelles.
+        </p>
+      </div>
+
+      <div className="mt-10 space-y-5 text-sm leading-6">
+        {[
+          "Vous présentez une situation professionnelle réelle.",
+          "Une seconde lecture permet d’évaluer la cohérence opérationnelle du profil.",
+          "Certaines compatibilités peuvent ensuite ouvrir vers un échange complémentaire.",
+        ].map((item, index) => (
+          <div key={item} className="flex gap-4">
+            <span
+              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px] font-medium text-white shadow-[0_6px_18px_rgba(0,0,0,0.18)]"
+              style={{ backgroundColor: meta.color }}
             >
-              <div className="grid gap-0 lg:grid-cols-[0.92fr_1.08fr]">
-                <div className="p-6 md:p-10 lg:p-12">
-                  <p className="text-xs uppercase tracking-[0.32em] opacity-45">
-                    Lecture complementaire
-                  </p>
+              {index + 1}
+            </span>
 
-                  <h2 className="mt-4 font-serif text-3xl leading-tight md:text-5xl">
-                    Presenter votre situation professionnelle
-                  </h2>
+            <span className="max-w-md pt-[2px] opacity-75">{item}</span>
+          </div>
+        ))}
+      </div>
+    </div>
 
-                  <div className="mt-8 space-y-6 text-sm leading-8 opacity-75">
-                    <p>
-                      Cette seconde étape permet d’approfondir la premiere lecture
-                      realisee lors du parcours.
-                    </p>
+    <div
+      className={`border-t p-4 sm:p-6 lg:border-l lg:border-t-0 lg:p-8 ${
+        isDark ? "border-white/10" : "border-black/5"
+      }`}
+    >
+      <form
+        action="/api/result-lead"
+        method="POST"
+        className={`rounded-[34px] border p-5 shadow-[0_26px_80px_rgba(15,23,42,0.14)] sm:p-7 md:p-8 ${
+          isDark
+            ? "border-white/10 bg-black/20"
+            : "border-black/5 bg-[#f8fafc]"
+        }`}
+      >
+        <input type="hidden" name="dominant" value={dominant} />
+        <input type="hidden" name="entity" value={meta.entity} />
+        <input type="hidden" name="structuration" value={rawScore.structuration} />
+        <input type="hidden" name="comprehension" value={rawScore.comprehension} />
+        <input type="hidden" name="valorisation" value={rawScore.valorisation} />
 
-                    <p>
-  Elle concerne principalement des indépendants, des profils opérationnels ou des personnes amenées à gérer des situations concrètes avec autonomie.
-</p>
+        <div className="mb-8">
+          <p
+            className="text-xs font-medium uppercase tracking-[0.28em]"
+            style={{ color: meta.color }}
+          >
+            Contexte professionnel
+          </p>
+        </div>
 
-<p>
-  L’objectif n’est pas d’évaluer un parcours, mais de comprendre votre manière d’intervenir, votre niveau d’autonomie, votre rapport aux outils IA et votre capacité à gérer des situations réelles.
-</p>
-                  </div>
+        <label className="block space-y-3 text-xs">
+          <span className="opacity-60">Situation professionnelle</span>
 
-                  <div className="mt-10 space-y-5 text-sm leading-6">
-                    {[
-                      "Vous transmettez une situation professionnelle réelle.",
-                      "Une seconde lecture permet d’évaluer la cohérence opérationnelle du profil.",
-                      "Une compatibilité peut ensuite ouvrir vers un échange complémentaire.",
-                    ].map((item, index) => (
-                      <div key={item} className="flex gap-4">
-                        <span
-                          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px] text-white shadow-sm"
-                          style={{ backgroundColor: meta.color }}
-                        >
-                          {index + 1}
-                        </span>
+          <textarea
+            required
+            name="message"
+            rows={12}
+            placeholder="Décrivez votre activité actuelle, votre manière de travailler, votre niveau d’autonomie, votre rapport aux outils, les situations que vous gérez concrètement et les raisons pour lesquelles cette lecture vous semble cohérente avec votre contexte professionnel."
+            className="min-h-[320px] w-full resize-y rounded-[26px] border border-black/10 bg-white px-5 py-5 text-sm leading-7 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-[#315f8c]"
+          />
+        </label>
 
-                        <span className="pt-[2px] opacity-75">{item}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+        <div className="mt-7 grid gap-4 sm:grid-cols-2">
+          <label className="space-y-2 text-xs">
+            <span className="opacity-60">Prénom</span>
 
-                <div
-                  className={`border-t p-4 sm:p-6 lg:border-l lg:border-t-0 lg:p-8 ${
-                    isDark ? "border-white/10" : "border-black/5"
-                  }`}
-                >
-                  <form
-                    action="/api/result-lead"
-                    method="POST"
-                    className={`rounded-[34px] border p-5 shadow-[0_26px_80px_rgba(15,23,42,0.14)] sm:p-7 md:p-8 ${
-                      isDark
-                        ? "border-white/10 bg-black/20"
-                        : "border-black/5 bg-[#f8fafc]"
-                    }`}
-                  >
-                    <input type="hidden" name="dominant" value={dominant} />
-                    <input type="hidden" name="entity" value={meta.entity} />
+            <input
+              required
+              name="firstName"
+              placeholder="Votre prénom"
+              className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#315f8c]"
+            />
+          </label>
 
-                    <input
-                      type="hidden"
-                      name="structuration"
-                      value={rawScore.structuration}
-                    />
+          <label className="space-y-2 text-xs">
+            <span className="opacity-60">Email</span>
 
-                    <input
-                      type="hidden"
-                      name="comprehension"
-                      value={rawScore.comprehension}
-                    />
+            <input
+              required
+              type="email"
+              name="email"
+              placeholder="vous@exemple.com"
+              className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#315f8c]"
+            />
+          </label>
 
-                    <input
-                      type="hidden"
-                      name="valorisation"
-                      value={rawScore.valorisation}
-                    />
+          <label className="space-y-2 text-xs">
+            <span className="opacity-60">Activité actuelle</span>
 
-                    <div className="mb-8">
-                      <p
-                        className="text-xs font-medium uppercase tracking-[0.28em]"
-                        style={{ color: meta.color }}
-                      >
-                        Transmission du contexte
-                      </p>
+            <input
+              required
+              name="activity"
+              placeholder="Métier, activité ou projet"
+              className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#315f8c]"
+            />
+          </label>
 
-                      <p className="mt-3 max-w-xl text-sm leading-7 opacity-65">
-                        Les éléments transmis permettent une lecture
-                        complémentaire plus précise de votre situation
-                        professionnelle.
-                      </p>
-                    </div>
+          <label className="space-y-2 text-xs">
+            <span className="opacity-60">Lien utile</span>
 
-                    <label className="block space-y-3 text-xs">
-                      <span className="opacity-60">
-                        Situation professionnelle
-                      </span>
+            <input
+              name="website"
+              placeholder="LinkedIn, site ou page principale"
+              className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#315f8c]"
+            />
+          </label>
+        </div>
 
-                      <textarea
-                        required
-                        name="message"
-                        rows={12}
-                        placeholder="Décrivez votre activité actuelle, votre manière de travailler, votre niveau d’autonomie, votre rapport aux outils, les situations que vous gérez concrètement et les raisons pour lesquelles cette lecture vous semble cohérente avec votre contexte professionnel."
-                        className="min-h-[320px] w-full resize-y rounded-[26px] border border-black/10 bg-white px-5 py-5 text-sm leading-7 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-[#315f8c]"
-                      />
-                    </label>
+        <button
+          type="submit"
+          className="mt-8 w-full rounded-full px-6 py-4 text-sm font-medium text-white shadow-[0_18px_40px_rgba(49,95,140,0.25)] transition hover:-translate-y-0.5"
+          style={{ backgroundColor: meta.color }}
+        >
+          Transmettre ma situation professionnelle
+        </button>
 
-                    <div className="mt-7 grid gap-4 sm:grid-cols-2">
-                      <label className="space-y-2 text-xs">
-                        <span className="opacity-60">Prénom</span>
-
-                        <input
-                          required
-                          name="firstName"
-                          placeholder="Votre prénom"
-                          className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#315f8c]"
-                        />
-                      </label>
-
-                      <label className="space-y-2 text-xs">
-                        <span className="opacity-60">Email</span>
-
-                        <input
-                          required
-                          type="email"
-                          name="email"
-                          placeholder="vous@exemple.com"
-                          className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#315f8c]"
-                        />
-                      </label>
-
-                      <label className="space-y-2 text-xs">
-                        <span className="opacity-60">Activité actuelle</span>
-
-                        <input
-                          required
-                          name="activity"
-                          placeholder="Métier, activité ou projet"
-                          className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#315f8c]"
-                        />
-                      </label>
-
-                      <label className="space-y-2 text-xs">
-                        <span className="opacity-60">Lien utile</span>
-
-                        <input
-                          name="website"
-                          placeholder="LinkedIn, site ou page principale"
-                          className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#315f8c]"
-                        />
-                      </label>
-                    </div>
-
-                    <button
-                      type="submit"
-                      className="mt-8 w-full rounded-full px-6 py-4 text-sm font-medium text-white shadow-[0_18px_40px_rgba(49,95,140,0.25)] transition hover:-translate-y-0.5"
-                      style={{ backgroundColor: meta.color }}
-                    >
-                      Transmettre ma situation
-                    </button>
-
-                    <p className="mx-auto mt-5 max-w-lg text-center text-xs leading-6 opacity-55">
-                      Cette étape permet uniquement une lecture complémentaire
-                      de compatibilité professionnelle. Elle ne constitue ni une
-                      sélection automatique ni un engagement mutuel.
-                    </p>
-                  </form>
-                </div>
-              </div>
-            </section>
+        <p className="mx-auto mt-5 max-w-lg text-center text-xs leading-6 opacity-55">
+          Cette étape permet uniquement une lecture complémentaire de
+          compatibilité professionnelle. Elle ne constitue ni une sélection
+          automatique ni un engagement mutuel.
+        </p>
+      </form>
+    </div>
+  </div>
+</section>
           </div>
         )}
       </div>
