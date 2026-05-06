@@ -271,9 +271,9 @@ arnaudcrestey.com
       `,
     });
 
-    return NextResponse.redirect(new URL("/merci", request.url), 303);
-  } catch (error) {
-    console.error(error);
+    return NextResponse.json({
+  success: true,
+});
 
     return NextResponse.json(
       { error: "Une erreur est survenue pendant l’envoi." },
