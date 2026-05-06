@@ -220,7 +220,7 @@ export default function StartPage() {
           )}
 
           {step === "followup" && currentQuestion && (
-            <div className="relative">
+           <div className="relative overflow-visible pb-6">
               <div className="mb-5 text-center text-[10px] uppercase tracking-[0.22em] text-[#8b6d43]">
                 Question {currentIndex + 1} / {questions.length}
               </div>
