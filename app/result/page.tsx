@@ -1,10 +1,13 @@
 import { ResultExperience } from "@/components/result-experience";
+
 import {
   computeDominantAxis,
   getHybridAxes,
   normalizeScore,
+
   type AxisKey,
   type VectorScore,
+  type SubSignals,
 } from "@/lib/scoring";
 
 const axisMeta: Record<
@@ -23,13 +26,19 @@ const axisMeta: Record<
   structuration: {
     name: "Structuration",
     entity: "SYSTIA",
-    gradient: "from-[#eef4ff] via-[#f6f8fc] to-[#efe7da]",
+    gradient:
+      "from-[#eef4ff] via-[#f6f8fc] to-[#efe7da]",
+
     color: "#315f8c",
+
     intro:
       "Vous intervenez naturellement là où un système doit être clarifié, structuré ou rendu opérationnel.",
+
     reflex:
       "Votre réflexe est de poser un cadre, d’organiser les priorités et de transformer le flou en méthode.",
+
     role: "SYSTIA — Structuration",
+
     actions: [
       "clarifier une activité ou une offre",
       "organiser un parcours, un outil ou une méthode",
@@ -40,13 +49,21 @@ const axisMeta: Record<
   comprehension: {
     name: "Compréhension",
     entity: "Cabinet Astraé",
-    gradient: "from-[#fff7f5] via-[#f8eee8] to-[#eef3ff]",
+
+    gradient:
+      "from-[#fff7f5] via-[#f8eee8] to-[#eef3ff]",
+
     color: "#b46b7d",
+
     intro:
       "Vous intervenez naturellement là où une situation doit être comprise, clarifiée ou relue avec discernement.",
+
     reflex:
       "Votre réflexe est de chercher ce qui se joue derrière les apparences, avant de proposer une direction.",
-    role: "Cabinet Astraé — Compréhension",
+
+    role:
+      "Cabinet Astraé — Compréhension",
+
     actions: [
       "analyser une situation complexe",
       "repérer les signaux faibles",
@@ -57,13 +74,20 @@ const axisMeta: Record<
   valorisation: {
     name: "Valorisation",
     entity: "QLYK",
-    gradient: "from-[#101827] via-[#172033] to-[#eef3ff]",
+
+    gradient:
+      "from-[#101827] via-[#172033] to-[#eef3ff]",
+
     color: "#7f8bff",
+
     intro:
       "Vous intervenez naturellement sur la perception, la lisibilité et l’impact d’un projet.",
+
     reflex:
       "Votre réflexe est d’améliorer ce qui est vu, compris et ressenti.",
+
     role: "QLYK — Valorisation",
+
     actions: [
       "améliorer la perception d’une offre",
       "rendre un contenu plus lisible",
@@ -73,22 +97,78 @@ const axisMeta: Record<
 };
 
 function parseScore(
-  searchParams: Record<string, string | string[] | undefined>
+  searchParams: Record<
+    string,
+    string | string[] | undefined
+  >
 ): VectorScore {
-  const parse = (value: string | string[] | undefined) =>
-    Number(Array.isArray(value) ? value[0] : value) || 0;
+  const parse = (
+    value: string | string[] | undefined
+  ) =>
+    Number(
+      Array.isArray(value)
+        ? value[0]
+        : value
+    ) || 0;
 
   return {
     structuration: parse(searchParams.s),
+
     comprehension: parse(searchParams.c),
+
     valorisation: parse(searchParams.v),
   };
 }
 
+function parseSubSignals(
+  searchParams: Record<
+    string,
+    string | string[] | undefined
+  >
+): SubSignals {
+  const parse = (
+    value: string | string[] | undefined
+  ) =>
+    Number(
+      Array.isArray(value)
+        ? value[0]
+        : value
+    ) || 0;
+
+  return {
+    clarte: parse(searchParams.clarte),
+
+    methode: parse(searchParams.methode),
+
+    pilotage: parse(searchParams.pilotage),
+
+    discernement: parse(
+      searchParams.discernement
+    ),
+
+    ecoute: parse(searchParams.ecoute),
+
+    lecture: parse(searchParams.lecture),
+
+    perception: parse(searchParams.perception),
+
+    impact: parse(searchParams.impact),
+
+    lisibilite: parse(
+      searchParams.lisibilite
+    ),
+  };
+}
+
 function getLockedAxis(
-  searchParams: Record<string, string | string[] | undefined>
+  searchParams: Record<
+    string,
+    string | string[] | undefined
+  >
 ): AxisKey | null {
-  const axisParam = Array.isArray(searchParams.axis)
+  const axisParam = Array.isArray(
+    searchParams.axis
+  )
     ? searchParams.axis[0]
     : searchParams.axis;
 
@@ -106,20 +186,29 @@ function getLockedAxis(
 export default function ResultPage({
   searchParams,
 }: {
-  searchParams: Record<string, string | string[] | undefined>;
+  searchParams: Record<
+    string,
+    string | string[] | undefined
+  >;
 }) {
   const rawScore = parseScore(searchParams);
 
-  // Axe verrouillé depuis le premier choix :
-  // Structurer -> SYSTIA
-  // Comprendre -> Cabinet Astraé
-  // Valoriser -> QLYK
-  const lockedAxis = getLockedAxis(searchParams);
+  const subSignals =
+    parseSubSignals(searchParams);
 
-  const dominant: AxisKey = lockedAxis ?? computeDominantAxis(rawScore);
+  const lockedAxis =
+    getLockedAxis(searchParams);
 
-  const hybrid = getHybridAxes(rawScore);
-  const norm = normalizeScore(rawScore);
+  const dominant: AxisKey =
+    lockedAxis ??
+    computeDominantAxis(rawScore);
+
+  const hybrid =
+    getHybridAxes(rawScore);
+
+  const norm =
+    normalizeScore(rawScore);
+
   const meta = axisMeta[dominant];
 
   return (
@@ -129,6 +218,7 @@ export default function ResultPage({
       dominant={dominant}
       hybrid={hybrid}
       meta={meta}
+      subSignals={subSignals}
     />
   );
 }
