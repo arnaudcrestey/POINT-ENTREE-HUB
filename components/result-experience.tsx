@@ -25,12 +25,6 @@ type Props = {
   meta: Meta;
 };
 
-const axisLabels: Record<AxisKey, string> = {
-  structuration: "Structuration",
-  comprehension: "Compréhension",
-  valorisation: "Valorisation",
-};
-
 const analysisSteps = [
   "Lecture de votre logique d’intervention",
   "Repérage de l’axe professionnel dominant",
@@ -59,6 +53,10 @@ export function ResultExperience({
   const dominantPercent = useMemo(() => {
     return toDisplayPercent(normalizedScore[dominant]);
   }, [dominant, normalizedScore]);
+
+  const secondarySignals = useMemo(() => {
+    return hybrid.filter((axis) => axis !== dominant).length;
+  }, [hybrid, dominant]);
 
   useEffect(() => {
     const stepTimer = window.setInterval(() => {
@@ -128,72 +126,71 @@ export function ResultExperience({
         }
 
         .reveal-1 { animation: revealUp .75s ease-out both; animation-delay: .05s; }
-        .reveal-2 { animation: revealUp .75s ease-out both; animation-delay: .25s; }
-        .reveal-3 { animation: revealUp .75s ease-out both; animation-delay: .45s; }
-        .reveal-4 { animation: revealUp .75s ease-out both; animation-delay: .65s; }
-        .reveal-5 { animation: revealUp .75s ease-out both; animation-delay: .85s; }
+        .reveal-2 { animation: revealUp .75s ease-out both; animation-delay: .22s; }
+        .reveal-3 { animation: revealUp .75s ease-out both; animation-delay: .40s; }
 
         .analysis-ring {
-  position: relative;
-  width: 92px;
-  height: 92px;
-  border-radius: 9999px;
-  background:
-    conic-gradient(
-      from 110deg,
-      transparent 0deg,
-      transparent 34deg,
-      ${meta.color} 72deg,
-      rgba(255,255,255,.92) 104deg,
-      transparent 148deg,
-      transparent 214deg,
-      ${meta.color} 262deg,
-      rgba(255,255,255,.86) 294deg,
-      transparent 342deg
-    );
-  animation: rotateRing 5.4s linear infinite;
-  box-shadow:
-    0 0 28px ${meta.color}34,
-    0 18px 44px rgba(15,23,42,.12);
-}
+          position: relative;
+          width: 92px;
+          height: 92px;
+          border-radius: 9999px;
+          background:
+            conic-gradient(
+              from 110deg,
+              transparent 0deg,
+              transparent 34deg,
+              ${meta.color} 72deg,
+              rgba(255,255,255,.92) 104deg,
+              transparent 148deg,
+              transparent 214deg,
+              ${meta.color} 262deg,
+              rgba(255,255,255,.86) 294deg,
+              transparent 342deg
+            );
+          animation: rotateRing 5.4s linear infinite;
+          box-shadow:
+            0 0 28px ${meta.color}34,
+            0 18px 44px rgba(15,23,42,.12);
+        }
 
-.analysis-ring::before {
-  content: "";
-  position: absolute;
-  inset: 7px;
-  border-radius: 9999px;
-  border: 1px solid rgba(255,255,255,.58);
-  background:
-    radial-gradient(circle at 38% 32%, rgba(255,255,255,.92), rgba(255,255,255,.42) 34%, transparent 62%),
-    radial-gradient(circle at 50% 50%, ${meta.color}22, transparent 68%);
-  box-shadow:
-    inset 0 0 18px rgba(255,255,255,.34),
-    inset 0 0 32px ${meta.color}18;
-}
+        .analysis-ring::before {
+          content: "";
+          position: absolute;
+          inset: 7px;
+          border-radius: 9999px;
+          border: 1px solid rgba(255,255,255,.58);
+          background:
+            radial-gradient(circle at 38% 32%, rgba(255,255,255,.92), rgba(255,255,255,.42) 34%, transparent 62%),
+            radial-gradient(circle at 50% 50%, ${meta.color}22, transparent 68%);
+          box-shadow:
+            inset 0 0 18px rgba(255,255,255,.34),
+            inset 0 0 32px ${meta.color}18;
+        }
 
-.analysis-ring::after {
-  content: "";
-  position: absolute;
-  inset: 23px;
-  border-radius: 9999px;
-  background:
-    radial-gradient(circle at 35% 30%, rgba(255,255,255,.96), ${meta.color}42 46%, ${meta.color} 100%);
-  box-shadow:
-    0 0 20px ${meta.color}62,
-    inset 0 0 12px rgba(255,255,255,.72);
-  animation: slowBreath 4.2s ease-in-out infinite;
-}
+        .analysis-ring::after {
+          content: "";
+          position: absolute;
+          inset: 23px;
+          border-radius: 9999px;
+          background:
+            radial-gradient(circle at 35% 30%, rgba(255,255,255,.96), ${meta.color}42 46%, ${meta.color} 100%);
+          box-shadow:
+            0 0 20px ${meta.color}62,
+            inset 0 0 12px rgba(255,255,255,.72);
+          animation: slowBreath 4.2s ease-in-out infinite;
+        }
 
-.analysis-core {
-  position: absolute;
-  inset: 37px;
-  z-index: 2;
-  border-radius: 9999px;
-  background: rgba(255,255,255,.82);
-  box-shadow:
-    0 0 14px rgba(255,255,255,.72),
-    0 0 24px ${meta.color}50;
-}
+        .analysis-core {
+          position: absolute;
+          inset: 37px;
+          z-index: 2;
+          border-radius: 9999px;
+          background: rgba(255,255,255,.82);
+          box-shadow:
+            0 0 14px rgba(255,255,255,.72),
+            0 0 24px ${meta.color}50;
+        }
+
         .scan-panel {
           position: relative;
           overflow: hidden;
@@ -310,7 +307,7 @@ export function ResultExperience({
             </div>
           </section>
         ) : (
-          <div className="space-y-8">
+          <div className="space-y-7 md:space-y-8">
             <div className="reveal-1 flex items-center justify-between gap-4">
               <Signature />
 
@@ -332,20 +329,20 @@ export function ResultExperience({
                   : "border-white/70 bg-white/82"
               }`}
             >
-              <div className="grid gap-10 lg:grid-cols-[1.12fr_0.88fr] lg:items-center">
+              <div className="grid gap-10 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
                 <div>
                   <p className="text-xs uppercase tracking-[0.32em] opacity-60">
                     Résultat de compatibilité
                   </p>
 
                   <h1 className="mt-4 font-serif text-4xl leading-tight md:text-6xl">
-                    Votre logique dominante :
+                    Logique dominante
                     <br />
                     <span style={{ color: meta.color }}>{meta.name}</span>
                   </h1>
 
                   <p className="mt-4 text-sm opacity-70">
-                    Environnement associé : {meta.entity}
+                    Environnement associé&nbsp;: {meta.entity}
                   </p>
 
                   <p className="mt-8 max-w-3xl text-lg leading-relaxed opacity-90">
@@ -357,21 +354,39 @@ export function ResultExperience({
                   </p>
 
                   <div
-                    className={`mt-6 rounded-2xl border p-4 text-sm leading-6 shadow-inner ${
+                    className={`mt-7 grid gap-3 rounded-2xl border p-4 text-sm leading-6 shadow-inner sm:grid-cols-3 ${
                       isDark
                         ? "border-white/10 bg-white/10"
                         : "border-black/5 bg-[#f4f7fb]"
                     }`}
                   >
-                    <p className="mb-2 font-medium">Lecture synthétique</p>
-                    <p>Univers pressenti : {meta.entity}</p>
-                    <p>Logique d’intervention : {meta.name}</p>
-                    <p>Signal principal : {dominantPercent}%</p>
+                    <div>
+                      <p className="text-[10px] uppercase tracking-[0.2em] opacity-45">
+                        Univers
+                      </p>
+                      <p className="mt-1 font-medium">{meta.entity}</p>
+                    </div>
+
+                    <div>
+                      <p className="text-[10px] uppercase tracking-[0.2em] opacity-45">
+                        Signal
+                      </p>
+                      <p className="mt-1 font-medium">{dominantPercent}%</p>
+                    </div>
+
+                    <div>
+                      <p className="text-[10px] uppercase tracking-[0.2em] opacity-45">
+                        Lecture
+                      </p>
+                      <p className="mt-1 font-medium">
+                        {secondarySignals > 0 ? "hybride" : "dominante"}
+                      </p>
+                    </div>
                   </div>
 
                   <a
                     href="#collaboration"
-                    className="mt-6 inline-flex rounded-full px-6 py-3 text-sm font-medium text-white shadow-[0_18px_40px_rgba(49,95,140,0.25)] transition hover:-translate-y-0.5"
+                    className="mt-7 inline-flex rounded-full px-6 py-3 text-sm font-medium text-white shadow-[0_18px_40px_rgba(49,95,140,0.25)] transition hover:-translate-y-0.5"
                     style={{ backgroundColor: meta.color }}
                   >
                     Vérifier une collaboration possible
@@ -404,99 +419,41 @@ export function ResultExperience({
             </div>
 
             <section
-              className={`reveal-3 rounded-[32px] border p-6 shadow-[0_30px_90px_rgba(15,23,42,0.10)] md:p-10 ${
-                isDark
-                  ? "border-white/10 bg-white/10"
-                  : "border-white/70 bg-white/85"
-              }`}
-            >
-              <p className="text-xs uppercase tracking-[0.28em] opacity-50">
-                Projection professionnelle
-              </p>
-
-              <h2 className="mt-3 font-serif text-3xl leading-tight">
-                Où cette logique peut devenir utile
-              </h2>
-
-              <p className="mt-4 font-medium">{meta.role}</p>
-
-              <ul className="mt-5 space-y-2 text-sm leading-6 opacity-80">
-                {meta.actions.map((action) => (
-                  <li key={action}>• {action}</li>
-                ))}
-              </ul>
-
-              <p className="mt-5 text-sm leading-7 opacity-70">
-                Ce positionnement ne sert pas seulement à vous décrire. Il sert
-                à vérifier si votre manière d’agir peut devenir une contribution
-                concrète dans un cadre professionnel structuré, avec des méthodes,
-                des supports et une exigence de continuité.
-              </p>
-            </section>
-
-            <section
-              className={`reveal-4 rounded-[32px] border p-6 shadow-[0_30px_90px_rgba(15,23,42,0.10)] md:p-10 ${
-                isDark
-                  ? "border-white/10 bg-white/10"
-                  : "border-white/70 bg-white/85"
-              }`}
-            >
-              <p className="text-xs uppercase tracking-[0.28em] opacity-50">
-                Ouverture possible
-              </p>
-
-              <h2 className="mt-3 font-serif text-3xl leading-tight">
-                Vers une collaboration sous licence
-              </h2>
-
-              <p className="mt-5 text-sm leading-7 opacity-80">
-                Ce résultat peut correspondre à un rôle réel dans l’un des
-                environnements développés sous arnaudcrestey.com.
-              </p>
-
-              <p className="mt-2 text-sm leading-7 opacity-70">
-                L’objectif n’est pas de recruter sur un intitulé de poste, mais
-                d’identifier des profils indépendants capables d’assumer une
-                logique d’intervention précise, dans un cadre déjà structuré.
-              </p>
-
-              <p className="mt-2 text-sm leading-7 opacity-70">
-                Certaines personnes utiliseront cette capacité ponctuellement.
-                D’autres pourront, si la compatibilité se confirme, l’inscrire
-                dans une collaboration plus durable autour d’un univers dédié.
-              </p>
-            </section>
-
-            <section
               id="collaboration"
-              className={`reveal-5 rounded-[34px] border p-6 shadow-[0_34px_100px_rgba(15,23,42,0.14)] md:p-10 ${
+              className={`reveal-3 rounded-[34px] border p-6 shadow-[0_34px_100px_rgba(15,23,42,0.12)] md:p-10 ${
                 isDark
                   ? "border-white/10 bg-white/10"
                   : "border-white/70 bg-white/88"
               }`}
             >
-              <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+              <div className="grid gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:items-start">
                 <div>
                   <p className="text-xs uppercase tracking-[0.28em] opacity-50">
-                    Étape suivante
+                    Vérification freelance
                   </p>
 
-                  <h2 className="mt-3 font-serif text-3xl leading-tight">
-                    Présenter votre situation
+                  <h2 className="mt-3 font-serif text-3xl leading-tight md:text-4xl">
+                    Présenter votre situation réelle
                   </h2>
 
                   <p className="mt-5 text-sm leading-7 opacity-75">
-                    Si ce résultat vous parle, l’étape utile consiste à regarder
-                    votre situation réelle : votre parcours, vos réflexes de
-                    travail, votre niveau d’autonomie et votre capacité à
-                    intervenir concrètement dans l’univers concerné.
+                    Cette première lecture ne constitue pas une sélection. Elle
+                    ouvre une seconde étape réservée aux profils indépendants,
+                    freelances ou personnes prêtes à fonctionner en autonomie
+                    dans un cadre structuré.
                   </p>
 
-                  <div className="mt-6 space-y-3 text-sm leading-6">
+                  <p className="mt-4 text-sm leading-7 opacity-70">
+                    Votre contexte sera analysé à partir de votre parcours, de
+                    votre niveau d’autonomie, de votre rapport aux outils et de
+                    votre capacité à porter une mission concrète.
+                  </p>
+
+                  <div className="mt-7 space-y-3 text-sm leading-6">
                     {[
-                      "Comprendre votre situation actuelle.",
-                      "Vérifier la cohérence avec l’univers concerné.",
-                      "Identifier si une collaboration structurée peut avoir du sens.",
+                      "Vous présentez brièvement votre situation.",
+                      "Une seconde lecture vérifie la compatibilité réelle.",
+                      "Deux voies possibles : échange envisageable ou compatibilité non confirmée.",
                     ].map((item, index) => (
                       <div key={item} className="flex gap-3">
                         <span
@@ -514,7 +471,7 @@ export function ResultExperience({
                 <form
                   action="/api/result-lead"
                   method="POST"
-                  className={`rounded-[26px] border p-5 shadow-[0_24px_70px_rgba(15,23,42,0.14)] md:p-6 ${
+                  className={`rounded-[26px] border p-5 shadow-[0_24px_70px_rgba(15,23,42,0.12)] md:p-6 ${
                     isDark
                       ? "border-white/10 bg-black/20"
                       : "border-black/5 bg-[#f8fafc]"
@@ -545,7 +502,7 @@ export function ResultExperience({
                         required
                         name="firstName"
                         placeholder="Votre prénom"
-                        className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-[#315f8c]"
+                        className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#315f8c]"
                       />
                     </label>
 
@@ -556,7 +513,7 @@ export function ResultExperience({
                         type="email"
                         name="email"
                         placeholder="vous@exemple.com"
-                        className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-[#315f8c]"
+                        className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#315f8c]"
                       />
                     </label>
 
@@ -566,7 +523,7 @@ export function ResultExperience({
                         required
                         name="activity"
                         placeholder="Métier, activité ou projet"
-                        className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-[#315f8c]"
+                        className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#315f8c]"
                       />
                     </label>
 
@@ -575,7 +532,7 @@ export function ResultExperience({
                       <input
                         name="website"
                         placeholder="LinkedIn, site ou page principale"
-                        className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-[#315f8c]"
+                        className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#315f8c]"
                       />
                     </label>
                   </div>
@@ -588,22 +545,23 @@ export function ResultExperience({
                     <textarea
                       required
                       name="message"
-                      rows={5}
-                      placeholder="Expliquez brièvement votre parcours, ce qui vous intéresse, et pourquoi ce résultat fait écho à votre manière de travailler."
-                      className="w-full resize-none rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-[#315f8c]"
+                      rows={6}
+                      placeholder="Expliquez brièvement votre parcours, votre statut actuel, votre rapport au travail indépendant, votre niveau d’autonomie et pourquoi ce résultat fait écho à votre manière de travailler."
+                      className="w-full resize-none rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#315f8c]"
                     />
                   </label>
 
                   <button
                     type="submit"
-                    className="mt-5 w-full rounded-full px-6 py-3 text-sm font-medium text-white shadow-[0_18px_40px_rgba(49,95,140,0.25)]"
+                    className="mt-5 w-full rounded-full px-6 py-3 text-sm font-medium text-white shadow-[0_18px_40px_rgba(49,95,140,0.25)] transition hover:-translate-y-0.5"
                     style={{ backgroundColor: meta.color }}
                   >
-                    Soumettre mon contexte professionnel
+                    Soumettre ma situation professionnelle
                   </button>
 
                   <p className="mt-3 text-center text-xs opacity-60">
-                    Première lecture de votre situation avant tout échange.
+                    Cette étape permet uniquement une première vérification de
+                    compatibilité.
                   </p>
                 </form>
               </div>
