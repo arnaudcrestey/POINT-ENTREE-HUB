@@ -230,17 +230,18 @@ Arnaud Crestey
               </div>
 
               <div style="margin-top:36px;padding-top:28px;border-top:1px solid #ebe7df;">
-                <p style="margin:0 0 8px;font-size:14px;line-height:1.7;color:#374151;">
-                  Bien à vous,
-                </p>
+  <p style="margin:0 0 8px;font-size:14px;line-height:1.7;color:#374151;">
+    Bien à vous,
+  </p>
 
-                <p style="margin:0;font-family:Georgia,serif;font-size:21px;line-height:1.4;color:#111827;">
-                  Arnaud Crestey
-                </p>
+  <div style="text-align:center;margin-top:18px;">
+    <p style="margin:0;font-family:Georgia,serif;font-size:21px;line-height:1.4;color:#111827;">
+      Arnaud Crestey
+    </p>
 
-                <div style="width:42px;height:1px;background:#c9a86a;margin:14px 0 0;"></div>
-              </div>
-            </div>
+    <div style="width:42px;height:1px;background:#c9a86a;margin:14px auto 0;"></div>
+  </div>
+</div>
           </div>
         </div>
       `,
