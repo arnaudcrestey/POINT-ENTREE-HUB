@@ -1,11 +1,52 @@
-export type AxisKey = "structuration" | "comprehension" | "valorisation";
+export type AxisKey =
+  | "structuration"
+  | "comprehension"
+  | "valorisation";
 
 export type VectorScore = Record<AxisKey, number>;
+
+/* =========================
+   SOUS-SIGNAUX
+========================= */
+
+export type SubSignalKey =
+  | "clarte"
+  | "methode"
+  | "pilotage"
+  | "discernement"
+  | "ecoute"
+  | "lecture"
+  | "perception"
+  | "impact"
+  | "lisibilite";
+
+export type SubSignals = Record<SubSignalKey, number>;
+
+export const INITIAL_SUBSIGNALS: SubSignals = {
+  clarte: 0,
+  methode: 0,
+  pilotage: 0,
+
+  discernement: 0,
+  ecoute: 0,
+  lecture: 0,
+
+  perception: 0,
+  impact: 0,
+  lisibilite: 0,
+};
+
+/* =========================
+   ANSWERS / QUESTIONS
+========================= */
 
 export type Answer = {
   id: string;
   label: string;
+
   delta: Partial<VectorScore>;
+
+  subSignals?: Partial<SubSignals>;
 };
 
 export type Question = {
@@ -15,21 +56,79 @@ export type Question = {
   answers: Answer[];
 };
 
+/* =========================
+   SCORES
+========================= */
+
 export const INITIAL_SCORE: VectorScore = {
   structuration: 0,
   comprehension: 0,
   valorisation: 0,
 };
 
-export function applyDelta(score: VectorScore, delta: Partial<VectorScore>): VectorScore {
+export function applyDelta(
+  score: VectorScore,
+  delta: Partial<VectorScore>
+): VectorScore {
   return {
-    structuration: score.structuration + (delta.structuration ?? 0),
-    comprehension: score.comprehension + (delta.comprehension ?? 0),
-    valorisation: score.valorisation + (delta.valorisation ?? 0),
+    structuration:
+      score.structuration + (delta.structuration ?? 0),
+
+    comprehension:
+      score.comprehension + (delta.comprehension ?? 0),
+
+    valorisation:
+      score.valorisation + (delta.valorisation ?? 0),
   };
 }
 
-export function computeDominantAxis(score: VectorScore): AxisKey {
+/* =========================
+   SUB SIGNALS
+========================= */
+
+export function applySubSignals(
+  current: SubSignals,
+  incoming?: Partial<SubSignals>
+): SubSignals {
+  if (!incoming) return current;
+
+  return {
+    clarte:
+      current.clarte + (incoming.clarte ?? 0),
+
+    methode:
+      current.methode + (incoming.methode ?? 0),
+
+    pilotage:
+      current.pilotage + (incoming.pilotage ?? 0),
+
+    discernement:
+      current.discernement + (incoming.discernement ?? 0),
+
+    ecoute:
+      current.ecoute + (incoming.ecoute ?? 0),
+
+    lecture:
+      current.lecture + (incoming.lecture ?? 0),
+
+    perception:
+      current.perception + (incoming.perception ?? 0),
+
+    impact:
+      current.impact + (incoming.impact ?? 0),
+
+    lisibilite:
+      current.lisibilite + (incoming.lisibilite ?? 0),
+  };
+}
+
+/* =========================
+   DOMINANT AXIS
+========================= */
+
+export function computeDominantAxis(
+  score: VectorScore
+): AxisKey {
   const ranked: [AxisKey, number][] = [
     ["structuration", score.structuration],
     ["comprehension", score.comprehension],
@@ -39,24 +138,73 @@ export function computeDominantAxis(score: VectorScore): AxisKey {
   ranked.sort((a, b) => b[1] - a[1]);
 
   if (ranked[0][1] === ranked[1][1]) {
-    const includesStructuration = ranked[0][0] === "structuration" || ranked[1][0] === "structuration";
-    if (includesStructuration) return "structuration";
+    const includesStructuration =
+      ranked[0][0] === "structuration" ||
+      ranked[1][0] === "structuration";
+
+    if (includesStructuration) {
+      return "structuration";
+    }
   }
 
   return ranked[0][0];
 }
 
-export function getHybridAxes(score: VectorScore): AxisKey[] {
+export function getHybridAxes(
+  score: VectorScore
+): AxisKey[] {
   const values = Object.values(score);
+
   const highest = Math.max(...values);
-  return (Object.keys(score) as AxisKey[]).filter((axis) => score[axis] === highest);
+
+  return (Object.keys(score) as AxisKey[]).filter(
+    (axis) => score[axis] === highest
+  );
 }
 
-export function normalizeScore(score: VectorScore): VectorScore {
-  const max = Math.max(score.structuration, score.comprehension, score.valorisation, 1);
+/* =========================
+   NORMALIZE MAIN SCORE
+========================= */
+
+export function normalizeScore(
+  score: VectorScore
+): VectorScore {
+  const max = Math.max(
+    score.structuration,
+    score.comprehension,
+    score.valorisation,
+    1
+  );
+
   return {
-    structuration: Number((score.structuration / max).toFixed(2)),
-    comprehension: Number((score.comprehension / max).toFixed(2)),
-    valorisation: Number((score.valorisation / max).toFixed(2)),
+    structuration: Number(
+      (score.structuration / max).toFixed(2)
+    ),
+
+    comprehension: Number(
+      (score.comprehension / max).toFixed(2)
+    ),
+
+    valorisation: Number(
+      (score.valorisation / max).toFixed(2)
+    ),
   };
+}
+
+/* =========================
+   NORMALIZE SUB SIGNALS
+========================= */
+
+export function normalizeSubSignals(
+  signals: Partial<SubSignals>,
+  keys: SubSignalKey[]
+) {
+  const values = keys.map((key) => signals[key] ?? 0);
+
+  const max = Math.max(...values, 1);
+
+  return keys.map((key) => ({
+    key,
+    value: Number(((signals[key] ?? 0) / max).toFixed(2)),
+  }));
 }
