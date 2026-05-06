@@ -3,6 +3,11 @@ import type {
   SubSignals,
 } from "@/lib/scoring";
 
+import {
+  normalizeSubSignals,
+  type SubSignalKey,
+} from "@/lib/scoring";
+
 type RoleRadarProps = {
   axis: AxisKey;
   color: string;
@@ -10,9 +15,8 @@ type RoleRadarProps = {
 };
 
 type RoleMetric = {
-  key: string;
+  key: SubSignalKey;
   label: string;
-  value: number;
 };
 
 function polarToCartesian(
@@ -21,11 +25,21 @@ function polarToCartesian(
   angleInDegrees: number,
   value: number = 1
 ) {
-  const angleInRadians = (angleInDegrees * Math.PI) / 180;
+  const angleInRadians =
+    (angleInDegrees * Math.PI) / 180;
 
   return {
-    x: center + Math.cos(angleInRadians) * radius * value,
-    y: center + Math.sin(angleInRadians) * radius * value,
+    x:
+      center +
+      Math.cos(angleInRadians) *
+        radius *
+        value,
+
+    y:
+      center +
+      Math.sin(angleInRadians) *
+        radius *
+        value,
   };
 }
 
@@ -35,24 +49,27 @@ export function VectorRadar({
   subSignals,
 }: RoleRadarProps) {
   const center = 145;
+
   const radius = 88;
 
-  const metricsByAxis: Record<AxisKey, RoleMetric[]> = {
+  const metricsByAxis: Record<
+    AxisKey,
+    RoleMetric[]
+  > = {
     structuration: [
       {
         key: "clarte",
         label: "Clarté",
-        value: subSignals.clarte ?? 0,
       },
+
       {
         key: "methode",
         label: "Méthode",
-        value: subSignals.methode ?? 0,
       },
+
       {
         key: "pilotage",
         label: "Pilotage",
-        value: subSignals.pilotage ?? 0,
       },
     ],
 
@@ -60,17 +77,16 @@ export function VectorRadar({
       {
         key: "discernement",
         label: "Discernement",
-        value: subSignals.discernement ?? 0,
       },
+
       {
         key: "ecoute",
         label: "Écoute",
-        value: subSignals.ecoute ?? 0,
       },
+
       {
         key: "lecture",
         label: "Lecture",
-        value: subSignals.lecture ?? 0,
       },
     ],
 
@@ -78,46 +94,66 @@ export function VectorRadar({
       {
         key: "perception",
         label: "Perception",
-        value: subSignals.perception ?? 0,
       },
+
       {
         key: "impact",
         label: "Impact",
-        value: subSignals.impact ?? 0,
       },
+
       {
         key: "lisibilite",
         label: "Lisibilité",
-        value: subSignals.lisibilite ?? 0,
       },
     ],
   };
 
-  const rawMetrics = metricsByAxis[axis];
+  const axisMetrics =
+    metricsByAxis[axis];
 
-  const max = Math.max(
-    ...rawMetrics.map((metric) => metric.value),
-    1
+  const normalized =
+    normalizeSubSignals(
+      subSignals,
+
+      axisMetrics.map(
+        (metric) => metric.key
+      )
+    );
+
+  const points = axisMetrics.map(
+    (metric, index) => {
+      const data =
+        normalized[index];
+
+      return {
+        key: metric.key,
+
+        label: metric.label,
+
+        /*
+          Valeur SVG (0-1)
+        */
+        value: data.value,
+
+        /*
+          Valeur affichée
+        */
+        percent: data.percent,
+
+        angle: [-90, 30, 150][index],
+      };
+    }
   );
-
-  const metrics = rawMetrics.map((metric) => ({
-    ...metric,
-    value: Number((metric.value / max).toFixed(2)),
-  }));
-
-  const points = metrics.map((metric, index) => ({
-    ...metric,
-    angle: [-90, 30, 150][index],
-  }));
 
   const polygonPoints = points
     .map((point) => {
-      const position = polarToCartesian(
-        center,
-        radius,
-        point.angle,
-        point.value
-      );
+      const position =
+        polarToCartesian(
+          center,
+          radius,
+          point.angle,
+          point.value
+        );
 
       return `${position.x},${position.y}`;
     })
@@ -149,6 +185,7 @@ export function VectorRadar({
 
               <feMerge>
                 <feMergeNode in="blur" />
+
                 <feMergeNode in="SourceGraphic" />
               </feMerge>
             </filter>
@@ -178,35 +215,38 @@ export function VectorRadar({
             fill="url(#radarBackground)"
           />
 
-          {[1, 0.75, 0.5, 0.25].map((level) => (
-            <polygon
-              key={level}
-              points={points
-                .map((point) => {
-                  const position =
-                    polarToCartesian(
-                      center,
-                      radius,
-                      point.angle,
-                      level
-                    );
+          {[1, 0.75, 0.5, 0.25].map(
+            (level) => (
+              <polygon
+                key={level}
+                points={points
+                  .map((point) => {
+                    const position =
+                      polarToCartesian(
+                        center,
+                        radius,
+                        point.angle,
+                        level
+                      );
 
-                  return `${position.x},${position.y}`;
-                })
-                .join(" ")}
-              fill="none"
-              stroke="rgba(30, 41, 59, 0.14)"
-              strokeWidth="1"
-            />
-          ))}
+                    return `${position.x},${position.y}`;
+                  })
+                  .join(" ")}
+                fill="none"
+                stroke="rgba(30, 41, 59, 0.14)"
+                strokeWidth="1"
+              />
+            )
+          )}
 
           {points.map((point) => {
-            const axisEnd = polarToCartesian(
-              center,
-              radius,
-              point.angle,
-              1
-            );
+            const axisEnd =
+              polarToCartesian(
+                center,
+                radius,
+                point.angle,
+                1
+              );
 
             return (
               <line
@@ -232,12 +272,13 @@ export function VectorRadar({
           />
 
           {points.map((point) => {
-            const position = polarToCartesian(
-              center,
-              radius,
-              point.angle,
-              point.value
-            );
+            const position =
+              polarToCartesian(
+                center,
+                radius,
+                point.angle,
+                point.value
+              );
 
             return (
               <circle
@@ -280,7 +321,7 @@ export function VectorRadar({
                   dominantBaseline="middle"
                   className="fill-slate-500 text-[9px]"
                 >
-                  {Math.round(point.value * 100)}%
+                  {point.percent}%
                 </text>
               </g>
             );
@@ -295,17 +336,15 @@ export function VectorRadar({
               <span>{point.label}</span>
 
               <span>
-                {Math.round(point.value * 100)}%
+                {point.percent}%
               </span>
             </div>
 
             <div className="h-[3px] overflow-hidden rounded-full bg-white/10">
               <div
-                className="h-full rounded-full"
+                className="h-full rounded-full transition-all duration-700"
                 style={{
-                  width: `${Math.round(
-                    point.value * 100
-                  )}%`,
+                  width: `${point.percent}%`,
                   backgroundColor: color,
                   boxShadow: `0 0 18px ${color}`,
                 }}
