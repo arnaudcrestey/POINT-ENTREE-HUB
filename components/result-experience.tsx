@@ -523,7 +523,7 @@ export function ResultExperience({
                   }`}
                 >
                   <form
-                    action="/api/recut-lead"
+                    action="/api/result-lead"
                     method="POST"
                     className={`rounded-[34px] border p-5 shadow-[0_26px_80px_rgba(15,23,42,0.14)] sm:p-7 md:p-8 ${
                       isDark
