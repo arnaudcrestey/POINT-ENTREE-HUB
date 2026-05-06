@@ -386,13 +386,11 @@ export function ResultExperience({
                     </div>
 
                     <div>
-                      <p className="text-[10px] uppercase tracking-[0.2em] opacity-45">
-                        Lecture
-                      </p>
-                      <p className="mt-1 font-medium">
-                        {secondarySignals > 0 ? "hybride" : "dominante"}
-                      </p>
-                    </div>
+  <p className="text-[10px] uppercase tracking-[0.2em] opacity-45">
+    Axe dominant
+  </p>
+  <p className="mt-1 font-medium">{meta.name}</p>
+</div>
                   </div>
 
                   <a
