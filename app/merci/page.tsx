@@ -10,10 +10,10 @@ export default function MerciPage() {
       <section className="relative z-10 w-full max-w-2xl rounded-[34px] border border-white/70 bg-white/80 p-8 text-center shadow-[0_34px_100px_rgba(15,23,42,0.10)] backdrop-blur-xl md:p-12">
         <div className="flex flex-col items-center">
           <Signature />
-          <div className="mt-4 h-px w-24 bg-gradient-to-r from-transparent via-[#c9a86a] to-transparent" />
+          
         </div>
 
-        <p className="mt-12 text-[11px] uppercase tracking-[0.32em] text-[#8a7557]">
+        <p className="mt-12 text-[13px] uppercase tracking-[0.38em] text-[#8a7557]">
           Merci
         </p>
 
