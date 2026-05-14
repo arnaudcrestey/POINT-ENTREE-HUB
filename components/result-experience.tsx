@@ -522,9 +522,25 @@ export function ResultExperience({
       }`}
     >
       <form
-        action="/api/result-lead"
-        method="POST"
-        className={`rounded-[34px] border p-5 shadow-[0_26px_80px_rgba(15,23,42,0.14)] sm:p-7 md:p-8 ${
+  action="/api/result-lead"
+  method="POST"
+  onSubmit={(event) => {
+    const form = event.currentTarget;
+    const button = form.querySelector<HTMLButtonElement>(
+      'button[type="submit"]'
+    );
+
+    if (button?.disabled) {
+      event.preventDefault();
+      return;
+    }
+
+    if (button) {
+      button.disabled = true;
+      button.textContent = "Transmission en cours...";
+    }
+  }}
+  className={`rounded-[34px] border p-5 shadow-[0_26px_80px_rgba(15,23,42,0.14)] sm:p-7 md:p-8 ${0_26px_80px_rgba(15,23,42,0.14)] sm:p-7 md:p-8 ${
           isDark
             ? "border-white/10 bg-black/20"
             : "border-black/5 bg-[#f8fafc]"
@@ -604,12 +620,12 @@ export function ResultExperience({
         </div>
 
         <button
-          type="submit"
-          className="mt-8 w-full rounded-full px-6 py-4 text-sm font-medium text-white shadow-[0_18px_40px_rgba(49,95,140,0.25)] transition hover:-translate-y-0.5"
-          style={{ backgroundColor: meta.color }}
-        >
-          Présenter ma situation 
-        </button>
+  type="submit"
+  className="mt-8 w-full rounded-full px-6 py-4 text-sm font-medium text-white shadow-[0_18px_40px_rgba(49,95,140,0.25)] transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
+  style={{ backgroundColor: meta.color }}
+>
+  Présenter ma situation
+</button>
 
         <p className="mx-auto mt-5 max-w-lg text-center text-xs leading-6 opacity-55">
           Cette étape permet d'approfondir la lecture du profil et d'évaluer une éventuelle
