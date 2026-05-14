@@ -540,12 +540,12 @@ export function ResultExperience({
       button.textContent = "Transmission en cours...";
     }
   }}
-  className={`rounded-[34px] border p-5 shadow-[0_26px_80px_rgba(15,23,42,0.14)] sm:p-7 md:p-8 ${0_26px_80px_rgba(15,23,42,0.14)] sm:p-7 md:p-8 ${
-          isDark
-            ? "border-white/10 bg-black/20"
-            : "border-black/5 bg-[#f8fafc]"
-        }`}
-      >
+  className={`rounded-[34px] border p-5 shadow-[0_26px_80px_rgba(15,23,42,0.14)] sm:p-7 md:p-8 ${
+    isDark
+      ? "border-white/10 bg-black/20"
+      : "border-black/5 bg-[#f8fafc]"
+  }`}
+>
         <input type="hidden" name="dominant" value={dominant} />
         <input type="hidden" name="entity" value={meta.entity} />
         <input type="hidden" name="structuration" value={rawScore.structuration} />
